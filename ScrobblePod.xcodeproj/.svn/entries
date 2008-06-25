@@ -1,51 +1,0 @@
-8
-
-dir
-0
-http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod/trunk/ScrobblePod.xcodeproj
-http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod
-add
-
-
-
-
-
-
-
-svn:special svn:externals svn:needs-lock
-
-ben.mode1v3
-file
-
-
-
-add
-
-ben.perspectivev3
-file
-
-
-
-add
-
-ben.mode1
-file
-
-
-
-add
-
-project.pbxproj
-file
-
-
-
-add
-
-ben.pbxuser
-file
-
-
-
-add
-
