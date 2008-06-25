@@ -1,973 +1,0 @@
-8
-
-dir
-1
-http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod/trunk
-http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod
-
-
-
-2008-06-04T23:15:39.243156Z
-1
-admin
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-25ccb8fe-95fe-4baa-b92f-148b22d33ad0
-
-main.m
-file
-0
-
-
-add
-
-ban_on.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGLastFmScrobbleResponse.h
-file
-0
-
-
-add
-
-BGLastFmSong.m
-file
-0
-
-
-add
-
-ScrobblePod.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-UKFileWatcher.h
-file
-0
-
-
-add
-
-BGLastFmScrobbler.h
-file
-0
-
-
-add
-
-StatusItemView.h
-file
-0
-
-
-add
-
-UKKQueue.h
-file
-0
-
-
-add
-
-BGLastFmScrobbleResponse.m
-file
-0
-
-
-add
-
-WhitePopUpButton.h
-file
-0
-
-
-add
-
-tag_off.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-StatusItemView.m
-file
-0
-
-
-add
-
-BGLastFmScrobbler.m
-file
-0
-
-
-add
-
-UKFileWatcher.m
-file
-0
-
-
-add
-
-UKKQueue.m
-file
-0
-
-
-add
-
-PreferencesController.h
-file
-0
-
-
-add
-
-WhitePopUpButton.m
-file
-0
-
-
-add
-
-BGLastFMPasswordChecker.h
-file
-0
-
-
-add
-
-NSBezierPath+RoundedRect.h
-file
-0
-
-
-add
-
-iPodWatcher.h
-file
-0
-
-
-add
-
-PreferencesController.m
-file
-0
-
-
-add
-
-BGLastFmServiceWorker.h
-file
-0
-
-
-add
-
-BGLastFMPasswordChecker.m
-file
-0
-
-
-add
-
-NSBezierPath+RoundedRect.m
-file
-0
-
-
-add
-
-iPodWatcher.m
-file
-0
-
-
-add
-
-UKMainThreadProxy.h
-file
-0
-
-
-add
-
-BGLastFmServiceWorker.m
-file
-0
-
-
-add
-
-UKMainThreadProxy.m
-file
-0
-
-
-add
-
-auto0.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-auto1.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-CocoaCryptoHashing.h
-file
-0
-
-
-add
-
-BGLastFmHandshaker.h
-file
-0
-
-
-add
-
-GrowlHub.h
-file
-0
-
-
-add
-
-RoundPointView.h
-file
-0
-
-
-add
-
-CocoaCryptoHashing.m
-file
-0
-
-
-add
-
-0.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-iTunesSmall.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-1.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGLastFmHandshaker.m
-file
-0
-
-
-add
-
-GrowlHub.m
-file
-0
-
-
-add
-
-2.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGAudioScrobblerXmlRpcParameter.h
-file
-0
-
-
-add
-
-RoundPointView.m
-file
-0
-
-
-add
-
-History.tiff
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-Preferences.tiff
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGAudioScrobblerXmlRpcPost.h
-file
-0
-
-
-add
-
-BGAudioScrobblerXmlRpcParameter.m
-file
-0
-
-
-add
-
-tag_on.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-ban_normal.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGAudioScrobblerXmlRpcPost.m
-file
-0
-
-
-add
-
-lastfmwindow.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-NSString+UrlEncoding.h
-file
-0
-
-
-add
-
-BGScrobbleDecisionManager.h
-file
-0
-
-
-add
-
-Defines.h
-file
-0
-
-
-add
-
-Update.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGRoundedInfoView.h
-file
-0
-
-
-add
-
-NSString+UrlEncoding.m
-file
-0
-
-
-add
-
-MenuNote_On.tif
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGScrobbleDecisionManager.m
-file
-0
-
-
-add
-
-exceptions.tiff
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-UKFNSubscribeFileWatcher.h
-file
-0
-
-
-add
-
-BGRoundedInfoView.m
-file
-0
-
-
-add
-
-BGLastFmHandshakeResponse.h
-file
-0
-
-
-add
-
-UKFNSubscribeFileWatcher.m
-file
-0
-
-
-add
-
-BGLastFmHandshakeResponse.m
-file
-0
-
-
-add
-
-ScrobblePod512.icns
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-ScrobblePod_Prefix.pch
-file
-0
-
-
-add
-
-love_on.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-WorkingValueTransformer.h
-file
-0
-
-
-add
-
-Credits.rtf
-file
-0
-
-
-add
-
-BGLastFmRadioHandshakeResponse.h
-file
-0
-
-
-add
-
-ScrobblePod.xcodeproj
-dir
-
-
-
-add
-
-WorkingValueTransformer.m
-file
-0
-
-
-add
-
-BGLastFmRadioHandshakeResponse.m
-file
-0
-
-
-add
-
-NSString+SFHFUtils.h
-file
-0
-
-
-add
-
-NSDictionary+ExclusionTest.h
-file
-0
-
-
-add
-
-NSString+SFHFUtils.m
-file
-0
-
-
-add
-
-NSDictionary+ExclusionTest.m
-file
-0
-
-
-add
-
-tag_normal.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-NSCalendarDate+RelativeDateDescription.h
-file
-0
-
-
-add
-
-SFHFKeychainUtils.h
-file
-0
-
-
-add
-
-AppController.h
-file
-0
-
-
-add
-
-CTGradient.h
-file
-0
-
-
-add
-
-BGTrackCollector.h
-file
-0
-
-
-add
-
-MenuNote.tif
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-iTunesWatcher.h
-file
-0
-
-
-add
-
-NSCalendarDate+RelativeDateDescription.m
-file
-0
-
-
-add
-
-bubbles.aif
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-English.lproj
-dir
-
-
-
-add
-
-SFHFKeychainUtils.m
-file
-0
-
-
-add
-
-BGTrackCollector.m
-file
-0
-
-
-add
-
-AppController.m
-file
-0
-
-
-add
-
-CTGradient.m
-file
-0
-
-
-add
-
-BGPointWindow.h
-file
-0
-
-
-add
-
-iTunesWatcher.m
-file
-0
-
-
-add
-
-love_off.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-BGLastFmDefines.h
-file
-0
-
-
-add
-
-BGPointWindow.m
-file
-0
-
-
-add
-
-Info.plist
-file
-0
-
-
-add
-
-iTunes.h
-file
-0
-
-
-add
-
-love_normal.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-LoginItemsAE.c
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-LoginItemsAE.h
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
-UKLoginItemRegistry.h
-file
-0
-
-
-add
-
-UKLoginItemRegistry.m
-file
-0
-
-
-add
-
-BGLastFmSong.h
-file
-0
-
-
-add
-
-ban_off.png
-file
-0
-
-
-add
-
-
-
-
-
-has-props
-has-prop-mods
-
