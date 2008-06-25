@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                loveSong = id; 
+                manualScrobble = id; 
+                quit = id; 
+                raiseLoginPanel = id; 
+                toggleItunesScrobbling = id; 
+            }; 
+            CLASS = AppController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                currentSongMenuItem = NSMenuItem; 
+                loveSongMenuItem = NSMenuItem; 
+                softwareUpdater = SUUpdater; 
+                statusMenu = NSMenu; 
+                statusMenuItem = NSMenuItem; 
+                watchItunesMenuItem = NSMenuItem; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {checkForUpdates = id; }; 
+            CLASS = SUUpdater; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

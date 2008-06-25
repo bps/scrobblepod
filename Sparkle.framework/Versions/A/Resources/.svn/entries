@@ -1,0 +1,212 @@
+8
+
+dir
+0
+http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod/trunk/Sparkle.framework/Versions/A/Resources
+http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod
+add
+
+
+
+
+
+
+
+svn:special svn:externals svn:needs-lock
+
+ja.lproj
+dir
+
+
+
+add
+
+zh_TW.lproj
+dir
+
+
+
+add
+
+id.lproj
+dir
+
+
+
+add
+
+he.lproj
+dir
+
+
+
+add
+
+fi.lproj
+dir
+
+
+
+add
+
+Info.plist
+file
+
+
+
+add
+
+zh_CN.lproj
+dir
+
+
+
+add
+
+en.lproj
+dir
+
+
+
+add
+
+cs.lproj
+dir
+
+
+
+add
+
+fr.lproj
+dir
+
+
+
+add
+
+es.lproj
+dir
+
+
+
+add
+
+ko.lproj
+dir
+
+
+
+add
+
+nl.lproj
+dir
+
+
+
+add
+
+is.lproj
+dir
+
+
+
+add
+
+cy.lproj
+dir
+
+
+
+add
+
+pl.lproj
+dir
+
+
+
+add
+
+th.lproj
+dir
+
+
+
+add
+
+it.lproj
+dir
+
+
+
+add
+
+hu.lproj
+dir
+
+
+
+add
+
+no.lproj
+dir
+
+
+
+add
+
+sk.lproj
+dir
+
+
+
+add
+
+SUStatus.nib
+dir
+
+
+
+add
+
+ca.lproj
+dir
+
+
+
+add
+
+da.lproj
+dir
+
+
+
+add
+
+tr.lproj
+dir
+
+
+
+add
+
+ru.lproj
+dir
+
+
+
+add
+
+de.lproj
+dir
+
+
+
+add
+
+sv.lproj
+dir
+
+
+
+add
+

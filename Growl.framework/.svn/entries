@@ -1,0 +1,71 @@
+8
+
+dir
+0
+http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod/trunk/Growl.framework
+http://bengummer@scrobblepod.svn.beanstalkapp.com/scrobblepod
+add
+
+
+
+
+
+
+
+svn:special svn:externals svn:needs-lock
+
+Versions
+dir
+
+
+
+add
+
+Growl
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+svn:special
+
+Resources
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+svn:special
+
+Headers
+file
+
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+svn:special
+

@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                checkForUpdates = id; 
+                setLoginStart = id; 
+                showWindow = id; 
+                switchIconStyle = id; 
+                switchWelcomeToPref = id; 
+            }; 
+            CLASS = PreferencesController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                exclusionsView = NSView; 
+                generalPrefsView = NSView; 
+                iconStylePreview = NSImageView; 
+                idleChoice = NSPopUpButton; 
+                lastChecked = NSTextField; 
+                lastFmPass = NSTextField; 
+                lastFmUser = NSTextField; 
+                lastfmPrefsView = NSView; 
+                startAtLogin = NSButton; 
+                updateView = NSView; 
+                welcomeView = NSView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = WhitePopUpButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }
+    ); 
+    IBVersion = 1; 
+}

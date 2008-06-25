@@ -1,0 +1,11 @@
+#define Handshake_DidFail @"Handshake_DidFail"
+#define Handshake_FailureReason @"Handshake_FailureReason"
+#define Handshake_NowPlayingURL @"Handshake_NowPlayingURL"
+#define Handshake_PostURL @"Handshake_PostURL"
+#define Handshake_SessionKey @"Handshake_SessionKey"
+#define Handshake_ResponseTypeString @"Handshake_ResponseTypeString"
+#define Scrobble_ResponseTypeString @"Scrobble_ResponseTypeString"
+#define Scrobble_WasSuccessful @"Scrobble_WasSuccessful"
+#define Scrobble_FailureReason @"Scrobble_FailureReason"
+#define AudioScrobbler_ServiceBaseUrl @"AS_HTTPBase"
+#define MultiPostMax 49

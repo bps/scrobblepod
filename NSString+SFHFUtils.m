@@ -1,0 +1,36 @@
+//
+//  NSString+SFHFUtils.m
+//  Delicious Client
+//
+//  Created by Buzz Andersen on Fri May 14 2004.
+//  Copyright (c) 2004 Sci-Fi Hi-Fi. All rights reserved.
+//
+
+#import "NSString+SFHFUtils.h"
+
+
+@implementation NSString (SFHFUtils)
+
+- (NSString *) stringByUnescapingEntities: (NSDictionary *) entitiesDictionary {
+    NSString *unescapedString = (NSString *) CFXMLCreateStringByUnescapingEntities(NULL, (CFStringRef) self, (CFDictionaryRef) entitiesDictionary);
+    return [unescapedString autorelease];
+}
+
+- (NSString *) stringByAddingPercentEscapesUsingEncoding: (NSStringEncoding) encoding legalURLCharactersToBeEscaped: (NSString *) legalCharacters {
+	NSString *escapedString = (NSString *) CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) self, NULL, (CFStringRef) legalCharacters, CFStringConvertNSStringEncodingToEncoding(encoding));
+	return [escapedString autorelease];
+}
+
+- (NSString *) stringByReplacingPercentEscapes {
+    return [(NSString*) CFURLCreateStringByReplacingPercentEscapes(NULL, (CFStringRef) self, CFSTR("")) autorelease];
+}
+
+- (NSString *)URLEncodedString {
+	NSString *legalURLCharactersToBeEscaped = @"&?";
+	CFStringRef percentEscapedString = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)legalURLCharactersToBeEscaped, kCFStringEncodingUTF8);
+	NSString *retVal = [[NSString alloc] initWithString: (NSString *)percentEscapedString];
+	CFRelease(percentEscapedString);
+	return [retVal autorelease];
+}
+
+@end
