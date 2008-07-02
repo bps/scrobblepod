@@ -58,6 +58,9 @@ static BGScrobbleDecisionManager *sharedDecisionManager = nil;
 	self = [super init];
 	if (self != nil) {
 		firstRefresh = YES;
+		self.isDecisionMadeAutomtically = YES;
+		self.usersManualChoice = NO;
+		[self shouldScrobble];
 		[self startRefreshTimer];
 	}
 	return self;
@@ -72,36 +75,35 @@ static BGScrobbleDecisionManager *sharedDecisionManager = nil;
 
 #pragma mark Decision Making
 
--(BOOL)shouldScrobbleWhenUsingAutoDecide:(BOOL)usingAutoDecide withUserChosenStatus:(BOOL)userChosenStatus {
-	cachedAutoChoice = usingAutoDecide;
-	cachedUserChoice = userChosenStatus;
-
-	self.cachedDecision = (usingAutoDecide ? [self shouldScrobbleAuto] : userChosenStatus );
-
-	return self.cachedDecision;
+-(BOOL)shouldScrobble {
+	self.cachedOverallDecision = (self.isDecisionMadeAutomtically ? [self shouldScrobbleAuto] : self.usersManualChoice );
+	return self.cachedOverallDecision;
 }
 
 -(BOOL)shouldScrobbleAuto {
-		BOOL scrobbleDecision = YES;
-		
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:BGPrefUsePodFreshnessInterval]) {
-			NSDate *testDate = [[NSDate alloc] initWithTimeIntervalSinceNow: ([[NSUserDefaults standardUserDefaults] integerForKey:BGPrefPodFreshnessInterval]*-3600) ];
-			scrobbleDecision = [[iPodWatcher sharedManager] iPodDisconnectedSinceDate:testDate];
-			[testDate release];
-		}
-		
-		self.cachedDecision = scrobbleDecision;
-		return scrobbleDecision;
+	BOOL shouldScrobbleAuto = YES;
+	
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:BGPrefUsePodFreshnessInterval]) {
+		NSDate *testDate = [[NSDate alloc] initWithTimeIntervalSinceNow: ([[NSUserDefaults standardUserDefaults] integerForKey:BGPrefPodFreshnessInterval]*-3600) ];
+		shouldScrobbleAuto = [[iPodWatcher sharedManager] iPodDisconnectedSinceDate:testDate];
+		[testDate release];
+	}
+	
+	self.cachedOverallDecision = shouldScrobbleAuto;
+	return self.cachedOverallDecision;
 }
 
 #pragma mark Refreshing Cache
 
-@synthesize cachedDecision;
+@synthesize cachedOverallDecision;
+@synthesize isDecisionMadeAutomtically;
+@synthesize usersManualChoice;
 
--(void)refreshDecisionWithAutoDecide:(BOOL)usingAutoDecide userChosenStatus:(BOOL)userChosenStatus notifyingIfChanged:(BOOL)notify {
-	BOOL oldDecision = self.cachedDecision;
-	BOOL newDecision = [self shouldScrobbleWhenUsingAutoDecide:usingAutoDecide withUserChosenStatus:userChosenStatus];
-	if (firstRefresh || oldDecision != newDecision) {
+-(void)refreshDecisionAndNotifyIfChanged:(BOOL)notify {
+	BOOL oldDecision = self.cachedOverallDecision;
+	BOOL newDecision = [self shouldScrobble];
+	if (notify && (firstRefresh || oldDecision != newDecision)) {
+	
 		NSString *descriptionString;
 		if (newDecision == YES) {
 			// if user enables the 3-hour (default) time limit, then work out how long there is left until scrobbling is disabled
@@ -124,8 +126,10 @@ static BGScrobbleDecisionManager *sharedDecisionManager = nil;
 											     andDescription:descriptionString
 													   andImage:nil
 												  andIdentifier:SP_Growl_DecisionChanged];
+
+
 	}
-	self.cachedDecision = newDecision;
+	self.cachedOverallDecision = newDecision;
 	firstRefresh = NO;
 }
 
@@ -139,7 +143,7 @@ static BGScrobbleDecisionManager *sharedDecisionManager = nil;
 }
 
 -(void)refreshFromTimer:(NSTimer *)fromTimer {
-	[self refreshDecisionWithAutoDecide:cachedAutoChoice userChosenStatus:cachedUserChoice notifyingIfChanged:YES];
+	[self refreshDecisionAndNotifyIfChanged:YES];
 }
 
 -(void)stopRefreshTimer {

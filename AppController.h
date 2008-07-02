@@ -16,7 +16,6 @@
 	IBOutlet NSMenuItem *currentSongMenuItem;
 	IBOutlet NSView *tagEntryView;
 	IBOutlet NSView *recommendationEntryView;
-	IBOutlet NSButton *statusIconButton;
 	IBOutlet NSView *containerView;
 	IBOutlet BGRoundedInfoView *infoView;
 	IBOutlet BGPointWindow *arrowWindow;
@@ -46,8 +45,6 @@
 	NSURL *currentNowPlayingUrl;
 	
 	NSTimer *nowPlayingDelay;
-	BOOL usingAutoDecide;
-	BOOL userChosenStatus;
 	
 	NSArray *tagAutocompleteList;
 	NSArray *friendsAutocompleteList;
@@ -90,7 +87,6 @@
 -(void)playScrobblingSound;
 
 #pragma mark Secondary Last.fm Methods
--(IBAction)switchStatus:(id)sender;
 -(IBAction)goToUserProfilePage:(id)sender;
 -(IBAction)loveSong:(id)sender;
 -(IBAction)banSong:(id)sender;

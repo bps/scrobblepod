@@ -30,16 +30,11 @@
 
 #pragma mark Application Starting/Quitting
 
--(void)setStatus {
-	[statusIconButton setImage: [NSImage imageNamed: ( usingAutoDecide ? [NSString stringWithFormat:@"auto%d",[[BGScrobbleDecisionManager sharedManager] shouldScrobbleWhenUsingAutoDecide:usingAutoDecide withUserChosenStatus:userChosenStatus]] : [NSString stringWithFormat:@"%d",userChosenStatus] )]];
-}
-
 -(void)showStatusMenu:(id)sender {
 	[statusItem popUpStatusItemMenu:statusMenu];
 }
 
 -(void)menuWillOpen:(NSMenu *)menu {
-	[self setStatus];
 	[[BGScrobbleDecisionManager sharedManager] resetRefreshTimer];
 	[arrowWindow properClose];
 }
@@ -49,8 +44,6 @@
 	[self setIsScrobbling:NO];
 	[self setIsPostingNP:NO];
 	
-	usingAutoDecide = YES;
-	userChosenStatus = YES;
 	isLoadingCommonTags = NO;
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -129,7 +122,6 @@ nil] ];
 
 -(void)menuDidClose:(NSMenu *)menu {
 	[(StatusItemView *)statusItem.view setSelected:NO];
-	[infoView stopScrollTimer];
 	[infoView resetBlueToOffState];
 }
 
@@ -202,7 +194,7 @@ nil] ];
 #pragma mark Delegate Method
 
 -(void)podWatcherMountedPod:(NSNotification *)notification {
-	[[BGScrobbleDecisionManager sharedManager] refreshDecisionWithAutoDecide:usingAutoDecide userChosenStatus:userChosenStatus notifyingIfChanged:YES];
+	[[BGScrobbleDecisionManager sharedManager] refreshDecisionAndNotifyIfChanged:YES];
 }
 
 -(void)preferencesControllerUpdatedCredentials:(NSNotification *)notification {
@@ -350,30 +342,6 @@ nil] ];
 	isPostingNP = aBool;
 }
 
--(IBAction)switchStatus:(id)sender {		
-	
-	// FUNCTION DESCRIPTION:
-	// This function changes the shiny circle icon at the top of the ScrobblePod menu.
-	// If the current status is chosen automatically, then the opposite of that is shown
-	// when the icon is first clicked.
-	//
-	// For example, if the icon is a "blue/green" combination, then the next shown colour will
-	// be "red". However, if the icon is a "blue/red" icon, then the next shown colour will be
-	// "green". This functionality is in place so that the behaviour is as intuitive as possible.
-	
-	BOOL scrobbleAuto = [[BGScrobbleDecisionManager sharedManager] shouldScrobbleAuto];
-	if (usingAutoDecide) { //Changing from auto to manual
-		usingAutoDecide = NO;
-		userChosenStatus = !scrobbleAuto;
-	} else {
-		// If you want to see the logic that thse 2 lines replace, email me. Basically, they replace
-		// an inefficient "if" selector, saving 10-15 lines of code.
-		userChosenStatus = !userChosenStatus;
-		usingAutoDecide  = scrobbleAuto ^ userChosenStatus; //XOR
-	}	
-	[self setStatus]; //Display the changes just made
-}
-
 #pragma mark Last.fm API Interaction
 
 -(IBAction)loveSong:(id)sender {		
@@ -476,7 +444,7 @@ nil] ];
 -(void)detachScrobbleThreadWithoutConsideration:(BOOL)passThrough {
 	if (!isScrobbling) {
 		BOOL shouldContinue = passThrough;
-		if (!passThrough) shouldContinue = [[BGScrobbleDecisionManager sharedManager] shouldScrobbleWhenUsingAutoDecide:usingAutoDecide withUserChosenStatus:userChosenStatus];
+		if (!passThrough) shouldContinue = [[BGScrobbleDecisionManager sharedManager] shouldScrobbleAuto];
 		if (shouldContinue) [NSThread detachNewThreadSelector:@selector(postScrobble) toTarget:self withObject:nil];
 	}
 }

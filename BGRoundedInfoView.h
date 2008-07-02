@@ -13,25 +13,28 @@
 	// INSTANCE VARIABLES
 	int currentLoveHateIconOpacity;
 	int currentBlueAction;
-	float scrollOffset;
 	float currentBlueOffset;
 	BOOL isResizingBlue;
 	BOOL blueIsClosed;
 	BOOL active;
-	BOOL needsScroll;
 	NSRect drawingBounds;
 	NSMutableArray *iconSet;
 	NSDictionary *attributesDictionary;
 	NSString *stringValue;
 	CTGradient *gradientFill;
+	
+	BOOL scrobblingEnabled;
+	BOOL scrobblingAuto;
 
 	// TIMERS
-	NSTimer *scrollTimer;
 	NSTimer *blueTimer;
 	NSTimer *fadeIconTimer;
 	
 	IBOutlet AppController *appController;
 }
+
+@property (assign) BOOL scrobblingEnabled;
+@property (assign) BOOL scrobblingAuto;
 
 #pragma mark Initialisation
 - (id)initWithFrame:(NSRect)frameRect;
@@ -45,11 +48,6 @@
 #pragma mark Event Tracking
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent;
 -(void)mouseDown:(NSEvent *)theEvent;
-
-#pragma mark Scroll Timer
--(void)startScrollTimer;
--(void)stopScrollTimer;
--(void)incrementScroll:(NSTimer *)timer;
 
 #pragma mark Blue Timer
 -(void)startBlueTimer;
@@ -79,9 +77,6 @@
 -(void)generateBackgroundImage;
 -(void)generateStringImage;
 
-#pragma mark Decision to Scroll
--(BOOL)shouldScroll;
-
 #pragma mark String Value
 -(NSString *)stringValue;
 -(void)setStringValue:(NSString *)aString;
@@ -91,7 +86,6 @@
 @property (retain) NSImage *stringImage;
 @property (assign) BOOL active;
 @property (assign) BOOL isResizingBlue;
-@property (assign) float scrollOffset;
 @property (assign) int currentBlueAction;
 @property (assign) int currentLoveHateIconOpacity;
 @property (assign) BOOL blueIsClosed;

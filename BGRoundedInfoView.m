@@ -1,13 +1,11 @@
-	#import "BGRoundedInfoView.h"
+#import "BGRoundedInfoView.h"
 #import "NSBezierPath+RoundedRect.h"
+#import "BGScrobbleDecisionManager.h"
 
 #pragma mark Fixed Values
 
-#define LeftPadding 34
+#define LeftPadding 18
 #define RightPadding 30
-#define ScrollAmount 0.5
-#define ScrollSpeed 0.01
-#define ScrollSpacing 20
 #define LineWidth 0.5
 
 #define BlueAmount 2
@@ -25,10 +23,12 @@
 @implementation BGRoundedInfoView
 
 @synthesize isResizingBlue;
-@synthesize scrollOffset;
 @synthesize currentBlueAction;
 @synthesize currentLoveHateIconOpacity;
 @synthesize blueIsClosed;
+
+@synthesize scrobblingEnabled;
+@synthesize scrobblingAuto;
 
 #pragma mark Initialisation Methods
 
@@ -36,12 +36,14 @@
 	if ((self = [super initWithFrame:frameRect]) != nil) {
 		// Assign initial values
 		[self calculateDrawingBounds];
-		self.scrollOffset = 0.0;		
 		self.isResizingBlue = NO;
 		self.active = NO;
 		self.currentBlueAction = BLUE_GROWING;
 		self.currentLoveHateIconOpacity = 10;
 		self.blueIsClosed = YES;
+
+		self.scrobblingEnabled = NO;
+		self.scrobblingAuto = YES;
 
 		// Create Objects Needed Later On
 		[self createTextAttributesDictionary];
@@ -57,7 +59,6 @@
 	[gradientFill release];
 	[attributesDictionary release];
 	[backgroundImage release];
-	[scrollTimer release];
 	[blueTimer release];
 	[fadeIconTimer release];
 	[iconSet release];
@@ -125,28 +126,29 @@
 	return nil;
 }
 
--(void)mouseEntered:(NSEvent *)theEvent {
-	NSLog(@"MOUSE_IN");
-
-}
-
--(void)mouseExited:(NSEvent *)theEvent {
-	NSLog(@"MOUSE_OUT");
-
-}
-
--(void)mouseMoved: (NSEvent *)theEvent {
-NSLog(@"mouseMoved working");
-}
-
 #pragma mark Event Tracking
 
 -(void)mouseDown:(NSEvent *)theEvent {
-	if (self.active) {
-		NSPoint loc = [theEvent locationInWindow];
-		loc.x -= [self frame].origin.x;
-		loc.y -= [self frame].origin.y;
-			
+	NSPoint loc = [theEvent locationInWindow];
+	loc.x -= [self frame].origin.x;
+	loc.y -= [self frame].origin.y;
+
+	if (loc.x > drawingBounds.origin.x && loc.x < drawingBounds.origin.x+15) {
+		// NEED TO MAKE THE XOR SWITCH, THEN SHOW IT IN DRAWRECT...
+		BGScrobbleDecisionManager *decisionMaker = [BGScrobbleDecisionManager sharedManager];
+		BOOL oldAutomaticScrobblingDecision = [decisionMaker shouldScrobbleAuto];
+		if (decisionMaker.isDecisionMadeAutomtically) { //Changing from auto to manual
+			decisionMaker.isDecisionMadeAutomtically = NO;
+			decisionMaker.usersManualChoice = !oldAutomaticScrobblingDecision;
+		} else {
+			// If you want to see the logic that thse 2 lines replace, email me. Basically, they replace
+			// an inefficient "if" selector, saving 10-15 lines of code.
+			decisionMaker.usersManualChoice = !decisionMaker.usersManualChoice;
+			decisionMaker.isDecisionMadeAutomtically = oldAutomaticScrobblingDecision ^ decisionMaker.usersManualChoice; //XOR
+		}
+		[self generateBackgroundImage];
+		[self setNeedsDisplay:YES];
+	} else if (self.active) {
 		float startAreaRight = drawingBounds.origin.x+drawingBounds.size.width;
 		float startAreaLeft  = startAreaRight - blueLimit_Off;
 			
@@ -170,30 +172,6 @@ NSLog(@"mouseMoved working");
 
 -(BOOL)acceptsFirstReponder {
 	return YES;
-}
-
-#pragma mark Scroll Timer
-
--(void)startScrollTimer {
-	if (!scrollTimer) self.scrollOffset = 0.0;
-	[self stopScrollTimer];
-	if ([self shouldScroll]) {
-		scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:ScrollSpeed target:self selector:@selector(incrementScroll:) userInfo:nil repeats:YES] retain];
-		[[NSRunLoop currentRunLoop] addTimer:scrollTimer forMode:NSEventTrackingRunLoopMode];
-	}
-}
-
--(void)stopScrollTimer {
-	if (scrollTimer!=nil) [scrollTimer invalidate];
-	[self setNeedsDisplay:YES];
-}
-
--(void)incrementScroll:(NSTimer *)timer {
-	self.scrollOffset -= ScrollAmount;
-	if (currentBlueOffset>drawingBounds.origin.x+20) {
-	}
-	if (self.scrollOffset < [[self stringImage] size].width*-1) self.scrollOffset = ScrollSpacing;
-	if (!isResizingBlue) [self setNeedsDisplay:YES];
 }
 
 #pragma mark Blue Timer
@@ -233,7 +211,6 @@ NSLog(@"mouseMoved working");
 		// Once drawing finishes, make sure it is on the exact (correct) value
 		if (self.currentBlueAction==BLUE_SHRINKING) {
 			[self resetBlueToOffState];
-			[self startScrollTimer];
 		} else if (self.currentBlueAction==BLUE_GROWING) {
 			currentBlueOffset = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On;
 			self.blueIsClosed = NO;
@@ -329,21 +306,16 @@ NSLog(@"mouseMoved working");
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)rect {
-	float capWidth = 9.0;
-	float textDrawWidth = currentBlueOffset-drawingBounds.origin.x-2;
+	float textDrawWidth = currentBlueOffset-drawingBounds.origin.x;
 	NSImage *wholeStringImage = [self stringImage];
 	NSImage *cutImage = [[NSImage alloc] initWithSize:NSMakeSize(textDrawWidth,[wholeStringImage size].height)];
 	[cutImage lockFocus];
-		[wholeStringImage compositeToPoint:NSMakePoint(self.scrollOffset+capWidth,0) operation:1.0];
-		if ([self shouldScroll]) {
-			float scrollDiff = textDrawWidth - (self.scrollOffset+[wholeStringImage size].width);
-			if (scrollDiff > ScrollSpacing) [wholeStringImage compositeToPoint:NSMakePoint(textDrawWidth - scrollDiff + ScrollSpacing + capWidth,0) operation:1.0];
-		}
+		[wholeStringImage compositeToPoint:NSMakePoint(22,0) operation:1.0];
 	[cutImage unlockFocus];
 	
 	[self lockFocus];
 		[[self backgroundImage] compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
-		[cutImage compositeToPoint:NSMakePoint(drawingBounds.origin.x+((24-(capWidth*2))/2),drawingBounds.origin.y+2) operation:NSCompositeSourceOver];
+		[cutImage compositeToPoint:NSMakePoint(drawingBounds.origin.x,drawingBounds.origin.y+2) operation:NSCompositeSourceOver];
 
 		if (self.active) {
 			NSImage *arrowImage = (self.blueIsClosed ? [NSImage imageNamed:@"BlueArrow_Left"] : [NSImage imageNamed:@"BlueArrow_Right"]);
@@ -397,16 +369,31 @@ NSLog(@"mouseMoved working");
 		float currentBlueWidth;
 		currentBlueWidth = (drawingBounds.origin.x + drawingBounds.size.width) - currentBlueOffset;
 
-		NSImage *blueImage = [[NSImage alloc] initWithSize:NSMakeSize(currentBlueWidth,blueHeight)];
+		NSImage *blueImage;
+		blueImage = [[NSImage alloc] initWithSize:NSMakeSize(currentBlueWidth,blueHeight)];
 		[blueImage lockFocus];
 			[[NSColor colorWithCalibratedRed:(131.0/255.0) green:(175.0/255.0) blue:(234.0/255.0) alpha:1.0] set];
 			[NSBezierPath fillRect:NSMakeRect(0,1,currentBlueWidth,blueHeight)];
 		[blueImage unlockFocus];
 		
+		BGScrobbleDecisionManager *decisionMaker = [BGScrobbleDecisionManager sharedManager];
+		NSImage *statusImage = [[NSImage alloc] initWithSize:NSMakeSize(15,blueHeight)];
+		NSColor *statusColor;
+		statusColor = ( [decisionMaker shouldScrobble] ? [NSColor greenColor] : [NSColor redColor] );
+		[statusImage lockFocus];
+			[statusColor set];
+			[NSBezierPath fillRect:NSMakeRect(0,1,15,blueHeight)];
+			if (decisionMaker.isDecisionMadeAutomtically) {
+				[[NSColor blueColor] set];
+				[NSBezierPath fillRect:NSMakeRect(0,blueHeight/2,15,blueHeight)];
+			}
+		[statusImage unlockFocus];
+		
 		[backgroundImage lockFocus];
 			// Draw Background, Blue, Shine
 			[gradientFill fillBezierPath:roundedPath angle:90];
 			if (self.active) [blueImage drawAtPoint:NSMakePoint(currentBlueOffset,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.9];
+			[statusImage drawAtPoint:NSMakePoint(LeftPadding,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.4];
 			[shineImage drawAtPoint:NSMakePoint(0,selfSize.height/2) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.4];
 			
 			// Stroke Entire Capsule
@@ -420,6 +407,9 @@ NSLog(@"mouseMoved working");
 				NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(currentBlueOffset, 1,1,drawingBounds.size.height-1)];
 				[onePixelVericalLine fill];
 			}
+			NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(LeftPadding+15, 1,1,drawingBounds.size.height-1)];
+			[onePixelVericalLine fill];
+
 		[backgroundImage unlockFocus];
 		
 		[shineImage release];
@@ -446,15 +436,10 @@ NSLog(@"mouseMoved working");
 	[drawString release];
 }
 
-#pragma mark Decision To Scroll
+#pragma mark View Being Shown
 
 -(void)viewDidMoveToWindow {
 	[self resetBlueToOffState];
-	[self startScrollTimer];
-}
-
--(BOOL)shouldScroll {
-	return (self.window && [stringImage size].width > currentBlueOffset - drawingBounds.origin.x - 5);
 }
 
 #pragma mark String Value
@@ -470,7 +455,6 @@ NSLog(@"mouseMoved working");
 			stringValue = nil;
 		}
 		stringValue = [aString copy];
-		self.scrollOffset = 0.0;
 		[self generateStringImage];
 		[self setNeedsDisplay:YES];
 	}

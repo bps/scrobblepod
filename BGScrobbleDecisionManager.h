@@ -10,14 +10,16 @@
 #import <Growl/GrowlApplicationBridge.h>
 
 @interface BGScrobbleDecisionManager : NSObject {
-	BOOL cachedDecision;
+	BOOL cachedOverallDecision;
+	BOOL isDecisionMadeAutomtically;
+	BOOL usersManualChoice;
 	BOOL firstRefresh;
 	NSTimer *refreshTimer;
-	BOOL cachedAutoChoice;
-	BOOL cachedUserChoice;
 }
 
-@property (assign) BOOL cachedDecision;
+@property (assign) BOOL cachedOverallDecision;
+@property (assign) BOOL isDecisionMadeAutomtically;
+@property (assign) BOOL usersManualChoice;
 
 +(BGScrobbleDecisionManager *)sharedManager;
 +(id)allocWithZone:(NSZone *)zone;
@@ -31,11 +33,11 @@
 
 #pragma mark Decision Making
 
--(BOOL)shouldScrobbleWhenUsingAutoDecide:(BOOL)usingAutoDecide withUserChosenStatus:(BOOL)userChosenStatus;
+-(BOOL)shouldScrobble;
 -(BOOL)shouldScrobbleAuto;
 
 #pragma mark Refreshing Cache
--(void)refreshDecisionWithAutoDecide:(BOOL)usingAutoDecide userChosenStatus:(BOOL)userChosenStatus notifyingIfChanged:(BOOL)notify;
+-(void)refreshDecisionAndNotifyIfChanged:(BOOL)notify;
 
 #pragma mark Timer
 
