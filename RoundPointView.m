@@ -28,7 +28,7 @@
 	float entireHeight = realSize.size.height;
 
 	NSBezierPath *bezierPath = [NSBezierPath bezierPath];
-	[bezierPath setLineWidth:0.1];
+	[bezierPath setLineWidth:0.5];
 
 	//bottom left
 	[bezierPath appendBezierPathWithArcWithCenter:NSMakePoint(cornerRadius, cornerRadius) radius:cornerRadius startAngle:180.0 endAngle:270.0];

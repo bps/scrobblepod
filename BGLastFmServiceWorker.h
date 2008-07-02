@@ -41,7 +41,7 @@
 #pragma mark Recommendations
 -(NSArray *)friendsForUser:(NSString *)aUsername;
 -(NSString *)methodNameForRecommendationType:(int)recommendationType;
--(void)recommendWithType:(int)recommendType forFriendUsernames:(NSArray *)friendsArray;
+-(void)recommendWithType:(int)recommendType forFriendUsernames:(NSArray *)friendsArray withMessage:(NSString *)aMessage;
 -(NSString *)recommendTypeStringFromType:(int)recommendationType;
 
 -(NSData *)dataFromUrl:(NSURL *)theURL;

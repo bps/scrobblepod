@@ -119,7 +119,7 @@
 	}
 }
 
--(void)recommendWithType:(int)recommendType forFriendUsernames:(NSArray *)friendsArray {
+-(void)recommendWithType:(int)recommendType forFriendUsernames:(NSArray *)friendsArray withMessage:(NSString *)aMessage {
 	if (self.title.length>0 && self.artist.length>0 && friendsArray.count > 0) {
 		BGAudioScrobblerXmlRpcPost *tastePost = [[BGAudioScrobblerXmlRpcPost alloc] init];
 		[tastePost setMethodName:@"recommendItem"];
@@ -133,8 +133,8 @@
 			[tastePost addPostParameter:@""];
 		}
 		[tastePost addPostParameter:[self recommendTypeStringFromType:recommendType]];
-		[tastePost addPostParameter:[friendsArray lastObject]];
-		[tastePost addPostParameter:@"Check out this song. It's really good."];
+		[tastePost addPostParameter:[friendsArray componentsJoinedByString:@", "]];
+		[tastePost addPostParameter:aMessage];
 		[tastePost addPostParameter:@"en"];
 
 		NSString *postXML = [tastePost xmlDescription];

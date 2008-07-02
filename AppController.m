@@ -147,6 +147,12 @@ nil] ];
 	
 	// let the user know if scrobbling is enabled
 	[self performSelector:@selector(podWatcherMountedPod:) withObject:nil afterDelay:10.0];
+	
+/*	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:@"www.last.fm" port:443 protocol:@"https" realm:nil authenticationMethod:NSURLAuthenticationMethodHTTPBasic];
+	NSURLCredentialStorage *credentialStorage = [NSURLCredentialStorage sharedCredentialStorage];
+	NSURLCredential *defaultCredential = [credentialStorage defaultCredentialForProtectionSpace:protectionSpace];
+	NSLog(@"FOUND DEETS: %@ = %@",defaultCredential.user,defaultCredential.password);
+	[protectionSpace release];*/
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
@@ -281,10 +287,12 @@ nil] ];
 }
 
 -(NSArray *)tokenField:(NSTokenField *)tokenField completionsForSubstring:(NSString *)substring indexOfToken:(int)tokenIndex indexOfSelectedItem:(int *)selectedIndex {
+	NSArray *arrayToMatchAgainst;
+	arrayToMatchAgainst = (tokenField==tagEntryField ? tagAutocompleteList : friendsAutocompleteList);
 	NSMutableArray *matchingTags = [NSMutableArray array];
 	NSString *substringLower = [substring lowercaseString];
 	NSString *currentTag;
-	for (currentTag in tagAutocompleteList) {
+	for (currentTag in arrayToMatchAgainst) {
 		if ([currentTag.lowercaseString rangeOfString:substringLower].location == 0) [matchingTags addObject:currentTag];
 	}
 
@@ -292,6 +300,7 @@ nil] ];
 }
 
 @synthesize tagAutocompleteList;
+@synthesize friendsAutocompleteList;
 
 -(void)populateCommonTags {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -402,18 +411,18 @@ nil] ];
 	[arrowWindow setShouldClose:NO];
 	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
 		[serviceWorker acquireCredentials];
-		[serviceWorker recommendWithType:[recommendTypeChooser selectedSegment] forFriendUsernames:friendsController.selectedObjects];
+		[serviceWorker recommendWithType:recommendTypeChooser.selectedSegment forFriendUsernames:friendsEntryField.objectValue withMessage:recommendMessageField.stringValue];
 	[serviceWorker release];
 	[arrowWindow setShouldClose:YES];
 }
 
 -(void)updateFriendsList {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	BGLastFmServiceWorker *friendFinder = [[BGLastFmServiceWorker alloc] init];
 		NSArray *friendsList = [friendFinder friendsForUser:[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUserKey]];
+		self.friendsAutocompleteList = friendsList;
 	[friendFinder release];
-	[friendsController removeObjects: friendsController.arrangedObjects];
-	[friendsController addObjects:friendsList];
-	NSLog(@"%@",friendsList);
+	[pool release];
 }
 
 -(void)showArrowWindowForView:(NSView *)theView {

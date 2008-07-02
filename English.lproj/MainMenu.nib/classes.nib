@@ -13,14 +13,6 @@
 			<string>NSView</string>
 		</dict>
 		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>close</key>
@@ -64,6 +56,14 @@
 			<string>NSObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -126,12 +126,14 @@
 				<string>NSView</string>
 				<key>currentSongMenuItem</key>
 				<string>NSMenuItem</string>
-				<key>friendsController</key>
-				<string>NSArrayController</string>
+				<key>friendsEntryField</key>
+				<string>NSTokenField</string>
 				<key>infoView</key>
 				<string>BGRoundedInfoView</string>
 				<key>interactionPanel</key>
 				<string>NSPanel</string>
+				<key>recommendMessageField</key>
+				<string>NSTextField</string>
 				<key>recommendTypeChooser</key>
 				<string>NSSegmentedControl</string>
 				<key>recommendationEntryView</key>

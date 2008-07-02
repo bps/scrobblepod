@@ -22,11 +22,11 @@
 	IBOutlet BGPointWindow *arrowWindow;
 	IBOutlet NSTokenField *tagEntryField;
 	IBOutlet NSTokenField *commonTagsField;
+	IBOutlet NSTokenField *friendsEntryField;
+	IBOutlet NSTextField *recommendMessageField;
 	IBOutlet NSTextField *tagLabel;
 	IBOutlet NSSegmentedControl *tagTypeChooser;
 	IBOutlet NSSegmentedControl *recommendTypeChooser;
-	
-	IBOutlet NSArrayController *friendsController;
 	
 	IBOutlet NSView *commonTagsLoadingView;
 	IBOutlet NSProgressIndicator *commonTagsLoadingIndicator;
@@ -50,9 +50,11 @@
 	BOOL userChosenStatus;
 	
 	NSArray *tagAutocompleteList;
+	NSArray *friendsAutocompleteList;
 }
 
 @property (retain) NSArray *tagAutocompleteList;
+@property (retain) NSArray *friendsAutocompleteList;
 
 -(IBAction)updateTagLabel:(id)sender;
 -(void)populateCommonTags;
