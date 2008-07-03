@@ -7,6 +7,7 @@
 @interface BGRoundedInfoView : NSView
 {
 	// CACHED IMAGES
+	NSImage *statusImage;
 	NSImage *backgroundImage;
 	NSImage *stringImage;
 
@@ -29,12 +30,17 @@
 	// TIMERS
 	NSTimer *blueTimer;
 	NSTimer *fadeIconTimer;
+	NSTimer *statusChangeTimer;
+	
+	NSString *properStringValue;
 	
 	IBOutlet AppController *appController;
 }
 
 @property (assign) BOOL scrobblingEnabled;
 @property (assign) BOOL scrobblingAuto;
+
+@property (copy) NSString *properStringValue;
 
 #pragma mark Initialisation
 - (id)initWithFrame:(NSRect)frameRect;
@@ -60,6 +66,10 @@
 -(void)startFadeTimer;
 -(void)stopFadeTimer;
 
+#pragma mark Status Change Timer
+-(void)startStatusChangeTimer;
+-(void)stopStatusChangeTimer;
+
 #pragma mark Convenience Blue Methods
 -(float)currentBlueWidth;
 -(void)openBlueMenu;
@@ -81,9 +91,12 @@
 -(NSString *)stringValue;
 -(void)setStringValue:(NSString *)aString;
 -(void)setStringValue:(NSString *)aString isActive:(BOOL)aBool;
+-(void)setTemporaryHoverStringValue:(NSString *)aString;
+-(void)revertFromHoverToStringValue:(NSTimer*)theTimer;
 
 #pragma mark Properties
 @property (retain) NSImage *stringImage;
+@property (retain) NSImage *statusImage;
 @property (assign) BOOL active;
 @property (assign) BOOL isResizingBlue;
 @property (assign) int currentBlueAction;

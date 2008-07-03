@@ -61,6 +61,7 @@
 	[backgroundImage release];
 	[blueTimer release];
 	[fadeIconTimer release];
+	[statusChangeTimer release];
 	[iconSet release];
 	[super dealloc];
 }
@@ -140,12 +141,15 @@
 		if (decisionMaker.isDecisionMadeAutomtically) { //Changing from auto to manual
 			decisionMaker.isDecisionMadeAutomtically = NO;
 			decisionMaker.usersManualChoice = !oldAutomaticScrobblingDecision;
+			[self setTemporaryHoverStringValue:(decisionMaker.usersManualChoice ? @"Scrobbling is now ON" : @"Scrobbling is now OFF")];
 		} else {
 			// If you want to see the logic that thse 2 lines replace, email me. Basically, they replace
 			// an inefficient "if" selector, saving 10-15 lines of code.
 			decisionMaker.usersManualChoice = !decisionMaker.usersManualChoice;
 			decisionMaker.isDecisionMadeAutomtically = oldAutomaticScrobblingDecision ^ decisionMaker.usersManualChoice; //XOR
+			[self setTemporaryHoverStringValue:(decisionMaker.isDecisionMadeAutomtically ? @"Scrobbling is set automatically" : (decisionMaker.usersManualChoice ? @"Scrobbling is now ON" : @"Scrobbling is now OFF"))];
 		}
+		[self generateStatusImage];
 		[self generateBackgroundImage];
 		[self setNeedsDisplay:YES];
 	} else if (self.active) {
@@ -240,6 +244,20 @@
 	}
 }
 
+#pragma mark Status Change Timer
+
+-(void)startStatusChangeTimer {
+	[self stopStatusChangeTimer];
+	statusChangeTimer = [[NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(revertFromHoverToStringValue:) userInfo:nil repeats:NO] retain];
+	[[NSRunLoop currentRunLoop] addTimer:statusChangeTimer forMode:NSEventTrackingRunLoopMode];
+}
+
+-(void)stopStatusChangeTimer {
+	if (statusChangeTimer!=nil) {
+		[statusChangeTimer invalidate];
+	}
+}
+
 -(void)stepIconOpacity:(NSTimer *)timer {
 	if (self.currentBlueAction==BLUE_SHRINKING) {
 		self.currentLoveHateIconOpacity -= 1;
@@ -315,7 +333,7 @@
 	
 	[self lockFocus];
 		[[self backgroundImage] compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
-		[cutImage compositeToPoint:NSMakePoint(drawingBounds.origin.x,drawingBounds.origin.y+2) operation:NSCompositeSourceOver];
+		[cutImage compositeToPoint:NSMakePoint(drawingBounds.origin.x,(drawingBounds.size.height/2)-([cutImage size].height/2)+1) operation:NSCompositeSourceOver];
 
 		if (self.active) {
 			NSImage *arrowImage = (self.blueIsClosed ? [NSImage imageNamed:@"BlueArrow_Left"] : [NSImage imageNamed:@"BlueArrow_Right"]);
@@ -376,39 +394,27 @@
 			[NSBezierPath fillRect:NSMakeRect(0,1,currentBlueWidth,blueHeight)];
 		[blueImage unlockFocus];
 		
-		BGScrobbleDecisionManager *decisionMaker = [BGScrobbleDecisionManager sharedManager];
-		NSImage *statusImage = [[NSImage alloc] initWithSize:NSMakeSize(15,blueHeight)];
-		NSColor *statusColor;
-		statusColor = ( [decisionMaker shouldScrobble] ? [NSColor greenColor] : [NSColor redColor] );
-		[statusImage lockFocus];
-			[statusColor set];
-			[NSBezierPath fillRect:NSMakeRect(0,1,15,blueHeight)];
-			if (decisionMaker.isDecisionMadeAutomtically) {
-				[[NSColor blueColor] set];
-				[NSBezierPath fillRect:NSMakeRect(0,blueHeight/2,15,blueHeight)];
-			}
-		[statusImage unlockFocus];
-		
 		[backgroundImage lockFocus];
 			// Draw Background, Blue, Shine
 			[gradientFill fillBezierPath:roundedPath angle:90];
 			if (self.active) [blueImage drawAtPoint:NSMakePoint(currentBlueOffset,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.9];
-			[statusImage drawAtPoint:NSMakePoint(LeftPadding,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.4];
+			[self.statusImage drawAtPoint:NSMakePoint(LeftPadding,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.4];
 			[shineImage drawAtPoint:NSMakePoint(0,selfSize.height/2) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.4];
 			
 			// Stroke Entire Capsule
-			[[NSColor darkGrayColor] set];
+			[[NSColor colorWithCalibratedWhite:0.0 alpha:1.0] set];
 			[roundedPath setLineWidth:LineWidth];
 			[roundedPath stroke];
 			
 			// Draw 1px vertical blue divider
 			if (self.active) {
-				[[NSColor lightGrayColor] set];			
+				[[NSColor colorWithCalibratedWhite:0.5 alpha:1.0] set];
 				NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(currentBlueOffset, 1,1,drawingBounds.size.height-1)];
 				[onePixelVericalLine fill];
 			}
-			NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(LeftPadding+15, 1,1,drawingBounds.size.height-1)];
-			[onePixelVericalLine fill];
+			
+			NSBezierPath *onePixelVericalLineTwo = [NSBezierPath bezierPathWithRect:NSMakeRect(LeftPadding+15, 1,1,drawingBounds.size.height-1)];
+			[onePixelVericalLineTwo fill];
 
 		[backgroundImage unlockFocus];
 		
@@ -417,6 +423,7 @@
 }
 
 @synthesize stringImage;
+@synthesize statusImage;
 
 -(NSImage *)stringImage {
 	if (!stringImage) [self generateStringImage];
@@ -434,6 +441,34 @@
 	self.stringImage = tempImage;
 	[tempImage release];
 	[drawString release];
+}
+
+-(NSImage *)statusImage {
+	if (!statusImage) [self generateStatusImage];
+	return statusImage;
+}
+
+-(void)generateStatusImage {
+	NSImage *tempImage = [[NSImage alloc] initWithSize:NSMakeSize(15,drawingBounds.size.height)];
+	
+	BGScrobbleDecisionManager *decisionMaker = [BGScrobbleDecisionManager sharedManager];
+	NSColor *statusColor;
+	statusColor = ( [decisionMaker shouldScrobble] ? [NSColor greenColor] : [NSColor redColor] );
+
+	[tempImage lockFocus];
+		[statusColor set];
+		[NSBezierPath fillRect:NSMakeRect(0,1,15,drawingBounds.size.height)];
+		if (decisionMaker.isDecisionMadeAutomtically) {
+			float yellowWidth = 9.0;
+			[[NSColor yellowColor] set];
+			[NSBezierPath fillRect:NSMakeRect(0,0,yellowWidth,drawingBounds.size.height)];
+			[[NSColor blackColor] set];
+			[NSBezierPath fillRect:NSMakeRect(yellowWidth,0,1,drawingBounds.size.height)];
+		}
+	[tempImage unlockFocus];
+	
+	self.statusImage = tempImage;
+	[tempImage release];
 }
 
 #pragma mark View Being Shown
@@ -461,14 +496,28 @@
 }
 
 -(void)setStringValue:(NSString *)aString isActive:(BOOL)aBool {
-	[self setStringValue:aString];
 	[self setActive:aBool];
-	[self setNeedsDisplay:YES];
+	self.stringValue = aString;
+	self.properStringValue = aString;
 }
 
 @synthesize active;
 -(void)setActive:(BOOL)aBool {
 	active = aBool;
 	// If not active, hide blue section
+}
+
+@synthesize properStringValue;
+
+-(void)setTemporaryHoverStringValue:(NSString *)aString {
+//	NSString *originalValue = [[self.stringValue copy] autorelease];
+//	NSTimer *revertTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(revertFromHoverToStringValue:) userInfo:nil repeats:NO];
+//	[[NSRunLoop currentRunLoop] addTimer:revertTimer forMode:NSEventTrackingRunLoopMode];
+	[self startStatusChangeTimer];
+	self.stringValue = aString;
+}
+
+-(void)revertFromHoverToStringValue:(NSTimer*)theTimer {
+	self.stringValue = self.properStringValue;
 }
 @end
