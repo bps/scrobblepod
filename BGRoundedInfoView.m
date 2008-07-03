@@ -412,7 +412,8 @@
 				NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(currentBlueOffset, 1,1,drawingBounds.size.height-1)];
 				[onePixelVericalLine fill];
 			}
-			
+
+			[[NSColor colorWithCalibratedWhite:0.5 alpha:1.0] set];
 			NSBezierPath *onePixelVericalLineTwo = [NSBezierPath bezierPathWithRect:NSMakeRect(LeftPadding+15, 1,1,drawingBounds.size.height-1)];
 			[onePixelVericalLineTwo fill];
 
@@ -463,7 +464,7 @@
 			[[NSColor yellowColor] set];
 			[NSBezierPath fillRect:NSMakeRect(0,0,yellowWidth,drawingBounds.size.height)];
 			[[NSColor blackColor] set];
-			[NSBezierPath fillRect:NSMakeRect(yellowWidth,0,1,drawingBounds.size.height)];
+			[NSBezierPath fillRect:NSMakeRect(yellowWidth-1,0,1,drawingBounds.size.height)];
 		}
 	[tempImage unlockFocus];
 	
