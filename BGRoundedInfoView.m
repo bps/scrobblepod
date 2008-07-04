@@ -135,7 +135,7 @@
 	loc.y -= [self frame].origin.y;
 
 	if (loc.x > drawingBounds.origin.x && loc.x < drawingBounds.origin.x+15) {
-		// NEED TO MAKE THE XOR SWITCH, THEN SHOW IT IN DRAWRECT...
+		[self closeBlueMenu];
 		BGScrobbleDecisionManager *decisionMaker = [BGScrobbleDecisionManager sharedManager];
 		BOOL oldAutomaticScrobblingDecision = [decisionMaker shouldScrobbleAuto];
 		if (decisionMaker.isDecisionMadeAutomtically) { //Changing from auto to manual
@@ -144,7 +144,7 @@
 			[self setTemporaryHoverStringValue:(decisionMaker.usersManualChoice ? @"Scrobbling is now ON" : @"Scrobbling is now OFF")];
 		} else {
 			// If you want to see the logic that thse 2 lines replace, email me. Basically, they replace
-			// an inefficient "if" selector, saving 10-15 lines of code.
+			// an inefficient series of "if" selectors, saving 10-15 lines of code.
 			decisionMaker.usersManualChoice = !decisionMaker.usersManualChoice;
 			decisionMaker.isDecisionMadeAutomtically = oldAutomaticScrobblingDecision ^ decisionMaker.usersManualChoice; //XOR
 			[self setTemporaryHoverStringValue:(decisionMaker.isDecisionMadeAutomtically ? @"Scrobbling is set automatically" : (decisionMaker.usersManualChoice ? @"Scrobbling is now ON" : @"Scrobbling is now OFF"))];
@@ -324,7 +324,7 @@
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)rect {
-	float textDrawWidth = currentBlueOffset-drawingBounds.origin.x;
+	float textDrawWidth = (self.active ? currentBlueOffset-drawingBounds.origin.x : drawingBounds.size.width);
 	NSImage *wholeStringImage = [self stringImage];
 	NSImage *cutImage = [[NSImage alloc] initWithSize:NSMakeSize(textDrawWidth,[wholeStringImage size].height)];
 	[cutImage lockFocus];
@@ -460,11 +460,13 @@
 		[statusColor set];
 		[NSBezierPath fillRect:NSMakeRect(0,1,15,drawingBounds.size.height)];
 		if (decisionMaker.isDecisionMadeAutomtically) {
-			float yellowWidth = 9.0;
+			float yellowOffset = 0.0;
+			float yellowWidth = 15.0;
+			float yellowHeight = 7.0;
 			[[NSColor yellowColor] set];
-			[NSBezierPath fillRect:NSMakeRect(0,0,yellowWidth,drawingBounds.size.height)];
-			[[NSColor blackColor] set];
-			[NSBezierPath fillRect:NSMakeRect(yellowWidth-1,0,1,drawingBounds.size.height)];
+			[NSBezierPath fillRect:NSMakeRect(yellowOffset,drawingBounds.size.height-yellowHeight,yellowWidth,yellowHeight)];
+//			[[NSColor darkGrayColor] set];
+//			[NSBezierPath fillRect:NSMakeRect(0,drawingBounds.size.height-yellowHeight-1,yellowWidth,1)];
 		}
 	[tempImage unlockFocus];
 	

@@ -86,6 +86,7 @@
 -(NSImage *)backgroundImage;
 -(void)generateBackgroundImage;
 -(void)generateStringImage;
+-(void)generateStatusImage;
 
 #pragma mark String Value
 -(NSString *)stringValue;
