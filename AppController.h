@@ -48,7 +48,12 @@
 	
 	NSArray *tagAutocompleteList;
 	NSArray *friendsAutocompleteList;
+	
+	IBOutlet NSWindow *welcomeWindow;
+	IBOutlet NSPanel *authorizationWaitPanel;
 }
+
+-(IBAction)showWaitPanel:(id)sender;
 
 @property (retain) NSArray *tagAutocompleteList;
 @property (retain) NSArray *friendsAutocompleteList;

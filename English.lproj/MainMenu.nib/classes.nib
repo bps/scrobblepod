@@ -34,6 +34,14 @@
 			<string>NSView</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>close</key>
@@ -56,14 +64,6 @@
 			<string>NSObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -101,6 +101,8 @@
 				<string>id</string>
 				<key>showAboutPanel</key>
 				<string>id</string>
+				<key>showWaitPanel</key>
+				<string>id</string>
 				<key>switchStatus</key>
 				<string>id</string>
 				<key>tagSong</key>
@@ -116,6 +118,8 @@
 			<dict>
 				<key>arrowWindow</key>
 				<string>BGPointWindow</string>
+				<key>authorizationWaitPanel</key>
+				<string>NSPanel</string>
 				<key>commonTagsField</key>
 				<string>NSTokenField</string>
 				<key>commonTagsLoadingIndicator</key>
@@ -156,6 +160,8 @@
 				<string>NSTextField</string>
 				<key>tagTypeChooser</key>
 				<string>NSSegmentedControl</string>
+				<key>welcomeWindow</key>
+				<string>NSWindow</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>

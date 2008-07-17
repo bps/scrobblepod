@@ -28,6 +28,14 @@
 
 @implementation AppController
 
+-(IBAction)showWaitPanel:(id)sender {
+//	[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:[NSURL URLWithString:@"http://www.google.com/"]] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
+//	[NSApp beginSheet:authorizationWaitPanel modalForWindow:welcomeWindow
+//            modalDelegate:self
+//            didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+//            contextInfo:NULL];
+}
+
 #pragma mark Application Starting/Quitting
 
 -(void)showStatusMenu:(id)sender {
@@ -472,15 +480,16 @@ nil] ];
 	NSCalendarDate *applescriptInputDateString = [NSCalendarDate dateWithString:lastScrobbleDateString calendarFormat:DATE_FORMAT_STRING];// descriptionWithCalendarFormat:DATE_FORMAT_STRING];
 	
 	BGTrackCollector *trackCollector = [[BGTrackCollector alloc] init];
-		NSArray *recentTracksSimple = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
+		NSArray *allRecentTracks = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
 	[trackCollector release];
 	
 	// Calculate extra plays, and insert them into recent songs array
-	BGMultipleSongPlayManager *multiPlayManager = [[BGMultipleSongPlayManager alloc] init];
+	/*BGMultipleSongPlayManager *multiPlayManager = [[BGMultipleSongPlayManager alloc] init];
 		NSArray *allRecentTracks = [multiPlayManager completeSongListForRecentTracks:recentTracksSimple sinceDate:applescriptInputDateString];
 	[multiPlayManager release];
 	
-	[recentTracksSimple release];
+	[recentTracksSimple release];*/
+	[allRecentTracks autorelease];
 	
 	NSLog(@"GOT ALL RECENT TRACKS:\n%@",allRecentTracks);
 	

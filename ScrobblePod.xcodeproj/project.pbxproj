@@ -31,6 +31,7 @@
 		B53F9C040D67F09000CCC8F9 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B53F9C030D67F09000CCC8F9 /* ScriptingBridge.framework */; };
 		B54CD6EF0DBDD7A500B2F077 /* StatusItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = B54CD6EE0DBDD7A500B2F077 /* StatusItemView.m */; };
 		B552E9F20BE69AF6000DE45D /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B552E9F10BE69AF6000DE45D /* Growl.framework */; };
+		B555F9180E29FBA600A0FB9A /* WelcomeBig.png in Resources */ = {isa = PBXBuildFile; fileRef = B555F9170E29FBA600A0FB9A /* WelcomeBig.png */; };
 		B556CEE00D90EC7200719B10 /* WorkingValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = B556CEDF0D90EC7200719B10 /* WorkingValueTransformer.m */; };
 		B556CEF20D90EFFD00719B10 /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = B556CEF00D90EFFD00719B10 /* 0.png */; };
 		B556CEF30D90EFFD00719B10 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B556CEF10D90EFFD00719B10 /* 1.png */; };
@@ -153,6 +154,7 @@
 		B54CD6ED0DBDD7A500B2F077 /* StatusItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusItemView.h; sourceTree = "<group>"; };
 		B54CD6EE0DBDD7A500B2F077 /* StatusItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusItemView.m; sourceTree = "<group>"; };
 		B552E9F10BE69AF6000DE45D /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
+		B555F9170E29FBA600A0FB9A /* WelcomeBig.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WelcomeBig.png; sourceTree = "<group>"; };
 		B556CEDE0D90EC7200719B10 /* WorkingValueTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkingValueTransformer.h; sourceTree = "<group>"; };
 		B556CEDF0D90EC7200719B10 /* WorkingValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkingValueTransformer.m; sourceTree = "<group>"; };
 		B556CEF00D90EFFD00719B10 /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 		B544D7AF0D7AD5B100CAB3A3 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				B555F9170E29FBA600A0FB9A /* WelcomeBig.png */,
 				B53AC8F10E0B75510033068D /* BlueArrow_Left.tif */,
 				B53AC8F20E0B75510033068D /* BlueArrow_Right.tif */,
 				B58579F10E0A0E1300CD4A14 /* Ban.tif */,
@@ -687,6 +690,7 @@
 				B58579F80E0A0E1300CD4A14 /* Tag.tif in Resources */,
 				B53AC8F30E0B75510033068D /* BlueArrow_Left.tif in Resources */,
 				B53AC8F40E0B75510033068D /* BlueArrow_Right.tif in Resources */,
+				B555F9180E29FBA600A0FB9A /* WelcomeBig.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
