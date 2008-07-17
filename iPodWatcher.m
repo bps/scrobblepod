@@ -74,7 +74,7 @@ static iPodWatcher *sharedPodWatcher = nil;
 }
 
 -(BOOL)isPodAtPath:(NSString *)testPath {
-	return (testPath!=nil && [[NSFileManager defaultManager] fileExistsAtPath:[testPath stringByAppendingPathComponent:@"iPod_Control"]]);
+	return (testPath!=nil && ([[NSFileManager defaultManager] fileExistsAtPath:[testPath stringByAppendingPathComponent:@"iPod_Control"]] || [[NSFileManager defaultManager] fileExistsAtPath:[testPath stringByAppendingPathComponent:@"iTunes_Control"]] || [[NSFileManager defaultManager] fileExistsAtPath:[testPath stringByAppendingPathComponent:@"var/root/Media/iTunes_Control"]]));
 }
 
 -(void)volumeDidUnmount:(NSNotification *)notification { 
