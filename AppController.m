@@ -131,6 +131,7 @@ nil] ];
 -(void)menuDidClose:(NSMenu *)menu {
 	[(StatusItemView *)statusItem.view setSelected:NO];
 	[infoView resetBlueToOffState];
+	[infoView stopScrolling];
 }
 
 -(void)applicationDidFinishLaunching:(NSNotification *)aNotification {
@@ -452,7 +453,7 @@ nil] ];
 -(void)detachScrobbleThreadWithoutConsideration:(BOOL)passThrough {
 	if (!isScrobbling) {
 		BOOL shouldContinue = passThrough;
-		if (!passThrough) shouldContinue = [[BGScrobbleDecisionManager sharedManager] shouldScrobbleAuto];
+		if (!passThrough) shouldContinue = [[BGScrobbleDecisionManager sharedManager] shouldScrobble];
 		if (shouldContinue) [NSThread detachNewThreadSelector:@selector(postScrobble) toTarget:self withObject:nil];
 	}
 }

@@ -11,6 +11,9 @@
 #define BlueAmount 2
 #define BlueSpeed 0.01
 
+#define ScrollAmount 1
+#define ScrollSpeed 0.05
+
 #define blueLimit_On 90.0
 #define blueLimit_Off 22.0
 
@@ -63,6 +66,7 @@
 	[fadeIconTimer release];
 	[statusChangeTimer release];
 	[iconSet release];
+	[scrollTimer invalidate];
 	[super dealloc];
 }
 
@@ -324,16 +328,20 @@
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)rect {
-	float textDrawWidth = (self.active ? currentBlueOffset-drawingBounds.origin.x : drawingBounds.size.width);
-	NSImage *wholeStringImage = [self stringImage];
-	NSImage *cutImage = [[NSImage alloc] initWithSize:NSMakeSize(textDrawWidth,[wholeStringImage size].height)];
-	[cutImage lockFocus];
-		[wholeStringImage compositeToPoint:NSMakePoint(22,0) operation:1.0];
-	[cutImage unlockFocus];
+	float textWidth = (self.active ? currentBlueOffset-drawingBounds.origin.x-16 : drawingBounds.size.width-16);
+
+	NSImage *primaryStringImage = [self stringImageWithWidth:textWidth andOffset:currentScrollOffset];//autoreleased
+	float currentPrimaryDrawPoint = drawingBounds.origin.x + 16.0;
 	
 	[self lockFocus];
 		[[self backgroundImage] compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
-		[cutImage compositeToPoint:NSMakePoint(drawingBounds.origin.x,(drawingBounds.size.height/2)-([cutImage size].height/2)+1) operation:NSCompositeSourceOver];
+		
+		float yDrawPoint = (drawingBounds.size.height/2)-(primaryStringImage.size.height/2)+1;
+		[primaryStringImage compositeToPoint:NSMakePoint(currentPrimaryDrawPoint, yDrawPoint) operation:NSCompositeSourceOver];
+		if ([self shouldScroll]) {
+			NSImage *secondaryStringImage = [self stringImageWithWidth:textWidth andOffset:currentScrollOffset - stringImage.size.width - 20];//autoreleased
+			[secondaryStringImage compositeToPoint:NSMakePoint(currentPrimaryDrawPoint, yDrawPoint) operation:NSCompositeSourceOver];
+		}
 
 		if (self.active) {
 			NSImage *arrowImage = (self.blueIsClosed ? [NSImage imageNamed:@"BlueArrow_Left"] : [NSImage imageNamed:@"BlueArrow_Right"]);
@@ -352,7 +360,6 @@
 			}
 		}
 	[self unlockFocus];
-	[cutImage release];
 }
 
 - (BOOL)isFlipped {
@@ -431,6 +438,15 @@
 	return stringImage;
 }
 
+-(NSImage *)stringImageWithWidth:(float)theWidth andOffset:(float)theOffset {
+	if (!stringImage) [self generateStringImage];
+	NSImage *returnImage = [[NSImage alloc] initWithSize:NSMakeSize(theWidth, stringImage.size.height)];
+	[returnImage lockFocus];
+		[stringImage compositeToPoint:NSMakePoint(0-theOffset+6, 0) operation:NSCompositeSourceOver];
+	[returnImage unlockFocus];	
+	return [returnImage autorelease];
+}
+
 -(void)generateStringImage {
 	NSAttributedString *drawString = [[NSAttributedString alloc] initWithString:self.stringValue attributes:attributesDictionary];
 	NSImage *tempImage = [[NSImage alloc] initWithSize:[drawString size]];
@@ -478,6 +494,36 @@
 
 -(void)viewDidMoveToWindow {
 	[self resetBlueToOffState];
+	[self startScrolling];
+}
+
+#pragma mark Scrolling
+
+-(void)startScrolling {
+	currentScrollOffset = 0.0;
+	[self stopScrolling];
+	if ([self shouldScroll]) {
+		scrollTimer = [[NSTimer scheduledTimerWithTimeInterval:ScrollSpeed target:self selector:@selector(incrementScroll:) userInfo:nil repeats:YES] retain];
+		[[NSRunLoop currentRunLoop] addTimer:scrollTimer forMode:NSEventTrackingRunLoopMode];
+	}
+	[self setNeedsDisplay:YES];
+}
+
+-(void)stopScrolling {
+	if (scrollTimer!=nil) {
+		[scrollTimer invalidate];
+		[self setNeedsDisplay:YES];
+	}
+}
+
+-(void)incrementScroll:(NSTimer *)timer {
+	currentScrollOffset += ScrollAmount;
+	if (drawingBounds.origin.x - currentScrollOffset + stringImage.size.width < -1) currentScrollOffset = 0.0;
+	[self setNeedsDisplay:YES];
+}
+
+-(BOOL)shouldScroll {
+	return (drawingBounds.size.width-44 < self.stringImage.size.width);
 }
 
 #pragma mark String Value
@@ -494,6 +540,7 @@
 		}
 		stringValue = [aString copy];
 		[self generateStringImage];
+		[self startScrolling];
 		[self setNeedsDisplay:YES];
 	}
 }

@@ -23,6 +23,7 @@
 	NSDictionary *attributesDictionary;
 	NSString *stringValue;
 	CTGradient *gradientFill;
+	float currentScrollOffset;
 	
 	BOOL scrobblingEnabled;
 	BOOL scrobblingAuto;
@@ -31,6 +32,7 @@
 	NSTimer *blueTimer;
 	NSTimer *fadeIconTimer;
 	NSTimer *statusChangeTimer;
+	NSTimer *scrollTimer;
 	
 	NSString *properStringValue;
 	
@@ -86,6 +88,7 @@
 -(NSImage *)backgroundImage;
 -(void)generateBackgroundImage;
 -(void)generateStringImage;
+-(NSImage *)stringImageWithWidth:(float)theWidth andOffset:(float)theOffset;
 -(void)generateStatusImage;
 
 #pragma mark String Value
@@ -94,6 +97,11 @@
 -(void)setStringValue:(NSString *)aString isActive:(BOOL)aBool;
 -(void)setTemporaryHoverStringValue:(NSString *)aString;
 -(void)revertFromHoverToStringValue:(NSTimer*)theTimer;
+
+#pragma mark Scrolling
+-(void)startScrolling;
+-(void)stopScrolling;
+-(BOOL)shouldScroll;
 
 #pragma mark Properties
 @property (retain) NSImage *stringImage;
