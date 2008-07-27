@@ -47,6 +47,8 @@
 
 		self.scrobblingEnabled = NO;
 		self.scrobblingAuto = YES;
+		
+		currentScrollOffset = 0.0;
 
 		// Create Objects Needed Later On
 		[self createTextAttributesDictionary];
