@@ -4,7 +4,7 @@
 
 #pragma mark Fixed Values
 
-#define LeftPadding 18
+#define LeftPadding 38//18+30
 #define RightPadding 30
 #define LineWidth 0.5
 
@@ -59,6 +59,8 @@
 	return self;
 }
 
+- (BOOL)acceptsFirstResponder { return YES; }
+
 -(void)dealloc {
 	[self setStringValue:nil];
 	[gradientFill release];
@@ -81,27 +83,27 @@
 	NSImage *tagIcon;
 
 	heartIcon = [[NSImage imageNamed:@"Love"] copy];
-	[self addIconFromImage:heartIcon withSelector:@"loveSong:"];
+	[self addIconFromImage:heartIcon withSelector:@"loveSong:" andDescription:@"Love this song"];
 	[heartIcon release];
 
 	banIcon = [[NSImage imageNamed:@"Ban"] copy];
-	[self addIconFromImage:banIcon withSelector:@"banSong:"];		
+	[self addIconFromImage:banIcon withSelector:@"banSong:" andDescription:@"Ban this song"];		
 	[banIcon release];
 
 	recIcon = [[NSImage imageNamed:@"Rec"] copy];
-	[self addIconFromImage:recIcon withSelector:@"recommendSong:"];		
+	[self addIconFromImage:recIcon withSelector:@"recommendSong:" andDescription:@"Share this song"];		
 	[recIcon release];
 
 	tagIcon = [[NSImage imageNamed:@"Tag"] copy];
-	[self addIconFromImage:tagIcon withSelector:@"tagSong:"];		
+	[self addIconFromImage:tagIcon withSelector:@"tagSong:" andDescription:@"Tag this song"];		
 	[tagIcon release];
 }
 
 #pragma mark Last.fm Icons
 
--(void)addIconFromImage:(NSImage *)theImage withSelector:(NSString *)action {
-		NSDictionary *newDictionary = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:theImage,action,nil]
-																  forKeys: [NSArray arrayWithObjects:@"image",@"action",nil] ];
+-(void)addIconFromImage:(NSImage *)theImage withSelector:(NSString *)action andDescription:(NSString *)aDescription {
+		NSDictionary *newDictionary = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:theImage,action,aDescription,nil]
+																  forKeys: [NSArray arrayWithObjects:@"image",@"action",@"description",nil] ];
 		[iconSet addObject:newDictionary];
 }
 
@@ -128,6 +130,18 @@
 		NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
 		float imageWidth = currentIcon.size.width;
 		if (clickPoint.x >= lastDrawPoint && clickPoint.x <= lastDrawPoint + imageWidth) return [[iconSet objectAtIndex:i] objectForKey:@"action"];
+		lastDrawPoint += imageWidth + 4.0;
+	}
+	return nil;
+}
+
+-(NSString *)descriptionForClickOffset:(NSPoint)clickPoint {
+	float lastDrawPoint = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On+7.0;
+	int i;
+	for (i=0; i<iconSet.count; i++) {
+		NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
+		float imageWidth = currentIcon.size.width;
+		if (clickPoint.x >= lastDrawPoint && clickPoint.x <= lastDrawPoint + imageWidth) return [[iconSet objectAtIndex:i] objectForKey:@"description"];
 		lastDrawPoint += imageWidth + 4.0;
 	}
 	return nil;
@@ -221,9 +235,11 @@
 		// Once drawing finishes, make sure it is on the exact (correct) value
 		if (self.currentBlueAction==BLUE_SHRINKING) {
 			[self resetBlueToOffState];
+			[[self window] setAcceptsMouseMovedEvents:NO];
 		} else if (self.currentBlueAction==BLUE_GROWING) {
 			currentBlueOffset = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On;
 			self.blueIsClosed = NO;
+			[[self window] setAcceptsMouseMovedEvents:YES];
 		}
 		
 		self.currentBlueAction = BLUE_STILL;
@@ -235,6 +251,12 @@
 	[self generateBackgroundImage];
 	[self setNeedsDisplay:YES];
 }
+
+-(void)mouseMoved:(NSEvent *)theEvent {
+	NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	NSString *theString = [self descriptionForClickOffset:thePoint];
+	if (theString) [self setTemporaryHoverStringValue:theString];
+} 
 
 #pragma mark Fade Timer
 
@@ -330,10 +352,10 @@
 #pragma mark Drawing
 
 - (void)drawRect:(NSRect)rect {
-	float textWidth = (self.active ? currentBlueOffset-drawingBounds.origin.x-16 : drawingBounds.size.width-16);
+	float textWidth = (self.active ? currentBlueOffset-drawingBounds.origin.x-2 : drawingBounds.size.width-2);
 
 	NSImage *primaryStringImage = [self stringImageWithWidth:textWidth andOffset:currentScrollOffset];//autoreleased
-	float currentPrimaryDrawPoint = drawingBounds.origin.x + 16.0;
+	float currentPrimaryDrawPoint = drawingBounds.origin.x + 2.0;//16 was here
 	
 	[self lockFocus];
 		[[self backgroundImage] compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
@@ -407,7 +429,7 @@
 			// Draw Background, Blue, Shine
 			[gradientFill fillBezierPath:roundedPath angle:90];
 			if (self.active) [blueImage drawAtPoint:NSMakePoint(currentBlueOffset,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.9];
-			[self.statusImage drawAtPoint:NSMakePoint(LeftPadding,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.4];
+			[self.statusImage drawAtPoint:NSMakePoint(19,2) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 			[shineImage drawAtPoint:NSMakePoint(0,selfSize.height/2) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.4];
 			
 			// Stroke Entire Capsule
@@ -421,10 +443,6 @@
 				NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(currentBlueOffset, 1,1,drawingBounds.size.height-1)];
 				[onePixelVericalLine fill];
 			}
-
-			[[NSColor colorWithCalibratedWhite:0.5 alpha:1.0] set];
-			NSBezierPath *onePixelVericalLineTwo = [NSBezierPath bezierPathWithRect:NSMakeRect(LeftPadding+15, 1,1,drawingBounds.size.height-1)];
-			[onePixelVericalLineTwo fill];
 
 		[backgroundImage unlockFocus];
 		
@@ -468,28 +486,16 @@
 }
 
 -(void)generateStatusImage {
-	NSImage *tempImage = [[NSImage alloc] initWithSize:NSMakeSize(15,drawingBounds.size.height)];
+	NSImage *tempImage;
 	
 	BGScrobbleDecisionManager *decisionMaker = [BGScrobbleDecisionManager sharedManager];
-	NSColor *statusColor;
-	statusColor = ( [decisionMaker shouldScrobble] ? [NSColor greenColor] : [NSColor redColor] );
+	if ([decisionMaker isDecisionMadeAutomtically]) {
+		tempImage = [decisionMaker shouldScrobble] ? [NSImage imageNamed:@"auto1"] : [NSImage imageNamed:@"auto0"];
+	} else {
+		tempImage = [decisionMaker shouldScrobble] ? [NSImage imageNamed:@"1"] : [NSImage imageNamed:@"0"];
+	}
 
-	[tempImage lockFocus];
-		[statusColor set];
-		[NSBezierPath fillRect:NSMakeRect(0,1,15,drawingBounds.size.height)];
-		if (decisionMaker.isDecisionMadeAutomtically) {
-			float yellowOffset = 0.0;
-			float yellowWidth = 15.0;
-			float yellowHeight = 7.0;
-			[[NSColor yellowColor] set];
-			[NSBezierPath fillRect:NSMakeRect(yellowOffset,drawingBounds.size.height-yellowHeight,yellowWidth,yellowHeight)];
-//			[[NSColor darkGrayColor] set];
-//			[NSBezierPath fillRect:NSMakeRect(0,drawingBounds.size.height-yellowHeight-1,yellowWidth,1)];
-		}
-	[tempImage unlockFocus];
-	
 	self.statusImage = tempImage;
-	[tempImage release];
 }
 
 #pragma mark View Being Shown
@@ -520,7 +526,7 @@
 
 -(void)incrementScroll:(NSTimer *)timer {
 	currentScrollOffset += ScrollAmount;
-	if (drawingBounds.origin.x - currentScrollOffset + stringImage.size.width < -1) currentScrollOffset = 0.0;
+	if (drawingBounds.origin.x - currentScrollOffset + stringImage.size.width < 18) currentScrollOffset = 0.0;
 	[self setNeedsDisplay:YES];
 }
 

@@ -49,9 +49,10 @@
 -(void)createIconSet;
 
 #pragma mark Last.fm Icons
--(void)addIconFromImage:(NSImage *)theImage withSelector:(NSString *)action;
+-(void)addIconFromImage:(NSImage *)theImage withSelector:(NSString *)action andDescription:(NSString *)aDescription;
 -(void)createTextAttributesDictionary;
 -(NSString *)selectorNameForClickOffset:(NSPoint)clickPoint;
+-(NSString *)descriptionForClickOffset:(NSPoint)clickPoint;
 
 #pragma mark Event Tracking
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent;
