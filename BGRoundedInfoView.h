@@ -24,6 +24,8 @@
 	NSString *stringValue;
 	CTGradient *gradientFill;
 	float currentScrollOffset;
+	int hoveredIcon;
+	int pressedIcon;
 	
 	BOOL scrobblingEnabled;
 	BOOL scrobblingAuto;
@@ -41,6 +43,8 @@
 
 @property (assign) BOOL scrobblingEnabled;
 @property (assign) BOOL scrobblingAuto;
+@property (assign) int hoveredIcon;
+@property (assign) int pressedIcon;
 
 @property (copy) NSString *properStringValue;
 
@@ -53,6 +57,7 @@
 -(void)createTextAttributesDictionary;
 -(NSString *)selectorNameForClickOffset:(NSPoint)clickPoint;
 -(NSString *)descriptionForClickOffset:(NSPoint)clickPoint;
+-(int)indexForClickOffset:(NSPoint)clickPoint;
 
 #pragma mark Event Tracking
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent;

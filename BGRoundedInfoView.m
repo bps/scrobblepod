@@ -48,6 +48,9 @@
 		self.scrobblingEnabled = NO;
 		self.scrobblingAuto = YES;
 		
+		self.hoveredIcon = -1;
+		self.pressedIcon = -1;
+		
 		currentScrollOffset = 0.0;
 
 		// Create Objects Needed Later On
@@ -124,37 +127,59 @@
 }
 
 -(NSString *)selectorNameForClickOffset:(NSPoint)clickPoint {
-	float lastDrawPoint = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On+7.0;
-	int i;
-	for (i=0; i<iconSet.count; i++) {
-		NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
-		float imageWidth = currentIcon.size.width;
-		if (clickPoint.x >= lastDrawPoint && clickPoint.x <= lastDrawPoint + imageWidth) return [[iconSet objectAtIndex:i] objectForKey:@"action"];
-		lastDrawPoint += imageWidth + 4.0;
+	if (clickPoint.y >= 0 && clickPoint.y <= 20) {
+		float lastDrawPoint = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On+7.0;
+		int i;
+		for (i=0; i<iconSet.count; i++) {
+			NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
+			float imageWidth = currentIcon.size.width;
+			if (clickPoint.x >= lastDrawPoint && clickPoint.x <= lastDrawPoint + imageWidth) return [[iconSet objectAtIndex:i] objectForKey:@"action"];
+			lastDrawPoint += imageWidth + 4.0;
+		}
 	}
 	return nil;
 }
 
 -(NSString *)descriptionForClickOffset:(NSPoint)clickPoint {
-	float lastDrawPoint = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On+7.0;
-	int i;
-	for (i=0; i<iconSet.count; i++) {
-		NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
-		float imageWidth = currentIcon.size.width;
-		if (clickPoint.x >= lastDrawPoint && clickPoint.x <= lastDrawPoint + imageWidth) return [[iconSet objectAtIndex:i] objectForKey:@"description"];
-		lastDrawPoint += imageWidth + 4.0;
+	if (clickPoint.y >= 0 && clickPoint.y <= 20) {
+		float lastDrawPoint = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On+7.0;
+		int i;
+		for (i=0; i<iconSet.count; i++) {
+			NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
+			float imageWidth = currentIcon.size.width;
+			if (clickPoint.x >= lastDrawPoint && clickPoint.x <= lastDrawPoint + imageWidth) {
+				return [[iconSet objectAtIndex:i] objectForKey:@"description"];
+			}
+			lastDrawPoint += imageWidth + 4.0;
+		}
 	}
 	return nil;
 }
 
+-(int)indexForClickOffset:(NSPoint)clickPoint {
+	if (clickPoint.y >= 0 && clickPoint.y <= 20) {
+		float lastDrawPoint = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On+7.0;
+		int i;
+		for (i=0; i<iconSet.count; i++) {
+			NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
+			float imageWidth = currentIcon.size.width;
+			if (clickPoint.x >= lastDrawPoint && clickPoint.x <= lastDrawPoint + imageWidth) return i;
+			lastDrawPoint += imageWidth + 4.0;
+		}
+	}
+	return -1;
+}
+
+@synthesize hoveredIcon;
+
 #pragma mark Event Tracking
 
--(void)mouseDown:(NSEvent *)theEvent {
-	NSPoint loc = [theEvent locationInWindow];
-	loc.x -= [self frame].origin.x;
-	loc.y -= [self frame].origin.y;
+@synthesize pressedIcon;
 
-	if (loc.x > drawingBounds.origin.x && loc.x < drawingBounds.origin.x+15) {
+-(void)mouseDown:(NSEvent *)theEvent {
+	NSPoint loc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+
+	if (loc.x > 15 && loc.x < 40) {
 		[self closeBlueMenu];
 		BGScrobbleDecisionManager *decisionMaker = [BGScrobbleDecisionManager sharedManager];
 		BOOL oldAutomaticScrobblingDecision = [decisionMaker shouldScrobbleAuto];
@@ -182,12 +207,23 @@
 		} else {
 			NSString *selectorName = [self selectorNameForClickOffset:loc];
 			if (selectorName) {
+				self.pressedIcon = [self indexForClickOffset:loc];
+				self.hoveredIcon = self.pressedIcon;
+				[self setNeedsDisplay:YES];
 				SEL methodSelector = NSSelectorFromString(selectorName);
-				if ([appController respondsToSelector:methodSelector]) [appController performSelector:methodSelector withObject:self];
+				if ([appController respondsToSelector:methodSelector]) {
+					[appController performSelector:methodSelector withObject:self];
+					[[NSRunLoop currentRunLoop] addTimer:[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(resetPressedIcon:) userInfo:nil repeats:NO] forMode:NSEventTrackingRunLoopMode];
+				}
 			}
 		
 		}
 	}
+}
+
+-(void)resetPressedIcon:(NSTimer *)theTimer {
+	self.pressedIcon = -1;
+	[self setNeedsDisplay:YES];
 }
 
 -(BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
@@ -203,6 +239,7 @@
 -(void)resetBlueToOffState {
 	self.currentBlueAction = BLUE_STILL;
 	self.blueIsClosed = YES;
+	self.hoveredIcon = -1;
 	[self stopBlueTimer];
 	[self stopFadeTimer];
 	self.currentLoveHateIconOpacity = 0;
@@ -255,6 +292,7 @@
 -(void)mouseMoved:(NSEvent *)theEvent {
 	NSPoint thePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	NSString *theString = [self descriptionForClickOffset:thePoint];
+	self.hoveredIcon = [self indexForClickOffset:thePoint];
 	if (theString) [self setTemporaryHoverStringValue:theString];
 } 
 
@@ -377,9 +415,25 @@
 			if (opacityValue>0.0) { // Fixes strange (but possibly useful) functionality where fraction:0.0 = fraction:1.0
 				int i;
 				for (i=0; i<iconSet.count; i++) {
-					NSImage *currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
+					NSImage *currentIcon = [[[iconSet objectAtIndex:i] objectForKey:@"image"] copy];
+					if (self.hoveredIcon==i) {
+						NSImage *overlayColor = [[NSImage alloc] initWithSize:currentIcon.size];
+						[overlayColor lockFocus];
+							[(self.pressedIcon == i ? [NSColor blackColor] : [NSColor whiteColor]) set];
+							NSRectFill(NSMakeRect(0,0,currentIcon.size.width,currentIcon.size.height));
+						[overlayColor unlockFocus];
+						
+						[currentIcon lockFocus];
+							[overlayColor compositeToPoint:NSZeroPoint operation:NSCompositeSourceAtop fraction:0.3];
+						[currentIcon unlockFocus];
+						
+						[overlayColor release];
+					}
+					
 					[currentIcon compositeToPoint:NSMakePoint(lastDrawPoint,3) operation:NSCompositeSourceOver fraction:opacityValue];
+
 					lastDrawPoint += currentIcon.size.width + 4.0;
+					[currentIcon release];
 				}
 			}
 		}
