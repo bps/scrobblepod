@@ -14,27 +14,6 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
-			<string>BGRoundedInfoView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>appController</key>
-				<string>AppController</string>
-				<key>banButton</key>
-				<string>NSButton</string>
-				<key>loveButton</key>
-				<string>NSButton</string>
-				<key>recButton</key>
-				<string>NSButton</string>
-				<key>tagButton</key>
-				<string>NSButton</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
 			<string>FirstResponder</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
@@ -64,6 +43,27 @@
 			<string>NSObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>BGRoundedInfoView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>appController</key>
+				<string>AppController</string>
+				<key>banButton</key>
+				<string>NSButton</string>
+				<key>loveButton</key>
+				<string>NSButton</string>
+				<key>recButton</key>
+				<string>NSButton</string>
+				<key>tagButton</key>
+				<string>NSButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>

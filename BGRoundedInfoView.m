@@ -23,6 +23,9 @@
 #define BLUE_SHRINKING 1
 #define BLUE_GROWING 2
 
+#define drawHeight 18.0
+#define shineHeight 10.0
+
 @implementation BGRoundedInfoView
 
 @synthesize isResizingBlue;
@@ -314,7 +317,7 @@
 
 -(void)startStatusChangeTimer {
 	[self stopStatusChangeTimer];
-	statusChangeTimer = [[NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(revertFromHoverToStringValue:) userInfo:nil repeats:NO] retain];
+	statusChangeTimer = [[NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(revertFromHoverToStringValue:) userInfo:nil repeats:NO] retain];
 	[[NSRunLoop currentRunLoop] addTimer:statusChangeTimer forMode:NSEventTrackingRunLoopMode];
 }
 
@@ -373,16 +376,15 @@
 	
 	tempBounds.origin.x += LeftPadding;
 	tempBounds.size.width -= RightPadding+LeftPadding;
-	tempBounds.size.height = 20;
+	tempBounds.size.height = drawHeight;
 	
 	tempBounds.size.width -= LineWidth*2;
 	
 	tempBounds.size.height -= 2;//2px padding
 	
-	tempBounds.origin.y = [self bounds].size.height - tempBounds.size.height - tempBounds.origin.y;
-	
+	tempBounds.origin.y = 5;
 	tempBounds.origin.x += LineWidth / 2;
-	tempBounds.origin.y -= 3*LineWidth;
+	tempBounds.origin.x -= 2;
 	
 	drawingBounds = tempBounds;
 }
@@ -392,14 +394,14 @@
 - (void)drawRect:(NSRect)rect {
 	float textWidth = (self.active ? currentBlueOffset-drawingBounds.origin.x-2 : drawingBounds.size.width-2);
 
-	NSImage *primaryStringImage = [self stringImageWithWidth:textWidth andOffset:currentScrollOffset];//autoreleased
-	float currentPrimaryDrawPoint = drawingBounds.origin.x + 2.0;//16 was here
+	NSImage *primaryStringImage = [self stringImageWithWidth:textWidth andOffset:currentScrollOffset-2];//autoreleased
+	float currentPrimaryDrawPoint = drawingBounds.origin.x + 2.0;
 	
 	[self lockFocus];
 		[[self backgroundImage] compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
 		
 		float yDrawPoint = (drawingBounds.size.height/2)-(primaryStringImage.size.height/2)+1;
-		[primaryStringImage compositeToPoint:NSMakePoint(currentPrimaryDrawPoint, yDrawPoint) operation:NSCompositeSourceOver];
+		[primaryStringImage compositeToPoint:NSMakePoint(currentPrimaryDrawPoint, yDrawPoint) operation:NSCompositeSourceAtop];
 		if ([self shouldScroll]) {
 			NSImage *secondaryStringImage = [self stringImageWithWidth:textWidth andOffset:currentScrollOffset - stringImage.size.width - 20];//autoreleased
 			[secondaryStringImage compositeToPoint:NSMakePoint(currentPrimaryDrawPoint, yDrawPoint) operation:NSCompositeSourceOver];
@@ -407,7 +409,7 @@
 
 		if (self.active) {
 			NSImage *arrowImage = (self.blueIsClosed ? [NSImage imageNamed:@"BlueArrow_Left"] : [NSImage imageNamed:@"BlueArrow_Right"]);
-			[arrowImage compositeToPoint:NSMakePoint(drawingBounds.origin.x+drawingBounds.size.width-(blueLimit_Off/2)-(arrowImage.size.width/2),((drawingBounds.origin.y+drawingBounds.size.height)/2)-(arrowImage.size.height/2)) operation:NSCompositeSourceAtop];
+			[arrowImage compositeToPoint:NSMakePoint(drawingBounds.origin.x+drawingBounds.size.width-(blueLimit_Off/2)-(arrowImage.size.width/2),(drawHeight/2)-(arrowImage.size.height/2)) operation:NSCompositeSourceAtop];
 		
 			float lastDrawPoint = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On+7.0;
 //			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationNone];
@@ -453,21 +455,28 @@
 
 -(void)generateBackgroundImage {
 		if (backgroundImage!=nil) [backgroundImage release];
-
-		NSSize selfSize = [self bounds].size;
-	
-		backgroundImage = [[NSImage alloc] initWithSize:selfSize];
+		float drawWidth = self.bounds.size.width;
+		backgroundImage = [[NSImage alloc] initWithSize:NSMakeSize(drawWidth, drawHeight)];
 		
-		NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRoundRectInRect:drawingBounds radius:19.5];
+		NSRect roundedFrame;
+		roundedFrame.origin.x = 37;
+		roundedFrame.origin.y = 0;
+		roundedFrame.origin.y += LineWidth;
+		roundedFrame.size.height = drawHeight;
+		roundedFrame.size.width = drawWidth-roundedFrame.origin.x-30;
+		roundedFrame.size.height -= LineWidth*2;
+		roundedFrame.size.width -= LineWidth*2;
 		
-		NSImage *shineImage = [[NSImage alloc] initWithSize:NSMakeSize(selfSize.width,selfSize.height/2)];
+		NSBezierPath *roundedPath = [NSBezierPath bezierPathWithRoundRectInRect:roundedFrame radius:drawHeight-0.5];
+		
+		NSImage *shineImage = [[NSImage alloc] initWithSize:NSMakeSize(drawWidth,shineHeight)];
 		
 		[shineImage lockFocus];
 			[[NSColor whiteColor] set];
-			[NSBezierPath fillRect:NSMakeRect(0,0,selfSize.width,selfSize.height/2)];
+			[NSBezierPath fillRect:NSMakeRect(0,0,drawWidth,drawHeight)];
 		[shineImage unlockFocus];
 
-		float blueHeight = selfSize.height-2;
+		float blueHeight = drawHeight-1;
 
 		float currentBlueWidth;
 		currentBlueWidth = (drawingBounds.origin.x + drawingBounds.size.width) - currentBlueOffset;
@@ -476,15 +485,16 @@
 		blueImage = [[NSImage alloc] initWithSize:NSMakeSize(currentBlueWidth,blueHeight)];
 		[blueImage lockFocus];
 			[[NSColor colorWithCalibratedRed:(131.0/255.0) green:(175.0/255.0) blue:(234.0/255.0) alpha:1.0] set];
-			[NSBezierPath fillRect:NSMakeRect(0,1,currentBlueWidth,blueHeight)];
+			[NSBezierPath fillRect:NSMakeRect(1,1,currentBlueWidth,blueHeight)];
 		[blueImage unlockFocus];
 		
 		[backgroundImage lockFocus];
+				
 			// Draw Background, Blue, Shine
 			[gradientFill fillBezierPath:roundedPath angle:90];
 			if (self.active) [blueImage drawAtPoint:NSMakePoint(currentBlueOffset,0) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:0.9];
-			[self.statusImage drawAtPoint:NSMakePoint(19,2) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-			[shineImage drawAtPoint:NSMakePoint(0,selfSize.height/2) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.4];
+			[self.statusImage drawAtPoint:NSMakePoint(19,(drawHeight/2) - (self.statusImage.size.height/2)) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+			[shineImage drawAtPoint:NSMakePoint(0,shineHeight) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.4];
 			
 			// Stroke Entire Capsule
 			[[NSColor colorWithCalibratedWhite:0.0 alpha:1.0] set];
@@ -494,7 +504,7 @@
 			// Draw 1px vertical blue divider
 			if (self.active) {
 				[[NSColor colorWithCalibratedWhite:0.5 alpha:1.0] set];
-				NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(currentBlueOffset, 1,1,drawingBounds.size.height-1)];
+				NSBezierPath *onePixelVericalLine = [NSBezierPath bezierPathWithRect:NSMakeRect(currentBlueOffset, 1,1,drawHeight-2)];
 				[onePixelVericalLine fill];
 			}
 
@@ -622,9 +632,6 @@
 @synthesize properStringValue;
 
 -(void)setTemporaryHoverStringValue:(NSString *)aString {
-//	NSString *originalValue = [[self.stringValue copy] autorelease];
-//	NSTimer *revertTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(revertFromHoverToStringValue:) userInfo:nil repeats:NO];
-//	[[NSRunLoop currentRunLoop] addTimer:revertTimer forMode:NSEventTrackingRunLoopMode];
 	[self startStatusChangeTimer];
 	self.stringValue = aString;
 }
