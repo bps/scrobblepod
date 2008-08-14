@@ -297,6 +297,7 @@
 	NSString *theString = [self descriptionForClickOffset:thePoint];
 	self.hoveredIcon = [self indexForClickOffset:thePoint];
 	if (theString) [self setTemporaryHoverStringValue:theString];
+	[self setNeedsDisplay:YES];
 } 
 
 #pragma mark Fade Timer
@@ -417,8 +418,11 @@
 			if (opacityValue>0.0) { // Fixes strange (but possibly useful) functionality where fraction:0.0 = fraction:1.0
 				int i;
 				for (i=0; i<iconSet.count; i++) {
-					NSImage *currentIcon = [[[iconSet objectAtIndex:i] objectForKey:@"image"] copy];
+					NSImage *currentIcon;
+					BOOL wasCopied = NO;
 					if (self.hoveredIcon==i) {
+						wasCopied = YES;
+						currentIcon = [[[iconSet objectAtIndex:i] objectForKey:@"image"] copy];
 						NSImage *overlayColor = [[NSImage alloc] initWithSize:currentIcon.size];
 						[overlayColor lockFocus];
 							[(self.pressedIcon == i ? [NSColor blackColor] : [NSColor whiteColor]) set];
@@ -430,12 +434,14 @@
 						[currentIcon unlockFocus];
 						
 						[overlayColor release];
+					} else {
+						currentIcon = [[iconSet objectAtIndex:i] objectForKey:@"image"];
 					}
 					
 					[currentIcon compositeToPoint:NSMakePoint(lastDrawPoint,3) operation:NSCompositeSourceOver fraction:opacityValue];
 
 					lastDrawPoint += currentIcon.size.width + 4.0;
-					[currentIcon release];
+					if (wasCopied) [currentIcon release];
 				}
 			}
 		}
