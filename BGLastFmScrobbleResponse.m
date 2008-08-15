@@ -25,6 +25,7 @@
 -(id)initWithScrobbleResponseString:(NSString *)aString {
 	self = [super init];
 	if (self != nil) {
+		NSLog(@"%@",aString);
 		responseLines = [[aString componentsSeparatedByString:@"\n"] retain];
 
 		NSString *statusLine = [responseLines objectAtIndex:0];

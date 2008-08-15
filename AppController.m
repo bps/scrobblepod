@@ -26,6 +26,8 @@
 
 #import "NSString+UrlEncoding.h"
 
+//#import "BGConnectionCaller.h"
+
 @implementation AppController
 
 -(IBAction)showWaitPanel:(id)sender {
@@ -108,6 +110,10 @@ nil] ];
 	[currentSongMenuItem setView:containerView];
 	[containerView addSubview:infoView];
 	
+	if (![self cacheFileExists]) {
+		[self primeSongPlayCache];
+	}
+	
 //	[resizingMenuItem setView:[[[BGResizingMenuItemView alloc] initWithFrame:NSMakeRect(0,0,containerView.frame.size.width,20)] autorelease] ];
 	
 	NSString *storedDateString = [defaults valueForKey:BGPrefLastScrobbled];
@@ -126,7 +132,52 @@ nil] ];
 	NSNotificationCenter *workspaceNotificationCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
     [workspaceNotificationCenter addObserver:self selector:@selector(workspaceDidLaunchApplication:) name:NSWorkspaceDidLaunchApplicationNotification object:nil];
     [workspaceNotificationCenter addObserver:self selector:@selector(workspaceDidTerminateApplication:) name:NSWorkspaceDidTerminateApplicationNotification object:nil];
+	
+//	NSURLRequest *theRequest=[NSURLRequest requestWithURL: [NSURL URLWithString:@"http://www.apple.com/"]
+//											  cachePolicy: NSURLRequestUseProtocolCachePolicy
+//										  timeoutInterval: 60.0];
+	
+//	BGConnectionCaller *cc = [[BGConnectionCaller alloc] init];
+//		[cc startRequest:theRequest withDelegate:self];
+//	[cc release];
 }
+
+-(void)primeSongPlayCache {
+	BGTrackCollector *collector = [[BGTrackCollector alloc] init];
+		NSArray *allTracks = [collector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:[[NSCalendarDate date] dateByAddingYears:-5 months:0 days:0 hours:0 minutes:0 seconds:0] includingPodcasts:YES includingVideo:YES ignoringComment:@"" withMinimumDuration:30];
+	[collector release];
+	
+	NSMutableDictionary *primedCache = [[NSMutableDictionary alloc] initWithCapacity:allTracks.count];
+	
+	BGLastFmSong *currentSong;
+	for (currentSong in allTracks) {
+		[primedCache setObject:[NSNumber numberWithInt:currentSong.playCount] forKey:currentSong.uniqueIdentifier];
+	}
+	
+	[primedCache writeToFile:[self pathForCachedDatabase] atomically:YES]; // DISABLE TEMPORARILY SO THAT WE ACTUALLY HAVE SOME EXTRA PLAYS
+	
+	[primedCache release];
+}
+
+-(NSString *)pathForCachedDatabase { //Method from CocoaDevCentral.com
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+	NSString *folder = @"~/Library/Application Support/ScrobblePod/";
+	folder = [folder stringByExpandingTildeInPath];
+
+	if ([fileManager fileExistsAtPath: folder] == NO) [fileManager createDirectoryAtPath: folder attributes: nil];
+	
+	NSString *fileName = @"PlayCountDB.xml";
+	return [folder stringByAppendingPathComponent: fileName]; 
+}
+
+-(BOOL)cacheFileExists {
+	return [[NSFileManager defaultManager] fileExistsAtPath:[self pathForCachedDatabase]];
+}
+
+//-(void)receivedData:(NSData *)theData {
+//	NSLog(@"The data was %d bytes long",[theData length]);
+//}
 
 -(void)menuDidClose:(NSMenu *)menu {
 	[(StatusItemView *)statusItem.view setSelected:NO];
@@ -481,16 +532,15 @@ nil] ];
 	NSCalendarDate *applescriptInputDateString = [NSCalendarDate dateWithString:lastScrobbleDateString calendarFormat:DATE_FORMAT_STRING];// descriptionWithCalendarFormat:DATE_FORMAT_STRING];
 	
 	BGTrackCollector *trackCollector = [[BGTrackCollector alloc] init];
-		NSArray *allRecentTracks = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
+		NSArray *recentTracksSimple = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
 	[trackCollector release];
 	
 	// Calculate extra plays, and insert them into recent songs array
-	/*BGMultipleSongPlayManager *multiPlayManager = [[BGMultipleSongPlayManager alloc] init];
+	BGMultipleSongPlayManager *multiPlayManager = [[BGMultipleSongPlayManager alloc] init];
 		NSArray *allRecentTracks = [multiPlayManager completeSongListForRecentTracks:recentTracksSimple sinceDate:applescriptInputDateString];
 	[multiPlayManager release];
 	
-	[recentTracksSimple release];*/
-	[allRecentTracks autorelease];
+	[recentTracksSimple release];
 	
 	NSLog(@"GOT ALL RECENT TRACKS:\n%@",allRecentTracks);
 	

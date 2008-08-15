@@ -13,13 +13,13 @@
 
 -(NSArray *)completeSongListForRecentTracks:(NSArray *)recentTracks sinceDate:(NSCalendarDate *)theDate {
 	NSMutableDictionary *cachedDatabase = [[NSDictionary dictionaryWithContentsOfFile:[self pathForCachedDatabase]] mutableCopy];
-	if (!cachedDatabase) cachedDatabase = [NSMutableDictionary new];
+	if (!cachedDatabase) cachedDatabase = [[NSMutableDictionary alloc] initWithCapacity:0];
 	
 	int lastScrobbleTime = [theDate timeIntervalSinceReferenceDate];
 	
 	// 2 lines below used for finding initial gaps
 	int completionTimeOfPreviousSong = lastScrobbleTime;
-	NSMutableArray *gapList = [NSMutableArray new];
+	NSMutableArray *gapList = [[NSMutableArray alloc] initWithCapacity:10];
 	
 	BGLastFmSong *currentSong;
 	for (currentSong in recentTracks) {
@@ -64,7 +64,7 @@
 
 	}
 	
-	NSMutableArray *extraPlayCopies = [NSMutableArray new];
+	NSMutableArray *extraPlayCopies = [[NSMutableArray alloc] init];
 	BOOL spotWasFound = YES;
 	while (spotWasFound) {
 		spotWasFound = NO;
@@ -115,6 +115,8 @@
 		if (extraPlaysStillExist == NO) spotWasFound = NO;
 	}
 	
+	[gapList release];
+	
 	[cachedDatabase writeToFile:[self pathForCachedDatabase] atomically:YES]; // DISABLE TEMPORARILY SO THAT WE ACTUALLY HAVE SOME EXTRA PLAYS
 	[cachedDatabase release];
 	
@@ -122,6 +124,9 @@
 	
 	[combinedArray addObjectsFromArray:recentTracks];
 	[combinedArray addObjectsFromArray:extraPlayCopies];
+	
+	[extraPlayCopies release];
+	
 	NSArray *sortedArray = [combinedArray sortedArrayUsingSelector:@selector(compareLastPlayedDate:)];
 	return sortedArray;
 }
@@ -136,6 +141,10 @@
 	
 	NSString *fileName = @"PlayCountDB.xml";
 	return [folder stringByAppendingPathComponent: fileName]; 
+}
+
+-(BOOL)cacheFileExists {
+	return [[NSFileManager defaultManager] fileExistsAtPath:[self pathForCachedDatabase]];
 }
 
 @end

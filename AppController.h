@@ -53,6 +53,9 @@
 	IBOutlet NSPanel *authorizationWaitPanel;
 }
 
+-(NSString *)pathForCachedDatabase;
+-(BOOL)cacheFileExists;
+
 -(IBAction)showWaitPanel:(id)sender;
 
 @property (retain) NSArray *tagAutocompleteList;

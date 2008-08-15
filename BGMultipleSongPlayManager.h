@@ -15,5 +15,6 @@
 
 -(NSArray *)completeSongListForRecentTracks:(NSArray *)recentTracks sinceDate:(NSCalendarDate *)theDate;
 -(NSString *)pathForCachedDatabase;
+-(BOOL)cacheFileExists;
 
 @end
