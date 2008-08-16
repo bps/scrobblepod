@@ -73,7 +73,6 @@
 		B599338D0E06501B005A84C8 /* rec_off.png in Resources */ = {isa = PBXBuildFile; fileRef = B599338A0E06501B005A84C8 /* rec_off.png */; };
 		B599338E0E06501B005A84C8 /* rec_on.png in Resources */ = {isa = PBXBuildFile; fileRef = B599338B0E06501B005A84C8 /* rec_on.png */; };
 		B5BB72A00BFC55C500190196 /* UKLoginItemRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = B5BB729E0BFC55C500190196 /* UKLoginItemRegistry.m */; };
-		B5BD16810E5584820004614A /* BGConnectionCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = B5BD16800E5584820004614A /* BGConnectionCaller.m */; };
 		B5BD7C820BBCDC6300EA5B29 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5BD7C810BBCDC6300EA5B29 /* AppController.m */; };
 		B5BD7CF10BBD0DA800EA5B29 /* bubbles.aif in Resources */ = {isa = PBXBuildFile; fileRef = B5BD7CF00BBD0DA800EA5B29 /* bubbles.aif */; };
 		B5CA13960D7235C10059C730 /* History.tiff in Resources */ = {isa = PBXBuildFile; fileRef = B5CA13950D7235C10059C730 /* History.tiff */; };
@@ -209,8 +208,6 @@
 		B599338B0E06501B005A84C8 /* rec_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_on.png; sourceTree = "<group>"; };
 		B5BB729D0BFC55C500190196 /* UKLoginItemRegistry.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UKLoginItemRegistry.h; sourceTree = "<group>"; };
 		B5BB729E0BFC55C500190196 /* UKLoginItemRegistry.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = UKLoginItemRegistry.m; sourceTree = "<group>"; };
-		B5BD167F0E5584820004614A /* BGConnectionCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGConnectionCaller.h; sourceTree = "<group>"; };
-		B5BD16800E5584820004614A /* BGConnectionCaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGConnectionCaller.m; sourceTree = "<group>"; };
 		B5BD7C800BBCDC6300EA5B29 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		B5BD7C810BBCDC6300EA5B29 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		B5BD7CF00BBD0DA800EA5B29 /* bubbles.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = bubbles.aif; sourceTree = "<group>"; };
@@ -278,8 +275,6 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				B5BD167F0E5584820004614A /* BGConnectionCaller.h */,
-				B5BD16800E5584820004614A /* BGConnectionCaller.m */,
 				B56DC4CB0E0122DB008CAA60 /* MultiPlay */,
 				B5F363950BE41753004DB2EF /* Main Classes */,
 				B52CE50F0C5AB1AA007090A7 /* LastFm */,
@@ -745,7 +740,6 @@
 				B55B7B7F0DE53244004A6DFC /* NSDictionary+ExclusionTest.m in Sources */,
 				B56DC4B40E011CC1008CAA60 /* BGMultipleSongPlayManager.m in Sources */,
 				B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */,
-				B5BD16810E5584820004614A /* BGConnectionCaller.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
