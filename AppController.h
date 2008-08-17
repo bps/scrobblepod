@@ -55,6 +55,7 @@
 
 -(NSString *)pathForCachedDatabase;
 -(BOOL)cacheFileExists;
+-(void)primeSongPlayCache;
 
 -(IBAction)showWaitPanel:(id)sender;
 

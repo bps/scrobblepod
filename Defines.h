@@ -12,6 +12,7 @@
 	#define BGPrefShouldIgnoreVideo @"IgnoreVideo"
 	#define BGPrefShouldIgnoreShort @"IgnoreShort"
 	#define BGPrefIgnoreShortLength @"IgnoreShortLength"
+	#define BGPrefShouldDoMultiPlay @"DoMultiPlay"
 	
 	#define BGPrefWantOldIcon @"WantOldIcon"
 

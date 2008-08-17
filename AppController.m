@@ -78,6 +78,7 @@
 		[NSNumber numberWithBool:YES],BGPref_Growl_ScrobbleFail,
 		[NSNumber numberWithBool:YES],BGPref_Growl_ScrobbleDecisionChanged,
 		[NSNumber numberWithBool:NO],BGPrefWantOldIcon,
+		[NSNumber numberWithBool:NO],BGPrefShouldDoMultiPlay,
 		@"~/Music/iTunes/iTunes Music Library.xml",BGPrefXmlLocation,
 nil] ];
 
@@ -132,14 +133,6 @@ nil] ];
 	NSNotificationCenter *workspaceNotificationCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
     [workspaceNotificationCenter addObserver:self selector:@selector(workspaceDidLaunchApplication:) name:NSWorkspaceDidLaunchApplicationNotification object:nil];
     [workspaceNotificationCenter addObserver:self selector:@selector(workspaceDidTerminateApplication:) name:NSWorkspaceDidTerminateApplicationNotification object:nil];
-	
-//	NSURLRequest *theRequest=[NSURLRequest requestWithURL: [NSURL URLWithString:@"http://www.apple.com/"]
-//											  cachePolicy: NSURLRequestUseProtocolCachePolicy
-//										  timeoutInterval: 60.0];
-	
-//	BGConnectionCaller *cc = [[BGConnectionCaller alloc] init];
-//		[cc startRequest:theRequest withDelegate:self];
-//	[cc release];
 }
 
 -(void)primeSongPlayCache {
@@ -535,14 +528,20 @@ nil] ];
 		NSArray *recentTracksSimple = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
 	[trackCollector release];
 	
+	NSArray *allRecentTracks;
 	// Calculate extra plays, and insert them into recent songs array
-	BGMultipleSongPlayManager *multiPlayManager = [[BGMultipleSongPlayManager alloc] init];
-		NSArray *allRecentTracks = [multiPlayManager completeSongListForRecentTracks:recentTracksSimple sinceDate:applescriptInputDateString];
-	[multiPlayManager release];
+	if ([defaults boolForKey:BGPrefShouldDoMultiPlay]) {
+		BGMultipleSongPlayManager *multiPlayManager = [[BGMultipleSongPlayManager alloc] init];
+		allRecentTracks = [multiPlayManager completeSongListForRecentTracks:recentTracksSimple sinceDate:applescriptInputDateString];
+		[multiPlayManager release];
+	} else {
+		allRecentTracks = recentTracksSimple;
+	}
 	
-	[recentTracksSimple release];
+	[recentTracksSimple autorelease];
 	
-	NSLog(@"GOT ALL RECENT TRACKS:\n%@",allRecentTracks);
+	NSLog(@"Using multi-play: %@",([defaults boolForKey:BGPrefShouldDoMultiPlay] ? @"Yes" : @"No"));
+	NSLog(@"Got all recent tracks:\n%@",allRecentTracks);
 	
 	int recentTracksCount = allRecentTracks.count;
 	
@@ -592,7 +591,7 @@ nil] ];
 						startFromHandshake = YES;
 					} else {
 						if (scrobbleAttempts==1) {
-							[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FailedScrobbling andTitle:@"Tracks could not be scrobbled" andDescription:@"Posting most likely timed out" andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
+							//[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FailedScrobbling andTitle:@"Tracks could not be scrobbled" andDescription:@"Scrobbling probably timed out" andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
 							[prefController addHistoryWithSuccess:NO andDate:[NSDate date] andDescription:@"Scrobble failed likely due to timeout"];
 						}
 						startFromHandshake = YES;
