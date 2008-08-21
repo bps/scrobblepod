@@ -248,6 +248,10 @@ nil] ];
 
 -(void)podWatcherMountedPod:(NSNotification *)notification {
 	[[BGScrobbleDecisionManager sharedManager] refreshDecisionAndNotifyIfChanged:YES];
+	if (infoView) {
+		[infoView generateStatusImage];
+		[infoView setNeedsDisplay:YES];
+	}
 }
 
 -(void)preferencesControllerUpdatedCredentials:(NSNotification *)notification {
