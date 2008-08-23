@@ -76,7 +76,11 @@ static BGScrobbleDecisionManager *sharedDecisionManager = nil;
 #pragma mark Decision Making
 
 -(BOOL)shouldScrobble {
-	self.cachedOverallDecision = (self.isDecisionMadeAutomtically ? [self shouldScrobbleAuto] : self.usersManualChoice );
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:BGPrefUsePodFreshnessInterval]) {
+		self.cachedOverallDecision = (self.isDecisionMadeAutomtically ? [self shouldScrobbleAuto] : self.usersManualChoice );
+	} else {
+		self.cachedOverallDecision = YES;
+	}
 	return self.cachedOverallDecision;
 }
 
