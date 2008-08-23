@@ -25,6 +25,8 @@
 
 	#define BGNotificationPodMounted @"iPodWatcher_PodMounted"
 	#define BGLoginChangedNotification @"LoginChangedNotification"
+	
+	#define BGScrobbleDecisionChangedNotification @"BGScrobbleDecisionChangedNotification"
 
 	#define BGOperationType_Song 0
 	#define BGOperationType_Artist 1

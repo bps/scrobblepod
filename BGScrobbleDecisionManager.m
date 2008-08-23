@@ -131,6 +131,7 @@ static BGScrobbleDecisionManager *sharedDecisionManager = nil;
 	}
 	self.cachedOverallDecision = newDecision;
 	firstRefresh = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:BGScrobbleDecisionChangedNotification object:nil];
 }
 
 #pragma mark Timer

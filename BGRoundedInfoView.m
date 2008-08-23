@@ -1,6 +1,7 @@
 #import "BGRoundedInfoView.h"
 #import "NSBezierPath+RoundedRect.h"
 #import "BGScrobbleDecisionManager.h"
+#import "Defines.h"
 
 #pragma mark Fixed Values
 
@@ -61,6 +62,8 @@
 		gradientFill = [[CTGradient unifiedNormalGradient] retain];
 		[self setStringValue:@"BGRoundedView: Please set string"];
 		[self createIconSet];		
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(decisionChangedNotificationReceived:) name:BGScrobbleDecisionChangedNotification object:nil];
 	}
 	return self;
 }
@@ -78,6 +81,13 @@
 	[iconSet release];
 	[scrollTimer invalidate];
 	[super dealloc];
+}
+
+-(void)decisionChangedNotificationReceived:(NSNotification *)notification {
+	[self generateStatusImage];
+	if ([self window]) {
+		[self setNeedsDisplay:YES];
+	}
 }
 
 -(void)createIconSet {
