@@ -125,6 +125,7 @@ nil] ];
 	NSNotificationCenter *defaultNotificationCenter = [NSNotificationCenter defaultCenter];
 	[defaultNotificationCenter addObserver:self selector:@selector(podWatcherMountedPod:) name:BGNotificationPodMounted object:nil];
 	[defaultNotificationCenter addObserver:self selector:@selector(preferencesControllerUpdatedCredentials:) name:BGLoginChangedNotification object:nil];
+	[defaultNotificationCenter addObserver:self selector:@selector(xmlFileChanged:) name:XMLChangedNotification object:nil];
 
 	[[iTunesWatcher sharedManager] setDelegate:self];
 	
@@ -133,6 +134,10 @@ nil] ];
 	NSNotificationCenter *workspaceNotificationCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
     [workspaceNotificationCenter addObserver:self selector:@selector(workspaceDidLaunchApplication:) name:NSWorkspaceDidLaunchApplicationNotification object:nil];
     [workspaceNotificationCenter addObserver:self selector:@selector(workspaceDidTerminateApplication:) name:NSWorkspaceDidTerminateApplicationNotification object:nil];
+	
+	 xmlWatcher = [[FileWatcher alloc] init];
+	 [xmlWatcher startWatchingXMLFile];
+	 NSLog(@"XML Path: %@",[xmlWatcher fullXmlPath]);
 }
 
 -(void)primeSongPlayCache {
@@ -187,9 +192,6 @@ nil] ];
 	
 	[self setAppropriateRoundedString];
 
-	[[UKKQueue sharedFileWatcher] setDelegate:self];
-	[self applyForXmlChangeNotification];
-	
 	// let the user know if scrobbling is enabled
 	[self performSelector:@selector(podWatcherMountedPod:) withObject:nil afterDelay:10.0];
 	
@@ -240,6 +242,8 @@ nil] ];
 	[nowPlayingDelay release];
 	
 	[tagAutocompleteList release];
+	
+	[xmlWatcher release];
 		
 	[super dealloc];
 }
@@ -248,6 +252,10 @@ nil] ];
 
 -(void)podWatcherMountedPod:(NSNotification *)notification {
 	[[BGScrobbleDecisionManager sharedManager] refreshDecisionAndNotifyIfChanged:YES];
+}
+
+-(void)xmlFileChanged:(NSNotification *)notification {
+	[self detachScrobbleThreadWithoutConsideration:NO];
 }
 
 -(void)preferencesControllerUpdatedCredentials:(NSNotification *)notification {
@@ -291,16 +299,6 @@ nil] ];
 		[nowPlayingDelay invalidate];
 		[nowPlayingDelay release];
 	}*/
-}
-
--(void)applyForXmlChangeNotification {
-	[[UKKQueue sharedFileWatcher] addPathToQueue:[self fullXmlPath] notifyingAbout:UKKQueueNotifyAboutDelete];
-}
-
--(void)watcher:(id<UKFileWatcher>)watcher receivedNotification:(NSString *)notification forPath:(NSString *)path {
-	[self detachScrobbleThreadWithoutConsideration:NO];
-	[[UKKQueue sharedFileWatcher] removePathFromQueue:[self fullXmlPath]];
-	[self applyForXmlChangeNotification];
 }
 
 -(NSString *)fullXmlPath {

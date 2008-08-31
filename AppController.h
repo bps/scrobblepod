@@ -4,10 +4,10 @@
 #import "PreferencesController.h"
 #import <Sparkle/SUUpdater.h>
 #import "BGRoundedInfoView.h"
-#import "UKKQueue.h"
 #import "BGLastFmSong.h"
 #import "BGPointWindow.h"
 #import "iTunesWatcher.h"
+#import "FileWatcher.h"
 
 @interface AppController : NSObject <TunesWatcherDelegate> {
 	NSStatusItem *statusItem;
@@ -51,6 +51,8 @@
 	
 	IBOutlet NSWindow *welcomeWindow;
 	IBOutlet NSPanel *authorizationWaitPanel;
+	
+	FileWatcher *xmlWatcher;
 }
 
 -(NSString *)pathForCachedDatabase;
@@ -81,8 +83,6 @@
 - (void)workspaceDidTerminateApplication:(NSNotification *)notification;
 
 #pragma mark XML Notifications
--(void)applyForXmlChangeNotification;
--(void)watcher:(id<UKFileWatcher>)watcher receivedNotification:(NSString *)notification forPath:(NSString *)path;//XML
 -(NSString *)fullXmlPath;
 -(IBAction)quit:(id)sender;
 
@@ -94,6 +94,7 @@
 -(void)postNowPlayingNotificationForSong:(BGLastFmSong *)nowPlayingSong;
 -(void)detachNowPlayingThread:(NSTimer *)fromTimer;
 -(void)playScrobblingSound;
+-(void)xmlFileChanged:(NSNotification *)notification;
 
 #pragma mark Secondary Last.fm Methods
 -(IBAction)goToUserProfilePage:(id)sender;

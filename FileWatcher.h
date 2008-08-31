@@ -7,21 +7,34 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "UKKQueue.h"
 
 @interface FileWatcher : NSObject {
-
+	BOOL xmlFileIsLocal;
+	NSTimer *pollTimer;
+	NSDate *lastModificationDate;
 }
 
-+(FileWatcher *)sharedManager;
-+(id)allocWithZone:(NSZone *)zone;
--(id)copyWithZone:(NSZone *)zone;
--(id)retain;
--(unsigned)retainCount;
--(void)release;
--(id)autorelease;
+@property (retain) NSDate *lastModificationDate;
+@property (assign) BOOL xmlFileIsLocal;
 
 - (id)init;
 
+#pragma mark General Methods
+-(NSString *)fullXmlPath;
+-(void)updateLocationFlag;
+-(void)postXMLChangeMessage;
+-(void)startWatchingXMLFile;
+-(void)stopWatchingXMLFile;
+
+#pragma mark Poll-Related Methods
+-(void)startPollTimer;
+-(void)stopPollTimer;
+-(void)pollXMLFile:(NSTimer *)timer;
+
+#pragma mark UKKQueue-Related Methods
+-(void)applyForXmlChangeNotification;
+-(void)watcher:(id<UKFileWatcher>)watcher receivedNotification:(NSString *)notification forPath:(NSString *)path;//XML
+-(void)stopEventBasedMonitoring;
 
 @end

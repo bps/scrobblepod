@@ -34,6 +34,8 @@
 
 	#define BGPrefWantNowPlaying @"PostNowPlaying"
 	#define BGPrefXmlLocation @"XMLLocation"
+	
+	#define XMLChangedNotification @"XMLChangedNotification"
 
 #pragma mark Growl Keys
 	#define SP_Growl_StartedScrobbling @"Started Scrobbling"
