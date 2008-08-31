@@ -72,6 +72,7 @@
 		B599338C0E06501B005A84C8 /* rec_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = B59933890E06501B005A84C8 /* rec_normal.png */; };
 		B599338D0E06501B005A84C8 /* rec_off.png in Resources */ = {isa = PBXBuildFile; fileRef = B599338A0E06501B005A84C8 /* rec_off.png */; };
 		B599338E0E06501B005A84C8 /* rec_on.png in Resources */ = {isa = PBXBuildFile; fileRef = B599338B0E06501B005A84C8 /* rec_on.png */; };
+		B5A2A8EA0E6A2589007591F5 /* FileWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A2A8E90E6A2589007591F5 /* FileWatcher.m */; };
 		B5BB72A00BFC55C500190196 /* UKLoginItemRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = B5BB729E0BFC55C500190196 /* UKLoginItemRegistry.m */; };
 		B5BD7C820BBCDC6300EA5B29 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5BD7C810BBCDC6300EA5B29 /* AppController.m */; };
 		B5BD7CF10BBD0DA800EA5B29 /* bubbles.aif in Resources */ = {isa = PBXBuildFile; fileRef = B5BD7CF00BBD0DA800EA5B29 /* bubbles.aif */; };
@@ -206,6 +207,8 @@
 		B59933890E06501B005A84C8 /* rec_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_normal.png; sourceTree = "<group>"; };
 		B599338A0E06501B005A84C8 /* rec_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_off.png; sourceTree = "<group>"; };
 		B599338B0E06501B005A84C8 /* rec_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_on.png; sourceTree = "<group>"; };
+		B5A2A8E80E6A2589007591F5 /* FileWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileWatcher.h; sourceTree = "<group>"; };
+		B5A2A8E90E6A2589007591F5 /* FileWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileWatcher.m; sourceTree = "<group>"; };
 		B5BB729D0BFC55C500190196 /* UKLoginItemRegistry.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UKLoginItemRegistry.h; sourceTree = "<group>"; };
 		B5BB729E0BFC55C500190196 /* UKLoginItemRegistry.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = UKLoginItemRegistry.m; sourceTree = "<group>"; };
 		B5BD7C800BBCDC6300EA5B29 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
@@ -577,6 +580,8 @@
 				B54CD6EE0DBDD7A500B2F077 /* StatusItemView.m */,
 				B516CFEA0DDBE72700F496BF /* BGScrobbleDecisionManager.h */,
 				B516CFEB0DDBE72700F496BF /* BGScrobbleDecisionManager.m */,
+				B5A2A8E80E6A2589007591F5 /* FileWatcher.h */,
+				B5A2A8E90E6A2589007591F5 /* FileWatcher.m */,
 			);
 			name = "Main Classes";
 			sourceTree = "<group>";
@@ -740,6 +745,7 @@
 				B55B7B7F0DE53244004A6DFC /* NSDictionary+ExclusionTest.m in Sources */,
 				B56DC4B40E011CC1008CAA60 /* BGMultipleSongPlayManager.m in Sources */,
 				B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */,
+				B5A2A8EA0E6A2589007591F5 /* FileWatcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
