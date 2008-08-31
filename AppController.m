@@ -237,10 +237,7 @@ nil] ];
 	[currentSessionKey release];
 	[currentPostUrl release];
 	[currentNowPlayingUrl release];
-	
-	[nowPlayingDelay invalidate];
-	[nowPlayingDelay release];
-	
+		
 	[tagAutocompleteList release];
 	
 	[xmlWatcher release];
@@ -287,7 +284,7 @@ nil] ];
 	NSString *songTitleString = [NSString stringWithFormat:@"%@: %@ ",anArtist,aName];
 	[infoView setStringValue:songTitleString isActive:YES];
 
-	[self startNowPlayingTimer];
+	[self detachNowPlayingThread];
 	
 	if ([arrowWindow isVisible]) [self updateTagLabel:self];
 }
@@ -295,10 +292,6 @@ nil] ];
 -(void)iTunesWatcherDidDetectSongStopped {
 	[self setAppropriateRoundedString];
 	if ([arrowWindow isVisible]) [arrowWindow close];
-/*	if (nowPlayingDelay!=nil) {
-		[nowPlayingDelay invalidate];
-		[nowPlayingDelay release];
-	}*/
 }
 
 -(NSString *)fullXmlPath {
@@ -626,6 +619,7 @@ nil] ];
 	}
 	
 	[self performSelectorOnMainThread:@selector(setIsScrobblingWithNumber:) withObject:[NSNumber numberWithBool:NO] waitUntilDone:YES];// setIsScrobbling:NO];
+	[self performSelectorOnMainThread:@selector(detachNowPlayingThread) withObject:nil waitUntilDone:YES];
 	
 	[pool release];
 }
@@ -638,16 +632,7 @@ nil] ];
 	[scrobbleSound play];
 }
 
--(void)startNowPlayingTimer {
-	if (nowPlayingDelay!=nil) {
-		[nowPlayingDelay invalidate];
-		[nowPlayingDelay release];
-	}
-	nowPlayingDelay = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(detachNowPlayingThread:) userInfo:nil repeats:NO];
-	[nowPlayingDelay retain];
-}
-
--(void)detachNowPlayingThread:(NSTimer *)fromTimer {
+-(void)detachNowPlayingThread {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (!isPostingNP && [defaults boolForKey:BGPrefWantNowPlaying]) {
 		BGLastFmSong *currentPlayingSong = [iTunesWatcher sharedManager].currentSong;

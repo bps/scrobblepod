@@ -44,8 +44,6 @@
 	NSURL *currentPostUrl;
 	NSURL *currentNowPlayingUrl;
 	
-	NSTimer *nowPlayingDelay;
-	
 	NSArray *tagAutocompleteList;
 	NSArray *friendsAutocompleteList;
 	
@@ -90,9 +88,8 @@
 -(IBAction)manualScrobble:(id)sender;
 -(void)detachScrobbleThreadWithoutConsideration:(BOOL)passThrough;
 -(void)postScrobble;
--(void)startNowPlayingTimer;
 -(void)postNowPlayingNotificationForSong:(BGLastFmSong *)nowPlayingSong;
--(void)detachNowPlayingThread:(NSTimer *)fromTimer;
+-(void)detachNowPlayingThread;
 -(void)playScrobblingSound;
 -(void)xmlFileChanged:(NSNotification *)notification;
 
