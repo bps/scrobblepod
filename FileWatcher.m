@@ -10,6 +10,7 @@
 	if (self != nil) {
 		self.lastModificationDate = [NSDate date];
 		[self updateLocationFlag];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(xmlLocationChanged:) name:BGXmlLocationChangedNotification object:nil];
 	}
 	return self;
 }
@@ -17,12 +18,21 @@
 -(void)dealloc {
 	self.lastModificationDate = nil;
 	[self stopWatchingXMLFile];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
 
 #pragma mark General Methods
 
 @synthesize xmlFileIsLocal;
+
+-(void)xmlLocationChanged:(NSNotification *)notification {
+	NSLog(@"XML Location Changed: %@",[self fullXmlPath]);
+	[self stopWatchingXMLFile];
+	[self updateLocationFlag];
+	[self startWatchingXMLFile];
+	[self postXMLChangeMessage];
+}
 
 -(NSString *)fullXmlPath {
 	return [[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefXmlLocation] stringByExpandingTildeInPath];

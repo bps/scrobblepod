@@ -564,8 +564,8 @@
 		B5F363950BE41753004DB2EF /* Main Classes */ = {
 			isa = PBXGroup;
 			children = (
-				B53F9BBD0D67E37D00CCC8F9 /* iTunes.h */,
 				B5F3627A0BE405DD004DB2EF /* Defines.h */,
+				B53F9BBD0D67E37D00CCC8F9 /* iTunes.h */,
 				B5BD7C800BBCDC6300EA5B29 /* AppController.h */,
 				B5BD7C810BBCDC6300EA5B29 /* AppController.m */,
 				B5CCE5C40BDCB6160086E373 /* PreferencesController.h */,

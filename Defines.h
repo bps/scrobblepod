@@ -27,6 +27,7 @@
 	#define BGLoginChangedNotification @"LoginChangedNotification"
 	
 	#define BGScrobbleDecisionChangedNotification @"BGScrobbleDecisionChangedNotification"
+	#define BGXmlLocationChangedNotification @"BGXmlLocationChangedNotification"
 
 	#define BGOperationType_Song 0
 	#define BGOperationType_Artist 1

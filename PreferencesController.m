@@ -125,9 +125,12 @@
 		contextInfo:nil];
 }
 
-- (void)filePanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+-(void)filePanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
 	[panel orderOut:nil];
-	if (returnCode == NSOKButton) [[NSUserDefaults standardUserDefaults] setObject:[panel filename] forKey:BGPrefXmlLocation];
+	if (returnCode == NSOKButton) {
+		[[NSUserDefaults standardUserDefaults] setObject:[panel filename] forKey:BGPrefXmlLocation];
+		[[NSNotificationCenter defaultCenter] postNotificationName:BGXmlLocationChangedNotification object:nil];
+	}
 }
 
 -(IBAction)setLoginStart:(id)sender {
