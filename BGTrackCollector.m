@@ -48,16 +48,31 @@
 
 			NSDictionary *trackStuff;
 			for (trackStuff in wantedTracksSorted) {
+				// track name
 				NSString *nameString = [trackStuff objectForKey:@"Name"];
 				if (!nameString) nameString = @"";
-				NSString *artistString = [trackStuff objectForKey:@"Artist"];
+				
+				// artist, using album artist where possible
+				NSString *artistString;
+				artistString = [trackStuff objectForKey:@"Album Artist"];
+				if (!artistString) artistString = [trackStuff objectForKey:@"Artist"];
 				if (!artistString) artistString = @"";
+				
+				// album name
 				NSString *albumString = [trackStuff objectForKey:@"Album"];
 				if (!albumString) albumString = @"";
+				
+				// track duration
 				NSString *theduration = [NSString stringWithFormat:@"%i",(int)([[trackStuff objectForKey:@"Total Time"] intValue]/1000)];
+				
+				// played date
 				NSString *playedString = [[trackStuff objectForKey:@"Play Date UTC"] descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S" timeZone:nil locale:nil];
 				NSCalendarDate *playedDate = [NSCalendarDate dateWithString:playedString calendarFormat:@"%Y-%m-%d %H:%M:%S"];
+				
+				// play count
 				int playCount = [[trackStuff objectForKey:@"Play Count"] intValue];
+				
+				// unique identifier
 				NSString *uniqueIdentifier = [[trackStuff objectForKey:@"Track ID"] stringValue];
 				
 				BGLastFmSong *newSong;
