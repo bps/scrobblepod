@@ -18,14 +18,16 @@
 		xmlPath = [@"~/Music/iTunes/iTunes Music Library.xml" stringByExpandingTildeInPath];
 	}
 
+	NSLog(@"Starting XML contents read");
 	NSDictionary *itunesLibrary = [NSDictionary dictionaryWithContentsOfFile:xmlPath];
-	
+	NSLog(@"Completed XML contents read");
+		
 	//check to see if library load was successful
 	
 	NSMutableArray *resultSongArray = [NSMutableArray new];
 	
 	if (itunesLibrary) {
-	
+		NSLog(@"Parsing XML contents");
 		NSDictionary *itunesTracks = [itunesLibrary objectForKey:@"Tracks"];
 		
 		if (itunesTracks) {

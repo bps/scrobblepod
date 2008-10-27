@@ -53,6 +53,7 @@
 }
 
 -(void)startWatchingXMLFile {
+	NSLog(@"Starting to watch XML file");
 	if (self.xmlFileIsLocal) {
 		NSLog(@"Starting watching using Event-Based method");
 		[self applyForXmlChangeNotification];
@@ -63,6 +64,7 @@
 }
 
 -(void)stopWatchingXMLFile {
+	NSLog(@"Stopping watch of XML file");
 	if (self.xmlFileIsLocal) {
 		[self stopEventBasedMonitoring];
 	} else {
@@ -77,13 +79,16 @@
 -(void)startPollTimer {
 	[self stopPollTimer];
 	pollTimer = [[NSTimer scheduledTimerWithTimeInterval:POLL_INTERVAL target:self selector:@selector(pollXMLFile:) userInfo:nil repeats:YES] retain];
+	NSLog(@"Starting XML poll timer");
 }
 
 -(void)stopPollTimer {
 	if (pollTimer!=nil) [pollTimer invalidate];
+	NSLog(@"Stopping XML poll timer");
 }
 
 -(void)pollXMLFile:(NSTimer *)timer {
+	NSLog(@"Polling XML File... now!");
 	NSDictionary *fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:[self fullXmlPath] traverseLink:YES];
 	NSDate *newModDate = [fileAttributes objectForKey:NSFileModificationDate];
 	if (newModDate) {
@@ -92,22 +97,25 @@
 			[self postXMLChangeMessage];
 		}
 	} else {
-		(@"Couldn't get XML file modification date");
+		NSLog(@"Couldn't get XML file modification date");
 	}
 }
 
 #pragma mark UKKQueue-Related Methods
 
 -(void)applyForXmlChangeNotification {
+	NSLog(@"Applying for KQueue Notification");
 	[[UKKQueue sharedFileWatcher] setDelegate:self];
 	[[UKKQueue sharedFileWatcher] addPathToQueue:[self fullXmlPath] notifyingAbout:UKKQueueNotifyAboutDelete];
 }
 
 -(void)stopEventBasedMonitoring {
+	NSLog(@"Deregistering from KQueue Notification");
 	[[UKKQueue sharedFileWatcher] removePathFromQueue:[self fullXmlPath]];
 }
 
 -(void)watcher:(id<UKFileWatcher>)watcher receivedNotification:(NSString *)notification forPath:(NSString *)path {
+	NSLog(@"Got KQueue Notification");
 	[self postXMLChangeMessage];
 	[self stopEventBasedMonitoring];
 	[self applyForXmlChangeNotification];

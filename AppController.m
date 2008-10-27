@@ -252,6 +252,7 @@ nil] ];
 }
 
 -(void)xmlFileChanged:(NSNotification *)notification {
+	NSLog(@"OMG! XML change!");
 	[self detachScrobbleThreadWithoutConsideration:NO];
 }
 
@@ -487,6 +488,7 @@ nil] ];
 
 -(void)detachScrobbleThreadWithoutConsideration:(BOOL)passThrough {
 	if (!isScrobbling) {
+		NSLog(@"Posting scrobbles");
 		BOOL shouldContinue = passThrough;
 		if (!passThrough) shouldContinue = [[BGScrobbleDecisionManager sharedManager] shouldScrobble];
 		if (shouldContinue) [NSThread detachNewThreadSelector:@selector(postScrobble) toTarget:self withObject:nil];
@@ -514,11 +516,13 @@ nil] ];
 
 	NSString *lastScrobbleDateString = 	[defaults valueForKey:BGPrefLastScrobbled];
 	NSCalendarDate *applescriptInputDateString = [NSCalendarDate dateWithString:lastScrobbleDateString calendarFormat:DATE_FORMAT_STRING];// descriptionWithCalendarFormat:DATE_FORMAT_STRING];
-	
+
+	NSLog(@"Collecting previously played tracks");	
 	BGTrackCollector *trackCollector = [[BGTrackCollector alloc] init];
 		NSArray *recentTracksSimple = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
 	[trackCollector release];
 	
+	NSLog(@"Assigning song list to variable");
 	NSArray *allRecentTracks;
 	// Calculate extra plays, and insert them into recent songs array
 	if ([defaults boolForKey:BGPrefShouldDoMultiPlay]) {
@@ -633,9 +637,12 @@ nil] ];
 }
 
 -(void)detachNowPlayingThread {
+	NSLog(@"Detaching now playing thread");
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (!isPostingNP && [defaults boolForKey:BGPrefWantNowPlaying]) {
+		NSLog(@"Getting current song details");
 		BGLastFmSong *currentPlayingSong = [iTunesWatcher sharedManager].currentSong;
+		NSLog(@"Posting song details to Last.fm Now Playing service");
 		[NSThread detachNewThreadSelector:@selector(postNowPlayingNotificationForSong:) toTarget:self withObject:currentPlayingSong];
 	}
 }
@@ -646,7 +653,7 @@ nil] ];
 	//////////////////////////////////////////////////////////
 	
 	[self setIsPostingNP:YES];
-
+	NSLog(@"Performing now playing code");
 	if (nowPlayingSong) {
 		
 		BOOL startFromHandshake = YES;
