@@ -641,9 +641,16 @@ nil] ];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (!isPostingNP && [defaults boolForKey:BGPrefWantNowPlaying]) {
 		NSLog(@"Getting current song details");
-		BGLastFmSong *currentPlayingSong = [iTunesWatcher sharedManager].currentSong;
-		NSLog(@"Posting song details to Last.fm Now Playing service");
-		[NSThread detachNewThreadSelector:@selector(postNowPlayingNotificationForSong:) toTarget:self withObject:currentPlayingSong];
+		iTunesWatcher *tunesWatcher = [iTunesWatcher sharedManager];
+		[tunesWatcher manuallyRetrieveCurrentSongInfo];
+		BGLastFmSong *currentPlayingSong = tunesWatcher.currentSong;
+		NSString *ignoreString = [[NSUserDefaults standardUserDefaults] stringForKey:BGPrefIgnoreCommentString];
+		if (currentPlayingSong.comment && ignoreString!=nil && [ignoreString length]>0 && [currentPlayingSong.comment rangeOfString:ignoreString].length==0) {
+			NSLog(@"Posting song details to Last.fm Now Playing service");
+			[NSThread detachNewThreadSelector:@selector(postNowPlayingNotificationForSong:) toTarget:self withObject:currentPlayingSong];
+		} else {
+			NSLog(@"Did not post Now Playing notification, as song is commented with exclusion string");
+		}
 	}
 }
 

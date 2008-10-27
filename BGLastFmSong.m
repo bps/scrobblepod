@@ -26,6 +26,7 @@
 	[title release];
 	[artist release];
 	[album release];
+	[comment release];
 	[lastPlayed release];
 	[uniqueIdentifier release];
 	[super dealloc];
@@ -56,6 +57,7 @@
 @synthesize title;
 @synthesize artist;
 @synthesize album;
+@synthesize comment;
 @synthesize lastPlayed;
 @synthesize length;
 @synthesize extraPlays;

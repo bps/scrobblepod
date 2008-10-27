@@ -104,7 +104,6 @@ static iTunesWatcher *sharedTunesManager = nil;
 -(void)handleSongChange:(NSTimer*)theTimer {
 	NSDictionary *playerInfo = [theTimer userInfo];
 	self.currentSongInfo = playerInfo;
-
 	if ([[playerInfo objectForKey:@"Player State"] isEqualToString:@"Playing"]) {
 		iTunesIsPlaying = YES;
 		NSString *trackName = [playerInfo objectForKey:@"Name"];
@@ -167,8 +166,8 @@ song is being played from a shared library.
 		if (iTunes.playerState == iTunesEPlSPlaying) {
 			iTunesIsPlaying = YES;
 			BGLastFmSong *manualSong = [[BGLastFmSong alloc] initWithTitle:currentTrack.name artist:currentTrack.artist album:currentTrack.album];
-			manualSong.length = currentTrack.duration;
-												  
+			manualSong.length        = currentTrack.duration;
+			manualSong.comment       = currentTrack.comment;
 			self.currentSong = manualSong;
 			[manualSong release];
 		} else {
