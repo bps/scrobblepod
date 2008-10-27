@@ -19,9 +19,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.50.7</string>
+	<string>0.50.8</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.50.7</string>
+	<string>0.50.8</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
@@ -31,6 +31,6 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>10.5</string>
 	<key>SUFeedURL</key>
-	<string>http://www.bengummer.net/scrobblepod/feed/</string>
+	<string>http://www.scrobblepod.com/appcast/</string>
 </dict>
 </plist>
