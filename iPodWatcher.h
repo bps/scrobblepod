@@ -26,6 +26,8 @@
 -(BOOL)isPodAtPath:(NSString *)testPath;
 
 -(BOOL)iPodDisconnectedSinceDate:(NSDate *)testDate;
+
+-(void)updateLastSyncDateWithNotification:(BOOL)shouldNotify;
 -(void)setLastSynched:(NSDate *)aDate;
 
 @end

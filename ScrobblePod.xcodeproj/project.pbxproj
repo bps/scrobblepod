@@ -97,6 +97,7 @@
 		B5EFC0D60D5C532C003C8C21 /* BGLastFMPasswordChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = B5EFC0D50D5C532C003C8C21 /* BGLastFMPasswordChecker.m */; };
 		B5F361F30BE3FF19004DB2EF /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F361F10BE3FF19004DB2EF /* SFHFKeychainUtils.m */; };
 		B5F362140BE40210004DB2EF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F362130BE40210004DB2EF /* Security.framework */; };
+		B5F504360EB7AD340035AF28 /* MobileDeviceSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F504350EB7AD340035AF28 /* MobileDeviceSupport.m */; };
 		B5F6B78D0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F6B78C0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m */; };
 /* End PBXBuildFile section */
 
@@ -251,6 +252,8 @@
 		B5F361F10BE3FF19004DB2EF /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
 		B5F362130BE40210004DB2EF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		B5F3627A0BE405DD004DB2EF /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
+		B5F504340EB7AD340035AF28 /* MobileDeviceSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileDeviceSupport.h; sourceTree = "<group>"; };
+		B5F504350EB7AD340035AF28 /* MobileDeviceSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobileDeviceSupport.m; sourceTree = "<group>"; };
 		B5F6B78B0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmRadioHandshakeResponse.h; sourceTree = "<group>"; };
 		B5F6B78C0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmRadioHandshakeResponse.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -589,6 +592,8 @@
 		B5F363960BE41782004DB2EF /* Mini Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B5F504340EB7AD340035AF28 /* MobileDeviceSupport.h */,
+				B5F504350EB7AD340035AF28 /* MobileDeviceSupport.m */,
 				B5DB312B0D6BE73A0084DC5B /* UKKQueue */,
 				B5CEA7930BFD9E75000C0500 /* LoginItemsAE.c */,
 				B5CEA78C0BFD9E48000C0500 /* LoginItemsAE.h */,
@@ -746,6 +751,7 @@
 				B56DC4B40E011CC1008CAA60 /* BGMultipleSongPlayManager.m in Sources */,
 				B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */,
 				B5A2A8EA0E6A2589007591F5 /* FileWatcher.m in Sources */,
+				B5F504360EB7AD340035AF28 /* MobileDeviceSupport.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
