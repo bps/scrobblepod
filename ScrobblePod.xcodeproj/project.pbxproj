@@ -48,6 +48,7 @@
 		B56692EF0D670D4C0044C622 /* love_on.png in Resources */ = {isa = PBXBuildFile; fileRef = B56692EB0D670D4C0044C622 /* love_on.png */; };
 		B56C42880EB845CB00D8B6C2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56C42870EB845CB00D8B6C2 /* Sparkle.framework */; };
 		B56C42980EB8466A00D8B6C2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B56C42870EB845CB00D8B6C2 /* Sparkle.framework */; };
+		B56C429E0EB848FE00D8B6C2 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = B56C429D0EB848FE00D8B6C2 /* dsa_pub.pem */; };
 		B56DC4B40E011CC1008CAA60 /* BGMultipleSongPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4B30E011CC1008CAA60 /* BGMultipleSongPlayManager.m */; };
 		B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4BD0E012038008CAA60 /* BGTimelineGap.m */; };
 		B572D2E20DADC4F1009B86C5 /* ScrobblePod512.icns in Resources */ = {isa = PBXBuildFile; fileRef = B572D2E10DADC4F1009B86C5 /* ScrobblePod512.icns */; };
@@ -176,6 +177,7 @@
 		B56692EA0D670D4C0044C622 /* love_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love_normal.png; sourceTree = "<group>"; };
 		B56692EB0D670D4C0044C622 /* love_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love_on.png; sourceTree = "<group>"; };
 		B56C42870EB845CB00D8B6C2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		B56C429D0EB848FE00D8B6C2 /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		B56DC4B20E011CC1008CAA60 /* BGMultipleSongPlayManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGMultipleSongPlayManager.h; sourceTree = "<group>"; };
 		B56DC4B30E011CC1008CAA60 /* BGMultipleSongPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGMultipleSongPlayManager.m; sourceTree = "<group>"; };
 		B56DC4BC0E012038008CAA60 /* BGTimelineGap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGTimelineGap.h; sourceTree = "<group>"; };
@@ -348,6 +350,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B56C429D0EB848FE00D8B6C2 /* dsa_pub.pem */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 				B5CCE6190BDCB8220086E373 /* Preferences.nib */,
 				B544D7AF0D7AD5B100CAB3A3 /* Images */,
@@ -701,6 +704,7 @@
 				B53AC8F30E0B75510033068D /* BlueArrow_Left.tif in Resources */,
 				B53AC8F40E0B75510033068D /* BlueArrow_Right.tif in Resources */,
 				B555F9180E29FBA600A0FB9A /* WelcomeBig.png in Resources */,
+				B56C429E0EB848FE00D8B6C2 /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
