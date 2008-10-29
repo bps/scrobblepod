@@ -47,6 +47,7 @@
 		B56692EE0D670D4C0044C622 /* love_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = B56692EA0D670D4C0044C622 /* love_normal.png */; };
 		B56692EF0D670D4C0044C622 /* love_on.png in Resources */ = {isa = PBXBuildFile; fileRef = B56692EB0D670D4C0044C622 /* love_on.png */; };
 		B56C42880EB845CB00D8B6C2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56C42870EB845CB00D8B6C2 /* Sparkle.framework */; };
+		B56C42980EB8466A00D8B6C2 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B56C42870EB845CB00D8B6C2 /* Sparkle.framework */; };
 		B56DC4B40E011CC1008CAA60 /* BGMultipleSongPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4B30E011CC1008CAA60 /* BGMultipleSongPlayManager.m */; };
 		B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4BD0E012038008CAA60 /* BGTimelineGap.m */; };
 		B572D2E20DADC4F1009B86C5 /* ScrobblePod512.icns in Resources */ = {isa = PBXBuildFile; fileRef = B572D2E10DADC4F1009B86C5 /* ScrobblePod512.icns */; };
@@ -107,6 +108,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B56C42980EB8466A00D8B6C2 /* Sparkle.framework in CopyFiles */,
 				B5754E060DA9989A006D4E81 /* Growl.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
