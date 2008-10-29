@@ -23,10 +23,14 @@
 
 - (id)init;
 
+-(void)applyForMobileDeviceNotifications;
+-(void)amdsDidConnect:(NSNotification*)note;
+-(void)amdsDidFail:(NSNotification*)note;
+
+-(void)applyForiPodNotifications;
 -(BOOL)isPodAtPath:(NSString *)testPath;
 
 -(BOOL)iPodDisconnectedSinceDate:(NSDate *)testDate;
-
 -(void)updateLastSyncDateWithNotification:(BOOL)shouldNotify;
 -(void)setLastSynched:(NSDate *)aDate;
 
