@@ -46,6 +46,7 @@
 		B56692ED0D670D4C0044C622 /* ban_on.png in Resources */ = {isa = PBXBuildFile; fileRef = B56692E90D670D4C0044C622 /* ban_on.png */; };
 		B56692EE0D670D4C0044C622 /* love_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = B56692EA0D670D4C0044C622 /* love_normal.png */; };
 		B56692EF0D670D4C0044C622 /* love_on.png in Resources */ = {isa = PBXBuildFile; fileRef = B56692EB0D670D4C0044C622 /* love_on.png */; };
+		B56C42880EB845CB00D8B6C2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56C42870EB845CB00D8B6C2 /* Sparkle.framework */; };
 		B56DC4B40E011CC1008CAA60 /* BGMultipleSongPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4B30E011CC1008CAA60 /* BGMultipleSongPlayManager.m */; };
 		B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4BD0E012038008CAA60 /* BGTimelineGap.m */; };
 		B572D2E20DADC4F1009B86C5 /* ScrobblePod512.icns in Resources */ = {isa = PBXBuildFile; fileRef = B572D2E10DADC4F1009B86C5 /* ScrobblePod512.icns */; };
@@ -172,6 +173,7 @@
 		B56692E90D670D4C0044C622 /* ban_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ban_on.png; sourceTree = "<group>"; };
 		B56692EA0D670D4C0044C622 /* love_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love_normal.png; sourceTree = "<group>"; };
 		B56692EB0D670D4C0044C622 /* love_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love_on.png; sourceTree = "<group>"; };
+		B56C42870EB845CB00D8B6C2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		B56DC4B20E011CC1008CAA60 /* BGMultipleSongPlayManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGMultipleSongPlayManager.h; sourceTree = "<group>"; };
 		B56DC4B30E011CC1008CAA60 /* BGMultipleSongPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGMultipleSongPlayManager.m; sourceTree = "<group>"; };
 		B56DC4BC0E012038008CAA60 /* BGTimelineGap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGTimelineGap.h; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				B584EC3D0C23541600AC24C7 /* IOKit.framework in Frameworks */,
 				B53F9C040D67F09000CCC8F9 /* ScriptingBridge.framework in Frameworks */,
 				B5103FD80DB5877F00F2403A /* QuartzCore.framework in Frameworks */,
+				B56C42880EB845CB00D8B6C2 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +303,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B56C42870EB845CB00D8B6C2 /* Sparkle.framework */,
 				B5103FD70DB5877F00F2403A /* QuartzCore.framework */,
 				B53F9C030D67F09000CCC8F9 /* ScriptingBridge.framework */,
 				B552E9F10BE69AF6000DE45D /* Growl.framework */,
