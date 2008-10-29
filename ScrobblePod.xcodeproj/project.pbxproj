@@ -49,8 +49,6 @@
 		B56DC4B40E011CC1008CAA60 /* BGMultipleSongPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4B30E011CC1008CAA60 /* BGMultipleSongPlayManager.m */; };
 		B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */ = {isa = PBXBuildFile; fileRef = B56DC4BD0E012038008CAA60 /* BGTimelineGap.m */; };
 		B572D2E20DADC4F1009B86C5 /* ScrobblePod512.icns in Resources */ = {isa = PBXBuildFile; fileRef = B572D2E10DADC4F1009B86C5 /* ScrobblePod512.icns */; };
-		B5754DD80DA997BC006D4E81 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5754DD70DA997BC006D4E81 /* Sparkle.framework */; };
-		B5754E050DA9989A006D4E81 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B5754DD70DA997BC006D4E81 /* Sparkle.framework */; };
 		B5754E060DA9989A006D4E81 /* Growl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B552E9F10BE69AF6000DE45D /* Growl.framework */; };
 		B5778A6E0D9618A60039CD4C /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B5778A6D0D9618A60039CD4C /* 2.png */; };
 		B5778B290D962CDE0039CD4C /* auto0.png in Resources */ = {isa = PBXBuildFile; fileRef = B5778B270D962CDE0039CD4C /* auto0.png */; };
@@ -108,7 +106,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B5754E050DA9989A006D4E81 /* Sparkle.framework in CopyFiles */,
 				B5754E060DA9989A006D4E81 /* Growl.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -180,7 +177,6 @@
 		B56DC4BC0E012038008CAA60 /* BGTimelineGap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGTimelineGap.h; sourceTree = "<group>"; };
 		B56DC4BD0E012038008CAA60 /* BGTimelineGap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGTimelineGap.m; sourceTree = "<group>"; };
 		B572D2E10DADC4F1009B86C5 /* ScrobblePod512.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ScrobblePod512.icns; sourceTree = "<group>"; };
-		B5754DD70DA997BC006D4E81 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		B5778A6D0D9618A60039CD4C /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		B5778B270D962CDE0039CD4C /* auto0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = auto0.png; sourceTree = "<group>"; };
 		B5778B280D962CDE0039CD4C /* auto1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = auto1.png; sourceTree = "<group>"; };
@@ -270,7 +266,6 @@
 				B5CEBAC00C21367500F025F0 /* ApplicationServices.framework in Frameworks */,
 				B584EC3D0C23541600AC24C7 /* IOKit.framework in Frameworks */,
 				B53F9C040D67F09000CCC8F9 /* ScriptingBridge.framework in Frameworks */,
-				B5754DD80DA997BC006D4E81 /* Sparkle.framework in Frameworks */,
 				B5103FD80DB5877F00F2403A /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,7 +301,6 @@
 			isa = PBXGroup;
 			children = (
 				B5103FD70DB5877F00F2403A /* QuartzCore.framework */,
-				B5754DD70DA997BC006D4E81 /* Sparkle.framework */,
 				B53F9C030D67F09000CCC8F9 /* ScriptingBridge.framework */,
 				B552E9F10BE69AF6000DE45D /* Growl.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
@@ -807,9 +801,11 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_10)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_11)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_10 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_11 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)\"";
@@ -854,6 +850,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)\"";
@@ -867,6 +864,7 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../Desktop/ScrobblePod\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;

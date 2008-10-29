@@ -13,12 +13,22 @@
 			<string>NSView</string>
 		</dict>
 		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>close</key>
+				<string>id</string>
+			</dict>
 			<key>CLASS</key>
-			<string>FirstResponder</string>
+			<string>BGPointWindow</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>theMenu</key>
+				<string>NSMenu</string>
+			</dict>
 			<key>SUPERCLASS</key>
-			<string>NSObject</string>
+			<string>NSWindow</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
@@ -48,31 +58,8 @@
 			<string>ObjC</string>
 		</dict>
 		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>close</key>
-				<string>id</string>
-			</dict>
 			<key>CLASS</key>
-			<string>BGPointWindow</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>theMenu</key>
-				<string>NSMenu</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindow</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>checkForUpdates</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>SUUpdater</string>
+			<string>FirstResponder</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
@@ -103,8 +90,6 @@
 				<string>id</string>
 				<key>showWaitPanel</key>
 				<string>id</string>
-				<key>switchStatus</key>
-				<string>id</string>
 				<key>tagSong</key>
 				<string>id</string>
 				<key>updateTagLabel</key>
@@ -134,20 +119,12 @@
 				<string>NSTokenField</string>
 				<key>infoView</key>
 				<string>BGRoundedInfoView</string>
-				<key>interactionPanel</key>
-				<string>NSPanel</string>
 				<key>recommendMessageField</key>
 				<string>NSTextField</string>
 				<key>recommendTypeChooser</key>
 				<string>NSSegmentedControl</string>
 				<key>recommendationEntryView</key>
 				<string>NSView</string>
-				<key>softwareUpdater</key>
-				<string>SUUpdater</string>
-				<key>statusIconButton</key>
-				<string>NSButton</string>
-				<key>statusIconView</key>
-				<string>StatusItemIconView</string>
 				<key>statusMenu</key>
 				<string>NSMenu</string>
 				<key>statusMenuItem</key>

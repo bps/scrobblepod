@@ -2,7 +2,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PreferencesController.h"
-#import <Sparkle/SUUpdater.h>
 #import "BGRoundedInfoView.h"
 #import "BGLastFmSong.h"
 #import "BGPointWindow.h"
@@ -29,8 +28,6 @@
 	
 	IBOutlet NSView *commonTagsLoadingView;
 	IBOutlet NSProgressIndicator *commonTagsLoadingIndicator;
-	
-	IBOutlet SUUpdater *softwareUpdater;
 	
 	BOOL isLoadingCommonTags;
 
