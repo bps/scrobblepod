@@ -56,7 +56,7 @@
 				if (!nameString) nameString = @"";
 				
 				// artist, using album artist where possible
-				NSString *artistString;
+				NSString *artistString = nil;
 				if (useAlbumArtist) artistString = [trackStuff objectForKey:@"Album Artist"];
 				if (!artistString)  artistString = [trackStuff objectForKey:@"Artist"];
 				if (!artistString)  artistString = @"";
