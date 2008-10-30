@@ -79,7 +79,7 @@
 		[NSNumber numberWithBool:YES],BGPref_Growl_ScrobbleDecisionChanged,
 		[NSNumber numberWithBool:NO],BGPrefWantOldIcon,
 		[NSNumber numberWithBool:NO],BGPrefShouldDoMultiPlay,
-		[NSNumber numberWithBool:YES],BGPrefShouldUseAlbumArtist,
+		[NSNumber numberWithBool:NO],BGPrefShouldUseAlbumArtist,
 		@"~/Music/iTunes/iTunes Music Library.xml",BGPrefXmlLocation,
 nil] ];
 
