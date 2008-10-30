@@ -8,6 +8,7 @@
 
 #import "iTunesWatcher.h"
 #import "iTunes.h"//ScriptingBridgeDefs
+#import "Defines.h"
 
 static iTunesWatcher *sharedTunesManager = nil;
 
@@ -133,7 +134,14 @@ static iTunesWatcher *sharedTunesManager = nil;
 		
 		// Keep track of the song that just started playing
 		NSString *trackName  = [newSongDetails objectForKey:@"Name"];
-		NSString *artistName = [newSongDetails objectForKey:@"Artist"];
+
+		BOOL useAlbumArtist = [[NSUserDefaults standardUserDefaults] boolForKey:BGPrefShouldUseAlbumArtist];
+		
+		NSString *artistName = nil;
+		if (useAlbumArtist) artistName = [newSongDetails objectForKey:@"Album Artist"];
+		if (!artistName) artistName = [newSongDetails objectForKey:@"Artist"];
+		if (!artistName) artistName = @"Unknown Artist";
+
 		NSString *albumName  = [newSongDetails objectForKey:@"Album"];
 		int trackDuration    = (int)([[newSongDetails objectForKey:@"Total Time"] intValue]/1000);
 
@@ -148,6 +156,8 @@ static iTunesWatcher *sharedTunesManager = nil;
 	} else {
 		NSLog(@"--CONTINUING SAME SONG");
 	}
+	
+	NSLog(@"Artist: %@",currentSong.artist);
 	
 	self.currentSongStarted = [self currentUnixDate];
 	
