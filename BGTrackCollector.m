@@ -8,6 +8,7 @@
 
 #import "BGTrackCollector.h"
 #import "BGLastFmSong.h"
+#import "Defines.h"
 #import "NSDictionary+ExclusionTest.h"
 
 @implementation BGTrackCollector
@@ -25,6 +26,8 @@
 	//check to see if library load was successful
 	
 	NSMutableArray *resultSongArray = [NSMutableArray new];
+	
+	BOOL useAlbumArtist = [[NSUserDefaults standardUserDefaults] boolForKey:BGPrefShouldUseAlbumArtist];
 	
 	if (itunesLibrary) {
 		NSLog(@"Parsing XML contents");
@@ -54,9 +57,9 @@
 				
 				// artist, using album artist where possible
 				NSString *artistString;
-				artistString = [trackStuff objectForKey:@"Album Artist"];
-				if (!artistString) artistString = [trackStuff objectForKey:@"Artist"];
-				if (!artistString) artistString = @"";
+				if (useAlbumArtist) artistString = [trackStuff objectForKey:@"Album Artist"];
+				if (!artistString)  artistString = [trackStuff objectForKey:@"Artist"];
+				if (!artistString)  artistString = @"";
 				
 				// album name
 				NSString *albumString = [trackStuff objectForKey:@"Album"];

@@ -13,6 +13,7 @@
 	#define BGPrefShouldIgnoreShort @"IgnoreShort"
 	#define BGPrefIgnoreShortLength @"IgnoreShortLength"
 	#define BGPrefShouldDoMultiPlay @"DoMultiPlay"
+	#define BGPrefShouldUseAlbumArtist @"UseAlbumArtist"
 	
 	#define BGPrefWantOldIcon @"WantOldIcon"
 
