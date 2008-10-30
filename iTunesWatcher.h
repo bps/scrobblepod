@@ -19,7 +19,10 @@
 @interface iTunesWatcher : NSObject {
 	id delegate;
 	BGLastFmSong *currentSong;	
-	NSDictionary *currentSongInfo;
+	NSString *currentIdentifier;
+	int currentSongStarted;
+	int durationPlayed;
+	BOOL currentSongAlreadyScrobbled;
 	
 	BOOL iTunesIsPlaying;
 }
@@ -47,6 +50,22 @@
 -(BOOL)itunesIsRunning;
 -(BOOL)iTunesIsPlaying;
 
+-(void)newSongStarted:(NSDictionary *)newSongDetails;
+-(void)currentSongStopped;
+-(void)forwardCurrentSong;
+
+-(BOOL)songIsNew:(NSString *)anIdentifier;
+-(BOOL)currentSongPlayedProperly;
+
+-(void)incrementDurationWatch;
+
+-(BGLastFmSong *)currentSong;
+-(int)currentUnixDate;
+
 @property (retain) BGLastFmSong *currentSong;
-@property (retain) NSDictionary *currentSongInfo;
+@property (assign) int currentSongStarted;
+@property (copy) NSString *currentIdentifier;
+@property (assign) int durationPlayed;
+@property (assign) BOOL iTunesIsPlaying;
+@property (assign) BOOL currentSongAlreadyScrobbled;
 @end

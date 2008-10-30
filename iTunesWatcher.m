@@ -68,7 +68,6 @@ static iTunesWatcher *sharedTunesManager = nil;
 
 - (void)dealloc {
 	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self name:ITUNES_NOTIFICATION_KEY object:nil];
-	[currentSongInfo release];
 	[currentSong release];
 	[super dealloc];
 }
@@ -83,9 +82,13 @@ static iTunesWatcher *sharedTunesManager = nil;
 #pragma mark iTunes Status
 
 @synthesize currentSong;
-@synthesize currentSongInfo;
+@synthesize currentIdentifier;
+@synthesize currentSongStarted;
+@synthesize durationPlayed;
+@synthesize iTunesIsPlaying;
+@synthesize currentSongAlreadyScrobbled;
 
-- (BOOL)itunesIsRunning {
+-(BOOL)itunesIsRunning {
 	NSEnumerator *e = [[[NSWorkspace sharedWorkspace] launchedApplications] objectEnumerator];
 	NSDictionary *proc;
 	while (proc = [e nextObject]) {
@@ -95,41 +98,93 @@ static iTunesWatcher *sharedTunesManager = nil;
 	return NO;
 }
 
--(BOOL)iTunesIsPlaying {
-	return iTunesIsPlaying;
+-(BGLastFmSong *)currentSong {
+	return (iTunesIsPlaying ? currentSong : nil);
 }
 
 #pragma mark Notification Handlers
-
--(void)handleSongChange:(NSTimer*)theTimer {
-	NSDictionary *playerInfo = [theTimer userInfo];
-	self.currentSongInfo = playerInfo;
-	if ([[playerInfo objectForKey:@"Player State"] isEqualToString:@"Playing"]) {
-		iTunesIsPlaying = YES;
-		NSString *trackName = [playerInfo objectForKey:@"Name"];
-		NSString *artistName = [playerInfo objectForKey:@"Artist"];
-		NSString *albumName = [playerInfo objectForKey:@"Album"];
-		int trackLength = (int)([[playerInfo objectForKey:@"Total Time"] intValue]/1000);
-		BGLastFmSong *newSong = [[BGLastFmSong alloc] initWithTitle:trackName artist:artistName album:albumName];
-			newSong.length = trackLength;
-			self.currentSong = newSong;
-		[newSong release];
-		[self updateDelegateWithCurrentSong];
-	} else {
-		iTunesIsPlaying = NO;
-	}
-}
 
 - (void)iTunesDidChangeState:(id)notification {
 	NSDictionary *playerInfo = [notification userInfo];
 
 	if ([[playerInfo objectForKey:@"Player State"] isEqualToString:@"Stopped"] || [[playerInfo objectForKey:@"Player State"] isEqualToString:@"Paused"]) {
-		self.currentSong = nil;
-		iTunesIsPlaying = NO;
-		[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(sendDelegateTrackStoppedNotification) userInfo:nil repeats:NO];
-	} else {
-		[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(handleSongChange:) userInfo:playerInfo repeats:NO];
+		NSLog(@"--SONG STOPPED");
+		[self incrementDurationWatch];
+		[self currentSongStopped];
+	} else if ([[playerInfo objectForKey:@"Player State"] isEqualToString:@"Playing"]) {
+		NSLog(@"--SONG PLAYING");
+		[self newSongStarted:playerInfo];
 	}
+}
+
+-(void)newSongStarted:(NSDictionary *)newSongDetails {
+	
+	self.iTunesIsPlaying = YES;
+	NSString *newIdentifier = [[newSongDetails objectForKey:@"PersistentID"] stringValue];
+	
+	if ( [self songIsNew:newIdentifier] ) {
+
+		NSLog(@"Started new song");
+
+		self.currentIdentifier = newIdentifier;
+
+		// Check if old song was played sufficiently. If so, add it to the queue for scrobbling
+		[self incrementDurationWatch];
+		
+		// Keep track of the song that just started playing
+		NSString *trackName  = [newSongDetails objectForKey:@"Name"];
+		NSString *artistName = [newSongDetails objectForKey:@"Artist"];
+		NSString *albumName  = [newSongDetails objectForKey:@"Album"];
+		int trackDuration    = (int)([[newSongDetails objectForKey:@"Total Time"] intValue]/1000);
+
+		BGLastFmSong *newSong = [[BGLastFmSong alloc] initWithTitle:trackName artist:artistName album:albumName];
+			newSong.length = trackDuration;
+			self.currentSong = newSong;
+		[newSong release];
+
+		self.durationPlayed = 0;
+		self.currentSongAlreadyScrobbled = NO;
+		
+	} else {
+		NSLog(@"--CONTINUING SAME SONG");
+	}
+	
+	self.currentSongStarted = [self currentUnixDate];
+	
+	[self updateDelegateWithCurrentSong];
+}
+
+-(int)currentUnixDate {
+	return (int)[[NSDate date] timeIntervalSince1970];
+}
+
+-(void)incrementDurationWatch {
+	if (self.currentSongStarted>0) {
+		int recentDuration = [self currentUnixDate] - self.currentSongStarted;
+		self.durationPlayed += recentDuration;
+		[self forwardCurrentSong];
+	}
+}
+
+-(void)currentSongStopped {
+	self.iTunesIsPlaying = NO;
+	[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(sendDelegateTrackStoppedNotification) userInfo:nil repeats:NO];
+}
+
+-(void)forwardCurrentSong {
+	if (currentIdentifier && [self currentSongPlayedProperly] && self.currentSongAlreadyScrobbled==NO) {
+		//Add currentSong to queue
+		NSLog(@"Scrobbling current song: %@",currentSong.title);
+		self.currentSongAlreadyScrobbled = YES;
+	}
+}
+
+-(BOOL)currentSongPlayedProperly {
+	return (durationPlayed >= 240 || durationPlayed >= currentSong.length/2);
+}
+
+-(BOOL)songIsNew:(NSString *)anIdentifier {
+	return (anIdentifier==nil || [anIdentifier isEqualToString:currentIdentifier]==false);
 }
 
 #pragma mark Outbound Delegate Communications
@@ -179,7 +234,7 @@ song is being played from a shared library.
 }
 
 -(NSImage *)artworkForCurrentTrack {
-	if (currentSongInfo != nil) {
+	if (self.iTunesIsPlaying && currentIdentifier != nil) {
 		iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:ITUNES_BUNDLE_IDENTIFIER];
 		iTunesTrack *currentTrack = [iTunes currentTrack];
 		if (self.iTunesIsPlaying) {
