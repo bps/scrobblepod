@@ -593,7 +593,7 @@ nil] ];
 						startFromHandshake = YES;
 					}
 				} else {
-					[prefController addHistoryWithSuccess:YES andDate:[NSDate date] andDescription:[NSString stringWithFormat:@"Scrobbled %d tracks",recentTracksCount]];
+					[prefController addHistoryWithSuccess:YES andDate:[NSDate date] andDescription:[NSString stringWithFormat:@"Scrobbled %d song%@",recentTracksCount,(recentTracksCount==1?@"":@"s")]];
 					startFromHandshake = NO;
 					NSCalendarDate *returnedDate = [scrobbleResponse lastScrobbleDate];
 					//[self addActivityHistoryEntryWithStatus:NO andDescription:@"Successful"];
