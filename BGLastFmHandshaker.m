@@ -8,6 +8,7 @@
 
 #import "BGLastFmHandshaker.h"
 #import "CocoaCryptoHashing.h"
+#import "HubStrings.h"
 
 @implementation BGLastFmHandshaker
 
@@ -23,7 +24,7 @@
 	[super dealloc];
 }
 
--(BGLastFmHandshakeResponse *)performHandshakeWithUsername:(NSString *)theUsername andPassword:(NSString *)thePassword {
+-(BGLastFmHandshakeResponse *)performHandshakeWithUsername:(NSString *)theUsername usingApiSessionKey:(NSString *)apiSessionKey {
 
 	NSString *currentUnixTime;
 	NSString *authenticationHash;
@@ -35,9 +36,9 @@
 	while ([theResponse sessionKey]==nil && ![theResponse didFail] && handshakeAttempts<3 ) {
 		
 		currentUnixTime = [NSString stringWithFormat:@"%d",(int)[[NSDate date] timeIntervalSince1970]]; 
-		authenticationHash = [[NSString stringWithFormat:@"%@%@",[thePassword md5HexHash],currentUnixTime] md5HexHash];
+		authenticationHash = [[NSString stringWithFormat:@"%@%@",[API_SECRET md5HexHash],currentUnixTime] md5HexHash];
 
-		handshakeURL = [NSURL URLWithString: [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2&c=sld&v=0.50&u=%@&t=%@&a=%@",theUsername,currentUnixTime,authenticationHash]];
+		handshakeURL = [NSURL URLWithString: [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=sld&v=0.50.11&u=%@&t=%@&a=%@&sk=%@",theUsername,currentUnixTime,authenticationHash,apiSessionKey]];
 
 		NSMutableURLRequest *handshakeRequest = [[NSMutableURLRequest alloc] initWithURL:handshakeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:2.0];
 		[handshakeRequest setHTTPMethod:@"GET"];

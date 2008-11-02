@@ -1,6 +1,5 @@
 #pragma mark Preferences Keys
 
-	#define BGPrefUserKey @"lastFMUsername"
 	#define BGPrefFirstRunKey @"BGFirstRun"
 	#define BGPrefLastScrobbled @"LastScrobbled"
 	#define BGPrefShouldPlaySound @"PlaySound"
@@ -25,7 +24,6 @@
 	#define BGPref_Growl_ScrobbleDecisionChanged @"GrowlScrobbleDecisionChanged"
 
 	#define BGNotificationPodMounted @"iPodWatcher_PodMounted"
-	#define BGLoginChangedNotification @"LoginChangedNotification"
 	
 	#define BGScrobbleDecisionChangedNotification @"BGScrobbleDecisionChangedNotification"
 	#define BGXmlLocationChangedNotification @"BGXmlLocationChangedNotification"
@@ -38,6 +36,8 @@
 	#define BGPrefXmlLocation @"XMLLocation"
 	
 	#define XMLChangedNotification @"XMLChangedNotification"
+	
+	#define BGPrefUsername @"Username"
 
 #pragma mark Growl Keys
 	#define SP_Growl_StartedScrobbling @"Started Scrobbling"
@@ -45,6 +45,7 @@
 	#define SP_Growl_FailedScrobbling @"Scrobbling Failed"
 	#define SP_Growl_TrackChanged @"Track Changed"
 	#define SP_Growl_DecisionChanged @"Automatic Scrobbling Decision Changed"
+	#define SP_Growl_LoginComplete @"Authorization Complete"
 
 #pragma mark Localise
 	#define DATE_FORMAT_STRING @"%Y-%m-%d %H-%M-%S"

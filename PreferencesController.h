@@ -21,11 +21,8 @@
 	IBOutlet NSButton *startAtLogin;
 	
 	#pragma mark Last.fm Login
-	IBOutlet NSTextField *lastFmUser;
-	IBOutlet NSSecureTextField *lastFmPass;
-	IBOutlet NSProgressIndicator *passCheckIndicator;
-	IBOutlet NSTextField *passCheckStatusDisplay;
-	IBOutlet NSButton *checkCredentialsButton;
+	IBOutlet NSBox *currentLoginContainer;
+	IBOutlet NSTextField *currentLogin;
 	
 	#pragma mark History
 	IBOutlet NSArrayController *historyController;
@@ -48,8 +45,7 @@
 
 #pragma mark Pane:LastFmLogin - Actions
 -(IBAction)openLastFmWebsite:(id)sender;
--(IBAction)checkEnteredCredentials:(id)sender;
-- (void)controlTextDidEndEditing:(NSNotification *)aNotification;
+-(IBAction)openAuthWebsite:(id)sender;
 
 #pragma mark Pane:History - Actions
 -(void)addHistoryWithSuccess:(BOOL)wasSuccess andDate:(NSDate *)aDate andDescription:(NSString *)aDescription;

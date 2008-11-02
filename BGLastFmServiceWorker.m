@@ -41,7 +41,7 @@
 
 -(void)acquireCredentials {
 	SecKeychainItemRef itemRef;
-	NSString *currentUsername = [[NSUserDefaults standardUserDefaults] valueForKey:BGPrefUserKey];
+	NSString *currentUsername = [[NSUserDefaults standardUserDefaults] valueForKey:BGPrefUsername];
 	NSString *currentPassword = [SFHFKeychainUtils getWebPasswordForUser:currentUsername  URL:[NSURL URLWithString:@"http://www.last.fm/"] domain:@"Last.FM Login" itemReference:&itemRef];
 
 	self.username = currentUsername;

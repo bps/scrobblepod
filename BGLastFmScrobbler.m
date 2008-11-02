@@ -89,7 +89,7 @@
 		NSData *scrobbleResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&postingError];
 		
 		NSLog(@"STATUS CODE: %d",[response statusCode]);
-		NSLog(@" ERROR CODE: %d",[postingError code]);
+		NSLog(@"ERROR CODE: %d",[postingError code]);
 		
 		if (scrobbleResponseData!=nil/* && [postingError code]!=-1001 && [response statusCode]==200*/) {
 			NSString *scrobbleResponseString = [[NSString alloc] initWithData:scrobbleResponseData encoding:NSUTF8StringEncoding];

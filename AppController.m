@@ -1,5 +1,6 @@
 #import "AppController.h"
 #import "Defines.h"
+#import "HubStrings.h"
 
 #import <Security/Security.h>
 #import <QuartzCore/CoreAnimation.h>
@@ -58,7 +59,9 @@
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults registerDefaults: [NSDictionary dictionaryWithObjectsAndKeys:
-		@"",BGPrefUserKey,
+		@"",BGPrefUsername,
+		@"",BGWebServiceSessionKey,
+		@"",BGSubmissionSessionKey,
 		[NSNumber numberWithBool:YES],BGPrefFirstRunKey,
 		[[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:0 hours:0 minutes:-2 seconds:0] descriptionWithCalendarFormat:DATE_FORMAT_STRING],BGPrefLastScrobbled,
 		[NSNumber numberWithBool:YES],BGPrefWantMultiPost,
@@ -125,8 +128,9 @@ nil] ];
 	
 	NSNotificationCenter *defaultNotificationCenter = [NSNotificationCenter defaultCenter];
 	[defaultNotificationCenter addObserver:self selector:@selector(podWatcherMountedPod:) name:BGNotificationPodMounted object:nil];
-	[defaultNotificationCenter addObserver:self selector:@selector(preferencesControllerUpdatedCredentials:) name:BGLoginChangedNotification object:nil];
 	[defaultNotificationCenter addObserver:self selector:@selector(xmlFileChanged:) name:XMLChangedNotification object:nil];
+
+	 authManager = [[BGLastFmAuthenticationManager alloc] initWithDelegate:self];
 
 	[[iTunesWatcher sharedManager] setDelegate:self];
 	
@@ -139,6 +143,15 @@ nil] ];
 	 xmlWatcher = [[FileWatcher alloc] init];
 	 [xmlWatcher startWatchingXMLFile];
 	 NSLog(@"XML Path: %@",[xmlWatcher fullXmlPath]);
+}
+
+-(void)newWebServiceSessionKeyAcquired {
+	
+}
+
+-(void)newSubmissionSessionKeyAcquired {
+	[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_LoginComplete andTitle:@"Authorization Successful" andDescription:@"ScrobblePod is now authorized to communicate with Last.fm" andImage:nil andIdentifier:SP_Growl_LoginComplete];
+	[self detachScrobbleThreadWithoutConsideration:NO];
 }
 
 -(void)primeSongPlayCache {
@@ -195,12 +208,7 @@ nil] ];
 
 	// let the user know if scrobbling is enabled
 	[self performSelector:@selector(podWatcherMountedPod:) withObject:nil afterDelay:10.0];
-	
-/*	NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:@"www.last.fm" port:443 protocol:@"https" realm:nil authenticationMethod:NSURLAuthenticationMethodHTTPBasic];
-	NSURLCredentialStorage *credentialStorage = [NSURLCredentialStorage sharedCredentialStorage];
-	NSURLCredential *defaultCredential = [credentialStorage defaultCredentialForProtectionSpace:protectionSpace];
-	NSLog(@"FOUND DEETS: %@ = %@",defaultCredential.user,defaultCredential.password);
-	[protectionSpace release];*/
+
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
@@ -216,7 +224,6 @@ nil] ];
 
 		[defaults setBool:FALSE forKey:BGPrefFirstRunKey];
 }
-
 
 -(IBAction)quit:(id)sender {
 	[NSApp terminate:self];
@@ -235,9 +242,6 @@ nil] ];
 	[scrobbleSound release];
 	[prefController release];
 	
-	[currentSessionKey release];
-	[currentPostUrl release];
-	[currentNowPlayingUrl release];
 		
 	[tagAutocompleteList release];
 	
@@ -255,10 +259,6 @@ nil] ];
 -(void)xmlFileChanged:(NSNotification *)notification {
 	NSLog(@"OMG! XML change!");
 	[self detachScrobbleThreadWithoutConsideration:NO];
-}
-
--(void)preferencesControllerUpdatedCredentials:(NSNotification *)notification {
-	if (currentSessionKey) [currentSessionKey release];
 }
 
 -(void)workspaceDidLaunchApplication:(NSNotification *)notification {
@@ -433,7 +433,7 @@ nil] ];
 -(void)updateFriendsList {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	BGLastFmServiceWorker *friendFinder = [[BGLastFmServiceWorker alloc] init];
-		NSArray *friendsList = [friendFinder friendsForUser:[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUserKey]];
+		NSArray *friendsList = [friendFinder friendsForUser:[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUsername]];
 		self.friendsAutocompleteList = friendsList;
 	[friendFinder release];
 	[pool release];
@@ -498,7 +498,7 @@ nil] ];
 
 -(IBAction)goToUserProfilePage:(id)sender {
 	[statusMenu cancelTracking];
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/user/%@",[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUserKey] ] ]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/user/%@",[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUsername] ] ]];
 }
 
 -(IBAction)manualScrobble:(id)sender {
@@ -545,78 +545,55 @@ nil] ];
 	
 		if (recentTracksCount > 1) 	[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_StartedScrobbling andTitle:SP_Growl_StartedScrobbling andDescription:[NSString stringWithFormat:@"Scrobbling %d track%@ to Last.fm", recentTracksCount, ( recentTracksCount == 1 ? @"" : @"s" )] andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
 
-		BOOL startFromHandshake = YES;
-		BOOL forceHandshake = NO;
 		int scrobbleAttempts = 0;
-		while (startFromHandshake && scrobbleAttempts < 2) {
+		while (scrobbleAttempts < 2) {
 		
-			if ((!currentSessionKey || !currentPostUrl) || forceHandshake) {
-				
-				if (currentSessionKey) [currentSessionKey release];
-				if (currentPostUrl) [currentPostUrl release];
-				
-				SecKeychainItemRef itemRef;
-				NSString *currentUsername = [defaults stringForKey:BGPrefUserKey];
-				NSString *currentPassword = [SFHFKeychainUtils getWebPasswordForUser:currentUsername URL:[NSURL URLWithString:@"http://www.last.fm/"] domain:@"Last.FM Login" itemReference:&itemRef];
-
-				
-				BGLastFmHandshaker *theHandshaker = [[BGLastFmHandshaker alloc] init];
-				BGLastFmHandshakeResponse *handshakeResponse = [theHandshaker performHandshakeWithUsername:currentUsername andPassword:currentPassword];
-				
-				if (!handshakeResponse.didFail && handshakeResponse.sessionKey!=nil) {
-					currentSessionKey = [handshakeResponse.sessionKey retain];
-					currentPostUrl = [handshakeResponse.postURL retain];
-				}
-				
-				[handshakeResponse release];
-				[theHandshaker release];
-			}
+			NSString *theSessionKey  = authManager.submissionSessionKey;
+			NSString *thePostAddress = authManager.scrobbleSubmissionURL;
 			
-			if (currentSessionKey && currentPostUrl) {
+			if (theSessionKey && thePostAddress && theSessionKey.length>0 && thePostAddress.length>0) {
 								
 				BGLastFmScrobbler *theScrobbler = [[BGLastFmScrobbler alloc] init];
-				BGLastFmScrobbleResponse *scrobbleResponse = [theScrobbler performScrobbleWithSongs:allRecentTracks andSessionKey:currentSessionKey toURL:currentPostUrl];
+				BGLastFmScrobbleResponse *scrobbleResponse = [theScrobbler performScrobbleWithSongs:allRecentTracks andSessionKey:theSessionKey toURL:[NSURL URLWithString:thePostAddress]];
 
 				if (!scrobbleResponse.wasSuccessful) {
 					if (scrobbleResponse.responseType==2) {
-						forceHandshake = YES;
-						startFromHandshake = YES;
+						// Need to rehandshake
 					} else if (scrobbleResponse.responseType==3) {
 						[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FailedScrobbling andTitle:@"Tracks could not be scrobbled" andDescription:[NSString stringWithFormat:@"Server said \"%@\"",[scrobbleResponse failureReason]] andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
 						[prefController addHistoryWithSuccess:NO andDate:[NSDate date] andDescription:[NSString stringWithFormat:@"Scrobble failed: ",[scrobbleResponse failureReason]]];
-						startFromHandshake = YES;
+					} else if (scrobbleResponse.responseType==0 && scrobbleAttempts==0) {
+						// Because the scrobble post URL is stored in the user defaults (and handshake is not updated on launch), there is a
+						// chance that the stored URL (IP address) may no longer point to Last.fm. In this case, we re-handshake.
+						[authManager fetchNewSubmissionSessionKeyUsingWebServiceSessionKey];
+						scrobbleAttempts = 2;
 					} else {
 						if (scrobbleAttempts==1) {
 							//[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FailedScrobbling andTitle:@"Tracks could not be scrobbled" andDescription:@"Scrobbling probably timed out" andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
 							[prefController addHistoryWithSuccess:NO andDate:[NSDate date] andDescription:@"Scrobble failed likely due to timeout"];
 						}
-						startFromHandshake = YES;
 					}
 				} else {
 					[prefController addHistoryWithSuccess:YES andDate:[NSDate date] andDescription:[NSString stringWithFormat:@"Scrobbled %d song%@",recentTracksCount,(recentTracksCount==1?@"":@"s")]];
-					startFromHandshake = NO;
 					NSCalendarDate *returnedDate = [scrobbleResponse lastScrobbleDate];
 					//[self addActivityHistoryEntryWithStatus:NO andDescription:@"Successful"];
 					if (returnedDate!=nil) {
 						[defaults setValue:[returnedDate descriptionWithCalendarFormat:DATE_FORMAT_STRING] forKey:BGPrefLastScrobbled];
 						[defaults synchronize];
 					}
-					[defaults setObject: [NSNumber numberWithInt: [[NSUserDefaults standardUserDefaults] integerForKey:BGTracksScrobbledTotal]+recentTracksCount ]
-										forKey:BGTracksScrobbledTotal];
+					[defaults setObject: [NSNumber numberWithInt: [[NSUserDefaults standardUserDefaults] integerForKey:BGTracksScrobbledTotal]+recentTracksCount ] forKey:BGTracksScrobbledTotal];
 					if (recentTracksCount>1) [[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FinishedScrobbling andTitle:@"Finished Scrobbling" andDescription:[NSString stringWithFormat:@"%d track%@ successfully scrobbled to Last.fm",recentTracksCount,( recentTracksCount == 1 ? @"" : @"s" )] andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
 
-					if ([defaults boolForKey:BGPrefShouldPlaySound]) {
-						[self playScrobblingSound];
-					}
-
+					if ([defaults boolForKey:BGPrefShouldPlaySound]) [self playScrobblingSound];
+					scrobbleAttempts = 2;
 				}
 				
 				[scrobbleResponse release];
 				[theScrobbler release];
 
 			} else {
+				NSLog(@"Scrobbling didn't work because not all values set:\n  Key:'%@'\n  URL:%@",theSessionKey,thePostAddress);
 				[prefController addHistoryWithSuccess:NO andDate:[NSDate date] andDescription:@"Handshake Failed"];
-				startFromHandshake = YES;
 			}//end if handshake worked
 			scrobbleAttempts++;
 		} //end while around handshake&scrobble processes
@@ -663,42 +640,17 @@ nil] ];
 	[self setIsPostingNP:YES];
 	NSLog(@"Performing now playing code");
 	if (nowPlayingSong) {
-		
-		BOOL startFromHandshake = YES;
-		BOOL forceHandshake = NO;
 		int notifyAttempts = 0;
-		while (startFromHandshake && notifyAttempts < 2) {
-			
-			if ((!currentSessionKey || !currentNowPlayingUrl) || forceHandshake) {
-				
-				if (currentSessionKey) [currentSessionKey release];
-				if (currentNowPlayingUrl) [currentNowPlayingUrl release];
-				
-				SecKeychainItemRef itemRef;
-				NSString *currentUsername = [[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUserKey];
-				NSString *currentPassword = [SFHFKeychainUtils getWebPasswordForUser:currentUsername  URL:[NSURL URLWithString:@"http://www.last.fm/"] domain:@"Last.FM Login" itemReference:&itemRef];
-
-				
-				BGLastFmHandshaker *theHandshaker = [[BGLastFmHandshaker alloc] init];
-				BGLastFmHandshakeResponse *handshakeResponse = [theHandshaker performHandshakeWithUsername:currentUsername andPassword:currentPassword];
-				
-				if (!handshakeResponse.didFail && handshakeResponse.sessionKey!=nil) {
-					currentSessionKey = [handshakeResponse.sessionKey retain];
-					currentNowPlayingUrl = [handshakeResponse.nowPlayingURL retain];
-				}
-				
-				[handshakeResponse release];
-				[theHandshaker release];
-			}// end if need to handshake
-			
-			if (currentSessionKey && currentNowPlayingUrl) {
-				NSLog(@"Song length: %d seconds",nowPlayingSong.length);
-				NSString *npPostString = [NSString stringWithFormat:@"s=%@&a=%@&t=%@&b=%@&l=%d&n=&m=",currentSessionKey,nowPlayingSong.artist.urlEncodedString,nowPlayingSong.title.urlEncodedString,nowPlayingSong.album.urlEncodedString,nowPlayingSong.length];
+		while (notifyAttempts < 2) {
+			NSString *theSessionKey  = authManager.submissionSessionKey;
+			NSString *thePostAddress = authManager.nowPlayingSubmissionURL;
+			if (theSessionKey && thePostAddress && theSessionKey.length>0 && thePostAddress.length>0) {
+				NSString *npPostString = [NSString stringWithFormat:@"s=%@&a=%@&t=%@&b=%@&l=%d&n=&m=",theSessionKey,nowPlayingSong.artist.urlEncodedString,nowPlayingSong.title.urlEncodedString,nowPlayingSong.album.urlEncodedString,nowPlayingSong.length];
 				NSData *postData = [npPostString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
 				NSString *postLength = [NSString stringWithFormat:@"%d", postData.length];
 		
 				NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-				[request setURL:currentNowPlayingUrl];
+				[request setURL:[NSURL URLWithString:thePostAddress]];
 				[request setHTTPMethod:@"POST"];
 				[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
 				[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -712,18 +664,17 @@ nil] ];
 						
 				if (npResponseData!=nil && postingError==nil) {
 					NSString *npResponseString = [[NSString alloc] initWithData:npResponseData encoding:NSUTF8StringEncoding];
+					
 					if ([npResponseString rangeOfString:@"BADSESSION"].length>0) {
-						forceHandshake = YES;
-						startFromHandshake = YES;
 					} else if ([npResponseString rangeOfString:@"OK"].length>0) {
-						startFromHandshake = NO;
+						notifyAttempts = 2;
 					} else {
 					}
 					[npResponseString release];
 				}
 								
 			} else {
-				startFromHandshake = YES;
+				NSLog(@"Now playing didn't work because not all values set:\n  Key:'%@'\n  URL:%@",theSessionKey,thePostAddress);
 			}//end if handshake worked
 	
 			notifyAttempts++;

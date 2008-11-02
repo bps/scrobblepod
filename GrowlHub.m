@@ -65,7 +65,8 @@ static GrowlHub *sharedGrowlHub = nil;
 														   SP_Growl_FinishedScrobbling,
 														     SP_Growl_FailedScrobbling,
 															     SP_Growl_TrackChanged,
-															  SP_Growl_DecisionChanged, nil];
+															  SP_Growl_DecisionChanged,
+															    SP_Growl_LoginComplete, nil];
 	return [NSDictionary dictionaryWithObjectsAndKeys:growlNotifications, GROWL_NOTIFICATIONS_ALL, growlNotifications, GROWL_NOTIFICATIONS_DEFAULT, nil];
 }
 
@@ -79,6 +80,8 @@ static GrowlHub *sharedGrowlHub = nil;
 		shouldPost = [defaults boolForKey:BGPref_Growl_ScrobbleDecisionChanged];
 	} else if ([postName isEqualToString:SP_Growl_StartedScrobbling] || [postName isEqualToString:SP_Growl_FinishedScrobbling] || [postName isEqualToString:SP_Growl_FailedScrobbling]) {
 		shouldPost = [defaults boolForKey:BGPref_Growl_ScrobbleFail];
+	} else if ([postName isEqualToString:SP_Growl_LoginComplete]) {
+		shouldPost = YES;
 	}
 	
 	if (shouldPost) [GrowlApplicationBridge notifyWithTitle:postTitle description:postDescription notificationName:postName iconData:postImage priority:0 isSticky:NO clickContext:nil identifier:postIdentifier];

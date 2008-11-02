@@ -13,6 +13,6 @@
 
 }
 
--(BGLastFmHandshakeResponse *)performHandshakeWithUsername:(NSString *)theUsername andPassword:(NSString *)thePassword;
+-(BGLastFmHandshakeResponse *)performHandshakeWithUsername:(NSString *)theUsername usingApiSessionKey:(NSString *)apiSessionKey;
 
 @end

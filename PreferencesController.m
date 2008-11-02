@@ -5,7 +5,8 @@
 #import <Security/Security.h>
 #import <QuartzCore/CoreAnimation.h>
 #import "UKLoginItemRegistry.h"
-#import "BGLastFMPasswordChecker.h"
+#import "HubStrings.h"
+#import "HubNotifications.h"
 
 #define maxItems 10 // Cutoff for history items
 
@@ -31,14 +32,12 @@
 	
 	[startAtLogin setState:([UKLoginItemRegistry indexForLoginItemWithPath:[[NSBundle mainBundle] bundlePath]]+1)];
 	
-	self.window.contentView = generalPrefsView;
-//	[self setPreferencesView:generalPrefsView];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginComplete) name:APIHUB_WebServiceAuthorizationCompleted object:nil];
 	
-	SecKeychainItemRef itemRef;
-	NSString *currentPassword = [SFHFKeychainUtils getWebPasswordForUser: [[NSUserDefaults standardUserDefaults] valueForKey:BGPrefUserKey] URL: [NSURL URLWithString:@"http://www.last.fm/"] domain:@"Last.FM Login"  itemReference: &itemRef];
-	if (currentPassword!=nil) {
-		[lastFmPass setStringValue:currentPassword];
-	}
+	NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"Username"];
+	if (!username || username.length==0) [currentLoginContainer setHidden:YES];
+	self.window.contentView = generalPrefsView;
+//	[self setPreferencesView:generalPrefsView];	
 }
 
 - (NSString *)windowNibName {
@@ -151,43 +150,13 @@
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.last.fm/join/"]];
 }
 
--(IBAction)checkEnteredCredentials:(id)sender {
-	[checkCredentialsButton setEnabled:NO];
-	[NSThread detachNewThreadSelector:@selector(checkCredentialsOnSeparateThread) toTarget:self withObject:nil];
+-(IBAction)openAuthWebsite:(id)sender {
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/api/auth?api_key=%@",API_KEY]]];
 }
 
--(void)checkCredentialsOnSeparateThread {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	BGLastFMPasswordChecker *passChecker = [[BGLastFMPasswordChecker alloc] init];
-	[passCheckStatusDisplay setStringValue:@"Checking login details..."];
-	[passCheckIndicator startAnimation:self];
-	if ([passChecker checkCredentialsWithUsername:[lastFmUser stringValue] andPassword:[lastFmPass stringValue]]) {			
-		[passCheckStatusDisplay setStringValue:@"Login successful"];
-		[SFHFKeychainUtils addWebPassword:[lastFmPass stringValue] forUser:[lastFmUser stringValue] URL: [[NSURL alloc] initWithString:@"http://www.last.fm/"] domain:@"Last.FM Login"];
-
-		// Post login changed notification so that cached handshake key is reset
-		[[NSNotificationCenter defaultCenter] postNotificationName:BGLoginChangedNotification object:nil];
-	} else {
-		NSBeep();
-		[passCheckStatusDisplay setStringValue:@"Login incorrect"];
-	}
-	[passChecker release];
-	[passCheckIndicator stopAnimation:self];
-
-	[checkCredentialsButton setEnabled:YES];
-
-	[pool release];
-}
-
-- (void)controlTextDidEndEditing:(NSNotification *)aNotification {
-	if ([aNotification object]==lastFmUser) { // fill in password field from keychain
-		SecKeychainItemRef itemRef;
-		NSString *currentPassword = [SFHFKeychainUtils getWebPasswordForUser: lastFmUser.stringValue URL: [NSURL URLWithString:@"http://www.last.fm/"] domain:@"Last.FM Login"  itemReference: &itemRef];
-		if (currentPassword!=nil) {
-			[lastFmPass setStringValue:currentPassword];
-		}
-	}
+-(void)loginComplete {
+	[currentLogin setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"Username"]];
+	[currentLoginContainer setHidden:NO];
 }
 
 #pragma mark Pane:History Methods

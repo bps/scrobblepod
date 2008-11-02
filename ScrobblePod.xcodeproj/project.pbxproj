@@ -58,6 +58,14 @@
 		B5778B2A0D962CDE0039CD4C /* auto1.png in Resources */ = {isa = PBXBuildFile; fileRef = B5778B280D962CDE0039CD4C /* auto1.png */; };
 		B57A1A5F0BD6C6900085E05B /* CocoaCryptoHashing.m in Sources */ = {isa = PBXBuildFile; fileRef = B57A1A5B0BD6C6900085E05B /* CocoaCryptoHashing.m */; };
 		B57A1A6E0BD6C7480085E05B /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B57A1A6D0BD6C7480085E05B /* libcrypto.dylib */; };
+		B57AAB380EBD2AFC0035BBCC /* BGLastFmAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB370EBD2AFC0035BBCC /* BGLastFmAuthenticationManager.m */; };
+		B57AAB450EBD2B490035BBCC /* BGLastFmSubmissionHandshaker.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB3A0EBD2B490035BBCC /* BGLastFmSubmissionHandshaker.m */; };
+		B57AAB460EBD2B490035BBCC /* BGLastFmSubmissionHandshakeResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB3C0EBD2B490035BBCC /* BGLastFmSubmissionHandshakeResponse.m */; };
+		B57AAB470EBD2B490035BBCC /* BGLastFmWebServiceCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB3E0EBD2B490035BBCC /* BGLastFmWebServiceCaller.m */; };
+		B57AAB480EBD2B490035BBCC /* BGLastFmWebServiceHandshaker.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB400EBD2B490035BBCC /* BGLastFmWebServiceHandshaker.m */; };
+		B57AAB490EBD2B490035BBCC /* BGLastFmWebServiceParameterList.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB420EBD2B490035BBCC /* BGLastFmWebServiceParameterList.m */; };
+		B57AAB4A0EBD2B490035BBCC /* BGLastFmWebServiceResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB440EBD2B490035BBCC /* BGLastFmWebServiceResponse.m */; };
+		B57AAB610EBD2BB80035BBCC /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = B57AAB600EBD2BB80035BBCC /* NSString+Contains.m */; };
 		B584EC3D0C23541600AC24C7 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B584EC3C0C23541600AC24C7 /* IOKit.framework */; };
 		B58579F50E0A0E1300CD4A14 /* Ban.tif in Resources */ = {isa = PBXBuildFile; fileRef = B58579F10E0A0E1300CD4A14 /* Ban.tif */; };
 		B58579F60E0A0E1300CD4A14 /* Love.tif in Resources */ = {isa = PBXBuildFile; fileRef = B58579F20E0A0E1300CD4A14 /* Love.tif */; };
@@ -189,6 +197,24 @@
 		B57A1A5A0BD6C6900085E05B /* CocoaCryptoHashing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CocoaCryptoHashing.h; sourceTree = "<group>"; };
 		B57A1A5B0BD6C6900085E05B /* CocoaCryptoHashing.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = CocoaCryptoHashing.m; sourceTree = "<group>"; };
 		B57A1A6D0BD6C7480085E05B /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
+		B57AAB360EBD2AFC0035BBCC /* BGLastFmAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmAuthenticationManager.h; sourceTree = "<group>"; };
+		B57AAB370EBD2AFC0035BBCC /* BGLastFmAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmAuthenticationManager.m; sourceTree = "<group>"; };
+		B57AAB390EBD2B490035BBCC /* BGLastFmSubmissionHandshaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmSubmissionHandshaker.h; sourceTree = "<group>"; };
+		B57AAB3A0EBD2B490035BBCC /* BGLastFmSubmissionHandshaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmSubmissionHandshaker.m; sourceTree = "<group>"; };
+		B57AAB3B0EBD2B490035BBCC /* BGLastFmSubmissionHandshakeResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmSubmissionHandshakeResponse.h; sourceTree = "<group>"; };
+		B57AAB3C0EBD2B490035BBCC /* BGLastFmSubmissionHandshakeResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmSubmissionHandshakeResponse.m; sourceTree = "<group>"; };
+		B57AAB3D0EBD2B490035BBCC /* BGLastFmWebServiceCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmWebServiceCaller.h; sourceTree = "<group>"; };
+		B57AAB3E0EBD2B490035BBCC /* BGLastFmWebServiceCaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmWebServiceCaller.m; sourceTree = "<group>"; };
+		B57AAB3F0EBD2B490035BBCC /* BGLastFmWebServiceHandshaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmWebServiceHandshaker.h; sourceTree = "<group>"; };
+		B57AAB400EBD2B490035BBCC /* BGLastFmWebServiceHandshaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmWebServiceHandshaker.m; sourceTree = "<group>"; };
+		B57AAB410EBD2B490035BBCC /* BGLastFmWebServiceParameterList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmWebServiceParameterList.h; sourceTree = "<group>"; };
+		B57AAB420EBD2B490035BBCC /* BGLastFmWebServiceParameterList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmWebServiceParameterList.m; sourceTree = "<group>"; };
+		B57AAB430EBD2B490035BBCC /* BGLastFmWebServiceResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmWebServiceResponse.h; sourceTree = "<group>"; };
+		B57AAB440EBD2B490035BBCC /* BGLastFmWebServiceResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmWebServiceResponse.m; sourceTree = "<group>"; };
+		B57AAB5D0EBD2BB80035BBCC /* HubNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HubNotifications.h; sourceTree = "<group>"; };
+		B57AAB5E0EBD2BB80035BBCC /* HubStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HubStrings.h; sourceTree = "<group>"; };
+		B57AAB5F0EBD2BB80035BBCC /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
+		B57AAB600EBD2BB80035BBCC /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
 		B584EC3C0C23541600AC24C7 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		B58579F10E0A0E1300CD4A14 /* Ban.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Ban.tif; sourceTree = "<group>"; };
 		B58579F20E0A0E1300CD4A14 /* Love.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Love.tif; sourceTree = "<group>"; };
@@ -410,6 +436,7 @@
 		B52CE50F0C5AB1AA007090A7 /* LastFm */ = {
 			isa = PBXGroup;
 			children = (
+				B57AAB350EBD2ADD0035BBCC /* Easy Logon */,
 				B5CFA3530DC0040F00F96D31 /* BGAudioScrobblerXmlRpcPost.h */,
 				B5CFA3540DC0040F00F96D31 /* BGAudioScrobblerXmlRpcPost.m */,
 				B5CFA3590DC00B5D00F96D31 /* BGAudioScrobblerXmlRpcParameter.h */,
@@ -509,6 +536,31 @@
 				B56DC4BD0E012038008CAA60 /* BGTimelineGap.m */,
 			);
 			name = MultiPlay;
+			sourceTree = "<group>";
+		};
+		B57AAB350EBD2ADD0035BBCC /* Easy Logon */ = {
+			isa = PBXGroup;
+			children = (
+				B57AAB360EBD2AFC0035BBCC /* BGLastFmAuthenticationManager.h */,
+				B57AAB370EBD2AFC0035BBCC /* BGLastFmAuthenticationManager.m */,
+				B57AAB390EBD2B490035BBCC /* BGLastFmSubmissionHandshaker.h */,
+				B57AAB3A0EBD2B490035BBCC /* BGLastFmSubmissionHandshaker.m */,
+				B57AAB3B0EBD2B490035BBCC /* BGLastFmSubmissionHandshakeResponse.h */,
+				B57AAB3C0EBD2B490035BBCC /* BGLastFmSubmissionHandshakeResponse.m */,
+				B57AAB3D0EBD2B490035BBCC /* BGLastFmWebServiceCaller.h */,
+				B57AAB3E0EBD2B490035BBCC /* BGLastFmWebServiceCaller.m */,
+				B57AAB3F0EBD2B490035BBCC /* BGLastFmWebServiceHandshaker.h */,
+				B57AAB400EBD2B490035BBCC /* BGLastFmWebServiceHandshaker.m */,
+				B57AAB410EBD2B490035BBCC /* BGLastFmWebServiceParameterList.h */,
+				B57AAB420EBD2B490035BBCC /* BGLastFmWebServiceParameterList.m */,
+				B57AAB430EBD2B490035BBCC /* BGLastFmWebServiceResponse.h */,
+				B57AAB440EBD2B490035BBCC /* BGLastFmWebServiceResponse.m */,
+				B57AAB5D0EBD2BB80035BBCC /* HubNotifications.h */,
+				B57AAB5E0EBD2BB80035BBCC /* HubStrings.h */,
+				B57AAB5F0EBD2BB80035BBCC /* NSString+Contains.h */,
+				B57AAB600EBD2BB80035BBCC /* NSString+Contains.m */,
+			);
+			name = "Easy Logon";
 			sourceTree = "<group>";
 		};
 		B58E1AA20DF4FFF600738891 /* Toolbar */ = {
@@ -756,6 +808,14 @@
 				B56DC4BE0E012038008CAA60 /* BGTimelineGap.m in Sources */,
 				B5A2A8EA0E6A2589007591F5 /* FileWatcher.m in Sources */,
 				B5F504360EB7AD340035AF28 /* MobileDeviceSupport.m in Sources */,
+				B57AAB380EBD2AFC0035BBCC /* BGLastFmAuthenticationManager.m in Sources */,
+				B57AAB450EBD2B490035BBCC /* BGLastFmSubmissionHandshaker.m in Sources */,
+				B57AAB460EBD2B490035BBCC /* BGLastFmSubmissionHandshakeResponse.m in Sources */,
+				B57AAB470EBD2B490035BBCC /* BGLastFmWebServiceCaller.m in Sources */,
+				B57AAB480EBD2B490035BBCC /* BGLastFmWebServiceHandshaker.m in Sources */,
+				B57AAB490EBD2B490035BBCC /* BGLastFmWebServiceParameterList.m in Sources */,
+				B57AAB4A0EBD2B490035BBCC /* BGLastFmWebServiceResponse.m in Sources */,
+				B57AAB610EBD2BB80035BBCC /* NSString+Contains.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

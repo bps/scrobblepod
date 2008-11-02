@@ -7,6 +7,7 @@
 #import "BGPointWindow.h"
 #import "iTunesWatcher.h"
 #import "FileWatcher.h"
+#import "BGLastFmAuthenticationManager.h"
 
 @interface AppController : NSObject <TunesWatcherDelegate> {
 	NSStatusItem *statusItem;
@@ -29,6 +30,8 @@
 	IBOutlet NSView *commonTagsLoadingView;
 	IBOutlet NSProgressIndicator *commonTagsLoadingIndicator;
 	
+	BGLastFmAuthenticationManager *authManager;
+	
 	BOOL isLoadingCommonTags;
 
 	BOOL isScrobbling;
@@ -36,10 +39,6 @@
 	NSSound *scrobbleSound;
 	
 	PreferencesController *prefController;
-	
-	NSString *currentSessionKey;
-	NSURL *currentPostUrl;
-	NSURL *currentNowPlayingUrl;
 	
 	NSArray *tagAutocompleteList;
 	NSArray *friendsAutocompleteList;
