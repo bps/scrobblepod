@@ -150,6 +150,7 @@ nil] ];
 }
 
 -(void)newSubmissionSessionKeyAcquired {
+	[self detachNowPlayingThread];
 	[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_LoginComplete andTitle:@"Authorization Successful" andDescription:@"ScrobblePod is now authorized to communicate with Last.fm" andImage:nil andIdentifier:SP_Growl_LoginComplete];
 	[self detachScrobbleThreadWithoutConsideration:NO];
 }
@@ -666,6 +667,8 @@ nil] ];
 					NSString *npResponseString = [[NSString alloc] initWithData:npResponseData encoding:NSUTF8StringEncoding];
 					
 					if ([npResponseString rangeOfString:@"BADSESSION"].length>0) {
+						[authManager fetchNewSubmissionSessionKeyUsingWebServiceSessionKey];
+						notifyAttempts = 2;
 					} else if ([npResponseString rangeOfString:@"OK"].length>0) {
 						notifyAttempts = 2;
 					} else {
