@@ -21,9 +21,10 @@
 -(id)initWithDelegate:(id)sender {
 	self = [super init];
 	if (self != nil) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newSessionKeyAcquired) name:APIHUB_WebServiceAuthorizationCompleted object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newSessionKeyAcquired) name:APIHUB_WebServiceAuthorizationProcessing object:nil];
 		[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 		self.delegate = sender;
+		if (self.webServiceSessionKey && self.webServiceSessionKey.length>0) [self fetchNewSubmissionSessionKeyUsingWebServiceSessionKey];
 	}
 	return self;
 }

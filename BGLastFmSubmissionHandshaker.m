@@ -9,6 +9,7 @@
 #import "BGLastFmSubmissionHandshaker.h"
 #import "CocoaCryptoHashing.h"
 #import "HubStrings.h"
+#import "HubNotifications.h"
 
 @implementation BGLastFmSubmissionHandshaker
 
@@ -35,6 +36,8 @@
 	BGLastFmSubmissionHandshakeResponse *responseObject;
 	if (responseData!=nil && [postingError code]!=-1001 && [response statusCode]==200) {
 		responseObject = [[BGLastFmSubmissionHandshakeResponse alloc] initWithData:responseData];
+		NSLog(@"SUB");
+		[[NSNotificationCenter defaultCenter] postNotificationName:APIHUB_WebServiceAuthorizationCompleted object:nil];
 	} else {
 		responseObject = [[BGLastFmSubmissionHandshakeResponse alloc] initWithData:nil];
 	}

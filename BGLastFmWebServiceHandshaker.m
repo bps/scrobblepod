@@ -40,7 +40,8 @@
 				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 				[defaults setObject:session forKey:BGWebServiceSessionKey];
 				[defaults setObject:username forKey:BGPrefUsername];
-				[[NSNotificationCenter defaultCenter] postNotificationName:APIHUB_WebServiceAuthorizationCompleted object:nil];
+				NSLog(@"WS");
+				[[NSNotificationCenter defaultCenter] postNotificationName:APIHUB_WebServiceAuthorizationProcessing object:nil];
 				return session;
 			}
 		} else {

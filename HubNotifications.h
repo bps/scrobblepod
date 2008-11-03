@@ -4,3 +4,4 @@
 // Format: #define ConstantName @"TheValue"
 
 #define APIHUB_WebServiceAuthorizationCompleted @"APIHUB_WebServiceAuthorizationCompleted"
+#define APIHUB_WebServiceAuthorizationProcessing @"APIHUB_WebServiceAuthorizationProcessing"

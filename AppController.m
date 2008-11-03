@@ -146,12 +146,11 @@ nil] ];
 }
 
 -(void)newWebServiceSessionKeyAcquired {
-	
+	[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_LoginComplete andTitle:@"Authorization Successful" andDescription:@"ScrobblePod is now authorized to communicate with Last.fm" andImage:nil andIdentifier:SP_Growl_LoginComplete];
 }
 
 -(void)newSubmissionSessionKeyAcquired {
 	[self detachNowPlayingThread];
-	[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_LoginComplete andTitle:@"Authorization Successful" andDescription:@"ScrobblePod is now authorized to communicate with Last.fm" andImage:nil andIdentifier:SP_Growl_LoginComplete];
 	[self detachScrobbleThreadWithoutConsideration:NO];
 }
 

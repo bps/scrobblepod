@@ -32,7 +32,9 @@
 	
 	[startAtLogin setState:([UKLoginItemRegistry indexForLoginItemWithPath:[[NSBundle mainBundle] bundlePath]]+1)];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginComplete) name:APIHUB_WebServiceAuthorizationCompleted object:nil];
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+	[notificationCenter addObserver:self selector:@selector(loginProcessing) name:APIHUB_WebServiceAuthorizationProcessing object:nil];
+	[notificationCenter addObserver:self selector:@selector(loginComplete) name:APIHUB_WebServiceAuthorizationCompleted  object:nil];
 	
 	NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"Username"];
 	if (!username || username.length==0) [currentLoginContainer setHidden:YES];
@@ -154,9 +156,21 @@
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/api/auth?api_key=%@",API_KEY]]];
 }
 
--(void)loginComplete {
-	[currentLogin setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"Username"]];
+-(void)loginProcessing {
+	[NSThread detachNewThreadSelector:@selector(startAuthSpinner) toTarget:self withObject:nil];
+}
+
+-(void)startAuthSpinner {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[currentLoginContainer setHidden:NO];
+	[currentLogin setStringValue:@""];
+	[authSpinner startAnimation:self];
+	[pool release];
+}
+
+-(void)loginComplete {
+	[authSpinner stopAnimation:self];
+	[currentLogin setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"Username"]];
 }
 
 #pragma mark Pane:History Methods

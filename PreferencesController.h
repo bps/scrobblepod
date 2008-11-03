@@ -23,6 +23,7 @@
 	#pragma mark Last.fm Login
 	IBOutlet NSBox *currentLoginContainer;
 	IBOutlet NSTextField *currentLogin;
+	IBOutlet NSProgressIndicator *authSpinner;
 	
 	#pragma mark History
 	IBOutlet NSArrayController *historyController;
@@ -46,6 +47,9 @@
 #pragma mark Pane:LastFmLogin - Actions
 -(IBAction)openLastFmWebsite:(id)sender;
 -(IBAction)openAuthWebsite:(id)sender;
+-(void)loginProcessing;
+-(void)loginComplete;
+-(void)startAuthSpinner;
 
 #pragma mark Pane:History - Actions
 -(void)addHistoryWithSuccess:(BOOL)wasSuccess andDate:(NSDate *)aDate andDescription:(NSString *)aDescription;
