@@ -44,7 +44,6 @@
 	NSArray *friendsAutocompleteList;
 	
 	IBOutlet NSWindow *welcomeWindow;
-	IBOutlet NSPanel *authorizationWaitPanel;
 	
 	FileWatcher *xmlWatcher;
 }
@@ -53,10 +52,10 @@
 -(BOOL)cacheFileExists;
 -(void)primeSongPlayCache;
 
--(IBAction)showWaitPanel:(id)sender;
-
 @property (retain) NSArray *tagAutocompleteList;
 @property (retain) NSArray *friendsAutocompleteList;
+
+-(IBAction)openAuthPage:(id)sender;
 
 -(IBAction)updateTagLabel:(id)sender;
 -(void)populateCommonTags;

@@ -59,7 +59,7 @@
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults registerDefaults: [NSDictionary dictionaryWithObjectsAndKeys:
-		@"",BGPrefUsername,
+		@"...",BGPrefUsername,
 		@"",BGWebServiceSessionKey,
 		@"",BGSubmissionSessionKey,
 		[NSNumber numberWithBool:YES],BGPrefFirstRunKey,
@@ -145,6 +145,10 @@ nil] ];
 	 NSLog(@"XML Path: %@",[xmlWatcher fullXmlPath]);
 }
 
+-(IBAction)openAuthPage:(id)sender {
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/api/auth?api_key=%@",API_KEY]]];
+}
+
 -(void)newWebServiceSessionKeyAcquired {
 	[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_LoginComplete andTitle:@"Authorization Successful" andDescription:@"ScrobblePod is now authorized to communicate with Last.fm" andImage:nil andIdentifier:SP_Growl_LoginComplete];
 }
@@ -202,7 +206,11 @@ nil] ];
 
 	prefController = [[PreferencesController alloc] init];
 
-	if ([defaults boolForKey:BGPrefFirstRunKey]) [self doFirstRun];
+	NSString *username, *wsKey;
+	username = [defaults objectForKey:BGPrefUsername];
+	wsKey    = [defaults objectForKey:BGWebServiceSessionKey];
+
+	if ([defaults boolForKey:BGPrefFirstRunKey] || !username || username.length==0 || [username isEqualToString:@"..."] || !wsKey || wsKey.length==0) [self doFirstRun];
 	
 	[self setAppropriateRoundedString];
 
@@ -223,6 +231,10 @@ nil] ];
 		[defaults setValue:overrideCalendarDate forKey:BGPrefLastScrobbled];
 
 		[defaults setBool:FALSE forKey:BGPrefFirstRunKey];
+		
+		[NSApp activateIgnoringOtherApps:YES];
+		[welcomeWindow center];
+		[welcomeWindow orderFront:self];
 }
 
 -(IBAction)quit:(id)sender {
