@@ -13,27 +13,6 @@
 			<string>NSView</string>
 		</dict>
 		<dict>
-			<key>CLASS</key>
-			<string>BGRoundedInfoView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>appController</key>
-				<string>AppController</string>
-				<key>banButton</key>
-				<string>NSButton</string>
-				<key>loveButton</key>
-				<string>NSButton</string>
-				<key>recButton</key>
-				<string>NSButton</string>
-				<key>tagButton</key>
-				<string>NSButton</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSView</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>close</key>
@@ -66,6 +45,27 @@
 			<string>ObjC</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>BGRoundedInfoView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>appController</key>
+				<string>AppController</string>
+				<key>banButton</key>
+				<string>NSButton</string>
+				<key>loveButton</key>
+				<string>NSButton</string>
+				<key>recButton</key>
+				<string>NSButton</string>
+				<key>tagButton</key>
+				<string>NSButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>checkForUpdates</key>
@@ -94,6 +94,8 @@
 				<string>id</string>
 				<key>manualScrobble</key>
 				<string>id</string>
+				<key>openAuthPage</key>
+				<string>id</string>
 				<key>performRecommendSong</key>
 				<string>id</string>
 				<key>performTagSong</key>
@@ -105,8 +107,6 @@
 				<key>recommendSong</key>
 				<string>id</string>
 				<key>showAboutPanel</key>
-				<string>id</string>
-				<key>showWaitPanel</key>
 				<string>id</string>
 				<key>tagSong</key>
 				<string>id</string>
@@ -121,8 +121,6 @@
 			<dict>
 				<key>arrowWindow</key>
 				<string>BGPointWindow</string>
-				<key>authorizationWaitPanel</key>
-				<string>NSPanel</string>
 				<key>commonTagsField</key>
 				<string>NSTokenField</string>
 				<key>commonTagsLoadingIndicator</key>
