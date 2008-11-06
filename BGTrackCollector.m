@@ -12,7 +12,7 @@
 #import "NSDictionary+ExclusionTest.h"
 
 @implementation BGTrackCollector
--(NSMutableArray *)collectTracksFromXMLFile:(NSString *)xmlPath withCutoffDate:(NSDate *)cutoffDate includingPodcasts:(BOOL)includePodcasts includingVideo:(BOOL)includeVideo ignoringComment:(NSString *)ignoreString withMinimumDuration:(int)minimumDuration {
+-(NSMutableArray *)collectTracksFromXMLFile:(NSString *)xmlPath withCutoffDate:(NSDate *)cutoffDate includingPodcasts:(BOOL)includePodcasts includingVideo:(BOOL)includeVideo ignoringComment:(NSString *)ignoreString ignoringGenre:(NSString *)genreString withMinimumDuration:(int)minimumDuration {
 
 	if (!xmlPath || ![[NSFileManager defaultManager] fileExistsAtPath:xmlPath]) {
 		NSLog(@"Supplied XML path does not exist - Using default XML path");
@@ -39,7 +39,7 @@
 			NSString *key;	
 			for (key in itunesTracks) {
 				NSDictionary *trackDetails = [itunesTracks objectForKey:key];
-				BOOL trackPassed = [trackDetails passesExclusionTestWithCutoffDate:cutoffDate includingPodcasts:includePodcasts includingVideo:includeVideo ignoringComment:ignoreString withMinimumDuration:minimumDuration];
+				BOOL trackPassed = [trackDetails passesExclusionTestWithCutoffDate:cutoffDate includingPodcasts:includePodcasts includingVideo:includeVideo ignoringComment:ignoreString ignoringGenre:genreString withMinimumDuration:minimumDuration];
 				if (trackPassed==YES)	[wantedTracks addObject:trackDetails];
 			}
 			NSLog(@"Tracks Passed: %d",wantedTracks.count);

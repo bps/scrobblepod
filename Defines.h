@@ -7,6 +7,8 @@
 	#define BGPrefWantStatusItem @"WantStatusItem"
 	#define BGPrefShouldIgnoreComments @"IgnoreComments"
 	#define BGPrefIgnoreCommentString @"IgnoreCommentsComment"
+	#define BGPrefShouldIgnoreGenre @"IgnoreGenre"
+	#define BGPrefIgnoreGenreString @"IgnoreGenreString"
 	#define BGPrefShouldIgnorePodcasts @"IgnorePodcasts"
 	#define BGPrefShouldIgnoreVideo @"IgnoreVideo"
 	#define BGPrefShouldIgnoreShort @"IgnoreShort"

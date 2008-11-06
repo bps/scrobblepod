@@ -11,7 +11,7 @@
 
 @implementation NSDictionary (ExclusionTest)
 
--(BOOL)passesExclusionTestWithCutoffDate:(NSDate *)cutoffDate includingPodcasts:(BOOL)includingPodcasts includingVideo:(BOOL)includeVideo ignoringComment:(NSString *)ignoreString withMinimumDuration:(int)minimumDuration {
+-(BOOL)passesExclusionTestWithCutoffDate:(NSDate *)cutoffDate includingPodcasts:(BOOL)includingPodcasts includingVideo:(BOOL)includeVideo ignoringComment:(NSString *)ignoreString ignoringGenre:(NSString *)genreString withMinimumDuration:(int)minimumDuration {
 	NSDate *playDate = [self objectForKey:@"Play Date UTC"];
 	BOOL shouldIncludeTrack;
 	shouldIncludeTrack = YES;
@@ -19,6 +19,7 @@
 		if (!includingPodcasts && [[self objectForKey:@"Podcast"] boolValue]) shouldIncludeTrack = NO; // include podcasts? //(wantPodcastCheckbox.state==NSOffState)
 		if (shouldIncludeTrack && !includeVideo && [[self objectForKey:@"Has Video"] boolValue]) shouldIncludeTrack = NO; // include video? //(wantVideoCheckbox.state==NSOffState)
 		if (shouldIncludeTrack && (ignoreString!=nil) && ([[self objectForKey:@"Comments"] rangeOfString:ignoreString].length>0)) shouldIncludeTrack = NO; // ignore commented? //(ignoreCommentedCheckbox.state==NSOnState)
+		if (shouldIncludeTrack && (genreString!=nil) && ([[self objectForKey:@"Genre"] rangeOfString:genreString].length>0)) shouldIncludeTrack = NO; // ignore commented? //(ignoreCommentedCheckbox.state==NSOnState)
 		if (shouldIncludeTrack && (minimumDuration > 0) && (minimumDuration > (int)[[self objectForKey:@"Total Time"] intValue]/1000)) shouldIncludeTrack = NO; // minimum track length? //(minimumDurationCheckbox.state==NSOnState)
 	} else {
 		shouldIncludeTrack = NO;

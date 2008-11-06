@@ -11,6 +11,6 @@
 
 @interface NSDictionary (ExclusionTest)
 
--(BOOL)passesExclusionTestWithCutoffDate:(NSDate *)cutoffDate includingPodcasts:(BOOL)includingPodcasts includingVideo:(BOOL)includeVideo ignoringComment:(NSString *)ignoreString withMinimumDuration:(int)minimumDuration;
+-(BOOL)passesExclusionTestWithCutoffDate:(NSDate *)cutoffDate includingPodcasts:(BOOL)includingPodcasts includingVideo:(BOOL)includeVideo ignoringComment:(NSString *)ignoreString ignoringGenre:(NSString *)genreString withMinimumDuration:(int)minimumDuration;
 
 @end

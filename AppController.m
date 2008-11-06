@@ -64,10 +64,13 @@
 		@"",BGSubmissionSessionKey,
 		[NSNumber numberWithBool:YES],BGPrefFirstRunKey,
 		[[[NSCalendarDate calendarDate] dateByAddingYears:0 months:0 days:0 hours:0 minutes:-2 seconds:0] descriptionWithCalendarFormat:DATE_FORMAT_STRING],BGPrefLastScrobbled,
+		[NSNumber numberWithBool:YES],@"SUEnableAutomaticChecks",
 		[NSNumber numberWithBool:YES],BGPrefWantMultiPost,
 		[NSNumber numberWithBool:NO],BGPrefShouldPlaySound,
 		[NSNumber numberWithBool:NO],BGPrefShouldIgnoreComments,
 		@"dontpost",BGPrefIgnoreCommentString,
+		[NSNumber numberWithBool:NO],BGPrefShouldIgnoreGenre,
+		@"",BGPrefIgnoreGenreString,
 		[NSNumber numberWithBool:YES],BGPrefShouldIgnoreShort,
 		[NSNumber numberWithInt:30],BGPrefIgnoreShortLength,
 		[NSNumber numberWithInt:3],BGPrefPodFreshnessInterval,
@@ -160,7 +163,7 @@ nil] ];
 
 -(void)primeSongPlayCache {
 	BGTrackCollector *collector = [[BGTrackCollector alloc] init];
-		NSArray *allTracks = [collector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:[[NSCalendarDate date] dateByAddingYears:-5 months:0 days:0 hours:0 minutes:0 seconds:0] includingPodcasts:YES includingVideo:YES ignoringComment:@"" withMinimumDuration:30];
+		NSArray *allTracks = [collector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:[[NSCalendarDate date] dateByAddingYears:-5 months:0 days:0 hours:0 minutes:0 seconds:0] includingPodcasts:YES includingVideo:YES ignoringComment:@"" ignoringGenre:nil withMinimumDuration:30];
 	[collector release];
 	
 	NSMutableDictionary *primedCache = [[NSMutableDictionary alloc] initWithCapacity:allTracks.count];
@@ -528,11 +531,12 @@ nil] ];
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
 	NSString *lastScrobbleDateString = 	[defaults valueForKey:BGPrefLastScrobbled];
+	NSLog(@"-- Last Scrobbled Date: %@",lastScrobbleDateString);
 	NSCalendarDate *applescriptInputDateString = [NSCalendarDate dateWithString:lastScrobbleDateString calendarFormat:DATE_FORMAT_STRING];// descriptionWithCalendarFormat:DATE_FORMAT_STRING];
 
 	NSLog(@"Collecting previously played tracks");	
 	BGTrackCollector *trackCollector = [[BGTrackCollector alloc] init];
-		NSArray *recentTracksSimple = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
+		NSArray *recentTracksSimple = [trackCollector collectTracksFromXMLFile:self.fullXmlPath withCutoffDate:applescriptInputDateString includingPodcasts:(![defaults boolForKey:BGPrefShouldIgnorePodcasts]) includingVideo:(![defaults boolForKey:BGPrefShouldIgnoreVideo]) ignoringComment:[defaults stringForKey:BGPrefIgnoreCommentString] ignoringGenre:[defaults stringForKey:BGPrefIgnoreGenreString] withMinimumDuration:[defaults integerForKey:BGPrefIgnoreShortLength]];//![defaults boolForKey:BGPrefShouldIgnorePodcasts]
 	[trackCollector release];
 	
 	NSLog(@"Assigning song list to variable");
@@ -588,9 +592,12 @@ nil] ];
 				} else {
 					[prefController addHistoryWithSuccess:YES andDate:[NSDate date] andDescription:[NSString stringWithFormat:@"Scrobbled %d song%@",recentTracksCount,(recentTracksCount==1?@"":@"s")]];
 					NSCalendarDate *returnedDate = [scrobbleResponse lastScrobbleDate];
+					NSLog(@"-- After Scrobbling Date Returned: %@",returnedDate);
 					//[self addActivityHistoryEntryWithStatus:NO andDescription:@"Successful"];
 					if (returnedDate!=nil) {
-						[defaults setValue:[returnedDate descriptionWithCalendarFormat:DATE_FORMAT_STRING] forKey:BGPrefLastScrobbled];
+						NSString *updatedDateString = [returnedDate descriptionWithCalendarFormat:DATE_FORMAT_STRING];
+						[defaults setValue:updatedDateString forKey:BGPrefLastScrobbled];
+						NSLog(@"-- Setting Last Scrobbling Date To: %@",updatedDateString);
 						[defaults synchronize];
 					}
 					[defaults setObject: [NSNumber numberWithInt: [[NSUserDefaults standardUserDefaults] integerForKey:BGTracksScrobbledTotal]+recentTracksCount ] forKey:BGTracksScrobbledTotal];
