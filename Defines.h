@@ -5,7 +5,7 @@
 	#define BGPrefShouldPlaySound @"PlaySound"
 	#define BGPrefWantMultiPost @"WantMultiPost"
 	#define BGPrefWantStatusItem @"WantStatusItem"
-	#define BGPrefShouldIgnoreComments @"IgnoreComments"
+	#define BGPrefShouldIgnoreComments @"IgnoreCommented"
 	#define BGPrefIgnoreCommentString @"IgnoreCommentsComment"
 	#define BGPrefShouldIgnoreGenre @"IgnoreGenre"
 	#define BGPrefIgnoreGenreString @"IgnoreGenreString"
