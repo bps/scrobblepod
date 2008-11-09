@@ -22,4 +22,6 @@
 -(NSString *)methodSignature;
 -(NSString *)concatenatedParametersString;
 
+-(void)resetSessionKeyValue;
+
 @end

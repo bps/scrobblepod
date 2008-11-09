@@ -16,7 +16,7 @@
 #define WS_RESP_INVALIDFORMAT 5;
 #define WS_RESP_INVALIDPARAMETERS 6;
 #define WS_RESP_INVALIDRESOURCE 7;
-#define WS_RESP_INVALIDSESSION 9; //need to re-authenticate
+#define WS_RESP_INVALIDSESSION 9; //need to re-authorize
 #define WS_RESP_INVALIDAPIKEY 10;
 #define WS_RESP_SERVICEOFFLINE 11;
 #define WS_RESP_SUBSCRIBERSONLY 12;
@@ -26,14 +26,13 @@
 @interface BGLastFmWebServiceResponse : NSObject {
 	NSXMLDocument *responseDocument;
 	int lastFmCode;
-	int translatedCode;
 	BOOL wasOK;
 }
 
 @property (retain) NSXMLDocument *responseDocument;
 @property (assign) BOOL wasOK;
 @property (assign) int lastFmCode;
-@property (assign) int translatedCode;
+@property (readonly) BOOL failedDueToInvalidKey;
 
 -(id)initWithData:(NSData *)receivedData;
 -(void)dealloc;
@@ -42,6 +41,5 @@
 -(NSXMLNode *)nodeForXPath:(NSString *)xPath;
 -(NSString *)stringValueForXPath:(NSString *)xPath;
 -(void)determineErrorCode;
--(int)constantErrorCodeFromResponseCode:(int)responseCode;
 
 @end

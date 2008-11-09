@@ -13,6 +13,7 @@
 
 -(BGLastFmWebServiceResponse *)callWithParameters:(BGLastFmWebServiceParameterList *)parameterList usingPostMethod:(BOOL)postBool usingAuthentication:(BOOL)needAuthentication {
 	BGLastFmWebServiceResponse *responseObject;
+	BOOL callWasSent = NO;
 	if (!postBool || (postBool && [parameterList parameterForKey:@"sk"]!=nil && [parameterList parameterForKey:@"sk"].length>0)) {
 		NSString *postString = [NSString stringWithFormat:@"%@%@",
 			[parameterList concatenatedParametersString],
@@ -46,14 +47,22 @@
 		
 		[request release];
 		
-		if (responseData!=nil && [postingError code]!=-1001 && [response statusCode]==200) {
+		int responseStatusCode = [response statusCode];
+		
+		if (responseData!=nil && [postingError code]!=-1001 && (responseStatusCode==200 || responseStatusCode==403) ) {
 			responseObject = [[BGLastFmWebServiceResponse alloc] initWithData:responseData];
+			callWasSent = YES;
+		} else {
+			NSLog(@"Got HTTP Status Code %d and did not continue.",responseStatusCode);
 		}
 	} else {
 		NSLog(@"Could not complete API POST request: no session key provided");
 	}
 	
-	if (responseObject==nil) responseObject = [[BGLastFmWebServiceResponse alloc] initWithData:nil];
+	if (callWasSent == NO) {
+		NSLog(@"-- Completed API call but nothing returned");
+		responseObject = [[BGLastFmWebServiceResponse alloc] initWithData:nil];
+	}
 	return [responseObject autorelease];
 }
 

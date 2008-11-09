@@ -8,6 +8,7 @@
 #import "iTunesWatcher.h"
 #import "FileWatcher.h"
 #import "BGLastFmAuthenticationManager.h"
+#import "BGLastFmWebServiceParameterList.h"
 
 @interface AppController : NSObject <TunesWatcherDelegate> {
 	NSStatusItem *statusItem;
@@ -46,6 +47,8 @@
 	IBOutlet NSWindow *welcomeWindow;
 	
 	FileWatcher *xmlWatcher;
+	
+	NSMutableArray *apiQueue;
 }
 
 -(NSString *)pathForCachedDatabase;
@@ -89,6 +92,8 @@
 -(void)xmlFileChanged:(NSNotification *)notification;
 
 #pragma mark Secondary Last.fm Methods
+-(void)queueApiCall:(BGLastFmWebServiceParameterList *)theCall popQueueToo:(BOOL)shouldPopQueue;
+-(void)popApiQueue;
 -(BOOL)dataIsAvailableForAPICallUsingArtist:(BOOL)useArtist andAlbum:(BOOL)useAlbum andTrack:(BOOL)useTrack;
 -(IBAction)goToUserProfilePage:(id)sender;
 -(IBAction)loveSong:(id)sender;

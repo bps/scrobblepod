@@ -163,14 +163,12 @@
 -(void)startAuthSpinner {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[currentLoginContainer setHidden:NO];
-	[currentLogin setStringValue:@""];
 	[authSpinner startAnimation:self];
 	[pool release];
 }
 
 -(void)loginComplete {
 	[authSpinner stopAnimation:self];
-	[currentLogin setStringValue:[[NSUserDefaults standardUserDefaults] stringForKey:@"Username"]];
 }
 
 #pragma mark Pane:History Methods

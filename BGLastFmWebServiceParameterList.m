@@ -41,6 +41,8 @@
 }
 
 -(NSString *)methodSignature {
+	[self resetSessionKeyValue];
+
 	NSMutableString *stringSoup = [[NSMutableString alloc] init];
 	
 	NSArray *sortedParameterKeys = [[parameters allKeys] sortedArrayUsingSelector:@selector(compare:)];
@@ -59,6 +61,8 @@
 }
 
 -(NSString *)concatenatedParametersString {
+	[self resetSessionKeyValue];
+
 	NSMutableArray *parameterPairs = [[NSMutableArray alloc] initWithCapacity:parameters.count];
 	NSString *key;
 	for (key in parameters) {
@@ -69,6 +73,10 @@
 	[parameterPairs release];
 	
 	return finalJoinedString;
+}
+
+-(void)resetSessionKeyValue {
+	[self setParameter:[[NSUserDefaults standardUserDefaults] stringForKey:BGWebServiceSessionKey] forKey:@"sk"];
 }
 
 @end

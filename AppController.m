@@ -17,6 +17,7 @@
 #import "BGLastFmScrobbleResponse.h"
 #import "BGLastFmWebServiceCaller.h"
 #import "BGLastFmWebServiceParameterList.h"
+#import "BGLastFmWebServiceResponse.h"
 
 #import "BGMultipleSongPlayManager.h"
 
@@ -137,6 +138,8 @@ nil] ];
 	 xmlWatcher = [[FileWatcher alloc] init];
 	 [xmlWatcher startWatchingXMLFile];
 	 NSLog(@"XML Path: %@",[xmlWatcher fullXmlPath]);
+	 
+	 apiQueue = [NSMutableArray new];
 }
 
 #pragma mark Authorization Manager
@@ -152,6 +155,7 @@ nil] ];
 -(void)newSubmissionSessionKeyAcquired {
 	[self detachNowPlayingThread];
 	[self detachScrobbleThreadWithoutConsideration:NO];
+	[self popApiQueue];
 }
 
 -(void)primeSongPlayCache {
@@ -245,11 +249,13 @@ nil] ];
 
 	[scrobbleSound release];
 	[prefController release];
-	
 		
 	[tagAutocompleteList release];
+	[friendsAutocompleteList release];
 	
 	[xmlWatcher release];
+	
+	[apiQueue release];
 		
 	[super dealloc];
 }
@@ -444,6 +450,28 @@ nil] ];
 
 #pragma mark Last.fm API Interaction
 
+-(void)queueApiCall:(BGLastFmWebServiceParameterList *)theCall popQueueToo:(BOOL)shouldPopQueue {
+	[apiQueue addObject:theCall];
+	if (shouldPopQueue) [self popApiQueue];
+}
+
+-(void)popApiQueue {
+	if (apiQueue.count > 0) {
+		BGLastFmWebServiceParameterList *params = [apiQueue objectAtIndex:0];
+		//NSLog(@"Going to pop queue with params:%@",params);
+		BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
+			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:YES];
+			NSLog(@"Got response: '%@'",[resp className]);
+			if (resp.wasOK) {
+				[apiQueue removeObject:params];
+				if (apiQueue.count > 0) [self performSelector:@selector(popApiQueue) withObject:nil afterDelay:1.0];
+			} else if (resp.failedDueToInvalidKey) {
+				[self openAuthPage:self];
+			}
+		[sc release];
+	}
+}
+
 -(IBAction)loveSong:(id)sender {		
 	[self startTasteCommand:ServiceWorker_LoveCommand];
 }
@@ -481,10 +509,7 @@ nil] ];
 		[params setParameter:currentSong.title  forKey:@"track"];
 		[params setParameter:currentSong.artist forKey:@"artist"];
 
-		BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:YES];
-			NSLog(@"Got API Response for command %@ - %@",tasteCommand,[resp description]);
-		[sc release];
+		[self queueApiCall:params popQueueToo:YES];
 
 		[params release];
 	}
@@ -536,10 +561,7 @@ nil] ];
 				[params setParameter:[theTags componentsJoinedByString:@","] forKey:@"tags"];
 			}
 
-			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:YES];
-				NSLog(@"Got API Response for command %@ - %@",apiMethod,[resp description]);
-			[sc release];
+			[self queueApiCall:params popQueueToo:YES];
 
 			[params release];
 		}
@@ -598,10 +620,7 @@ nil] ];
 			NSString *theMessage = recommendMessageField.stringValue;
 			if (theMessage.length > 0) [params setParameter:theMessage forKey:@"message"];
 
-			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:YES];
-				NSLog(@"Got API Response for command %@ - %@",apiMethod,[resp description]);
-			[sc release];
+			[self queueApiCall:params popQueueToo:YES];
 
 			[params release];
 		}
@@ -611,9 +630,7 @@ nil] ];
 }
 
 -(void)updateFriendsList {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	self.friendsAutocompleteList = [self friendsForUser];
-	[pool release];
 }
 
 -(NSArray *)friendsForUser {

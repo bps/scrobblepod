@@ -27,25 +27,24 @@
 			[sessionParams setParameter:theToken forKey:@"token"];
 
 			BGLastFmWebServiceCaller *sessionCaller = [[BGLastFmWebServiceCaller alloc] init];
-				BGLastFmWebServiceResponse *response = [sessionCaller callWithParameters:sessionParams usingPostMethod:NO];
+				BGLastFmWebServiceResponse *response = [sessionCaller callWithParameters:sessionParams usingPostMethod:NO usingAuthentication:YES];
 			[sessionCaller release];
 		[sessionParams release];
 		
 		NSLog(@"%@",response.responseDocument);
 		
 		if (response.wasOK) {
-			NSString *session = [response stringValueForXPath:@"/lfm/session/key"];
 			NSString *username = [response stringValueForXPath:@"/lfm/session/name"];
+			NSString *session = [response stringValueForXPath:@"/lfm/session/key"];
 			if (session && username) {
 				NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 				[defaults setObject:session forKey:BGWebServiceSessionKey];
 				[defaults setObject:username forKey:BGPrefUsername];
-				NSLog(@"WS");
 				[[NSNotificationCenter defaultCenter] postNotificationName:APIHUB_WebServiceAuthorizationProcessing object:nil];
 				return session;
 			}
 		} else {
-			NSLog(@"Unable to fetch Session Key: response.translatedCode=%d",response.translatedCode);
+			NSLog(@"Unable to fetch Session Key: response.lastFmCode = %d",response.lastFmCode);
 		}
 
 	}
@@ -68,7 +67,7 @@
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/api/auth?api_key=%@",API_KEY]]];
 }
 
-+ (NSString *)fetchSessionKeyUsingToken:(NSString *)theToken {
++(NSString *)fetchSessionKeyUsingToken:(NSString *)theToken {
 	BGLastFmWebServiceHandshaker *obj = [[self alloc] init];
 	NSString *sk = [obj sessionKeyFromToken:theToken];
 	[obj release];
