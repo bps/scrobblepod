@@ -100,6 +100,7 @@
 
 -(void)showArrowWindowForView:(NSView *)theView;
 -(void)updateFriendsList;
+-(NSArray *)friendsForUser;
 -(IBAction)performRecommendSong:(id)sender;
 
 #pragma mark Preference Integration

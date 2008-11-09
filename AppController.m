@@ -410,10 +410,11 @@ nil] ];
 -(BOOL)dataIsAvailableForAPICallUsingArtist:(BOOL)useArtist andAlbum:(BOOL)useAlbum andTrack:(BOOL)useTrack {
 	iTunesWatcher *tunesWatcher = [iTunesWatcher sharedManager];
 
+	NSString *username = authManager.username;
 	NSString *sessionKey = authManager.webServiceSessionKey;
 	BOOL isPlaying = tunesWatcher.iTunesIsPlaying;
 
-	if (isPlaying && sessionKey && sessionKey.length > 0) {
+	if (isPlaying && username && username.length > 0 && sessionKey && sessionKey.length > 0) {
 		BGLastFmSong *currentSong = tunesWatcher.currentSong;
 		
 		if (currentSong) {
@@ -511,20 +512,89 @@ nil] ];
 
 -(IBAction)performRecommendSong:(id)sender {
 	[arrowWindow setShouldClose:NO];
-/*	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
-		[serviceWorker acquireCredentials];
-		[serviceWorker recommendWithType:recommendTypeChooser.selectedSegment forFriendUsernames:friendsEntryField.objectValue withMessage:recommendMessageField.stringValue];
-	[serviceWorker release];*/
+	
+	int tagType = recommendTypeChooser.selectedSegment;
+	BOOL needAlbum = BGOperationType_Album == tagType;
+	BOOL needTrack = BGOperationType_Song  == tagType;
+	
+	if ([self dataIsAvailableForAPICallUsingArtist:YES andAlbum:needAlbum andTrack:needTrack]) {
+	
+		NSString *apiMethod;
+		switch (tagType) {
+			case BGOperationType_Song:
+				apiMethod = @"track.share";
+				break;
+			case BGOperationType_Artist:
+				apiMethod = @"artist.share";
+				break;
+			case BGOperationType_Album:
+				apiMethod = nil;//@"album.share"; //album.share not yet supported by last.fm
+				break;
+			default:
+				apiMethod = nil;
+				break;
+		}
+		
+		if (apiMethod != nil) {
+			NSString *sessionKey = authManager.webServiceSessionKey;
+			BGLastFmSong *currentSong = [iTunesWatcher sharedManager].currentSong;
+
+			BGLastFmWebServiceParameterList *params = [[BGLastFmWebServiceParameterList alloc] initWithMethod:apiMethod andSessionKey:sessionKey];
+			[params setParameter:currentSong.artist forKey:@"artist"];
+			if (needTrack) [params setParameter:currentSong.title  forKey:@"track"];
+			if (needAlbum) [params setParameter:currentSong.album  forKey:@"album"];
+			
+			NSArray *theFriends = [friendsEntryField objectValue];
+			if (theFriends.count > 10) theFriends = [theFriends objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 9)]];
+			if (theFriends.count > 0) {
+				[params setParameter:[theFriends componentsJoinedByString:@","] forKey:@"recipient"];
+			}
+			
+			NSString *theMessage = recommendMessageField.stringValue;
+			if (theMessage.length > 0) [params setParameter:theMessage forKey:@"message"];
+
+			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
+				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+				NSLog(@"Got API Response for command %@ - %@",apiMethod,[resp description]);
+			[sc release];
+
+			[params release];
+		}
+	}
+
 	[arrowWindow setShouldClose:YES];
 }
 
 -(void)updateFriendsList {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-/*	BGLastFmServiceWorker *friendFinder = [[BGLastFmServiceWorker alloc] init];
-		NSArray *friendsList = [friendFinder friendsForUser:[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUsername]];
-		self.friendsAutocompleteList = friendsList;
-	[friendFinder release];*/
+	self.friendsAutocompleteList = [self friendsForUser];
 	[pool release];
+}
+
+-(NSArray *)friendsForUser {
+	NSMutableArray *friendsList = [NSMutableArray array];
+	if ([self dataIsAvailableForAPICallUsingArtist:NO andAlbum:NO andTrack:NO]) {
+		NSString *username = authManager.username;
+		NSString *sessionKey = authManager.webServiceSessionKey;
+
+		BGLastFmWebServiceParameterList *params = [[BGLastFmWebServiceParameterList alloc] initWithMethod:@"user.getFriends" andSessionKey:sessionKey];
+		[params setParameter:username forKey:@"user"];
+
+		BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
+			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+			
+			NSXMLDocument *friendsXML = resp.responseDocument;
+			NSArray *friendNodes = [friendsXML nodesForXPath:@"/lfm/friends/user/name" error:nil];
+			NSXMLNode *currentNameNode;
+			for (currentNameNode in friendNodes) {
+				[friendsList addObject:[currentNameNode stringValue]];
+			}
+			
+		[sc release];
+
+		[params release];
+	}
+	return friendsList;
 }
 
 -(void)showArrowWindowForView:(NSView *)theView {
