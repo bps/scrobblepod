@@ -15,7 +15,6 @@
 #import "BGLastFmHandshakeResponse.h"
 #import "BGLastFmScrobbler.h"
 #import "BGLastFmScrobbleResponse.h"
-//#import "BGLastFmServiceWorker.h"
 #import "BGLastFmWebServiceCaller.h"
 #import "BGLastFmWebServiceParameterList.h"
 

@@ -38,7 +38,6 @@
 		B55B7AFE0DE513CF004A6DFC /* GrowlHub.m in Sources */ = {isa = PBXBuildFile; fileRef = B55B7AFD0DE513CF004A6DFC /* GrowlHub.m */; };
 		B55B7B7F0DE53244004A6DFC /* NSDictionary+ExclusionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B55B7B7E0DE53244004A6DFC /* NSDictionary+ExclusionTest.m */; };
 		B55D0A7C0C10400D00E21BB0 /* exceptions.tiff in Resources */ = {isa = PBXBuildFile; fileRef = B55D0A7B0C10400D00E21BB0 /* exceptions.tiff */; };
-		B55E7EDE0C5C05C900CB1F31 /* BGLastFmServiceWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = B55E7EDC0C5C05C900CB1F31 /* BGLastFmServiceWorker.m */; };
 		B560F8F20DB36ECB0005674A /* tag_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = B560F8EF0DB36ECB0005674A /* tag_normal.png */; };
 		B560F8F30DB36ECB0005674A /* tag_off.png in Resources */ = {isa = PBXBuildFile; fileRef = B560F8F00DB36ECB0005674A /* tag_off.png */; };
 		B560F8F40DB36ECB0005674A /* tag_on.png in Resources */ = {isa = PBXBuildFile; fileRef = B560F8F10DB36ECB0005674A /* tag_on.png */; };
@@ -107,7 +106,6 @@
 		B5F361F30BE3FF19004DB2EF /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F361F10BE3FF19004DB2EF /* SFHFKeychainUtils.m */; };
 		B5F362140BE40210004DB2EF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F362130BE40210004DB2EF /* Security.framework */; };
 		B5F504360EB7AD340035AF28 /* MobileDeviceSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F504350EB7AD340035AF28 /* MobileDeviceSupport.m */; };
-		B5F6B78D0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F6B78C0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -175,8 +173,6 @@
 		B55B7B7D0DE53244004A6DFC /* NSDictionary+ExclusionTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+ExclusionTest.h"; sourceTree = "<group>"; };
 		B55B7B7E0DE53244004A6DFC /* NSDictionary+ExclusionTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+ExclusionTest.m"; sourceTree = "<group>"; };
 		B55D0A7B0C10400D00E21BB0 /* exceptions.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = exceptions.tiff; sourceTree = "<group>"; };
-		B55E7EDB0C5C05C900CB1F31 /* BGLastFmServiceWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmServiceWorker.h; sourceTree = "<group>"; };
-		B55E7EDC0C5C05C900CB1F31 /* BGLastFmServiceWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmServiceWorker.m; sourceTree = "<group>"; };
 		B560F8EF0DB36ECB0005674A /* tag_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tag_normal.png; sourceTree = "<group>"; };
 		B560F8F00DB36ECB0005674A /* tag_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tag_off.png; sourceTree = "<group>"; };
 		B560F8F10DB36ECB0005674A /* tag_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tag_on.png; sourceTree = "<group>"; };
@@ -282,8 +278,6 @@
 		B5F3627A0BE405DD004DB2EF /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		B5F504340EB7AD340035AF28 /* MobileDeviceSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileDeviceSupport.h; sourceTree = "<group>"; };
 		B5F504350EB7AD340035AF28 /* MobileDeviceSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobileDeviceSupport.m; sourceTree = "<group>"; };
-		B5F6B78B0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGLastFmRadioHandshakeResponse.h; sourceTree = "<group>"; };
-		B5F6B78C0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGLastFmRadioHandshakeResponse.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -444,7 +438,6 @@
 				B52CE5170C5AB20D007090A7 /* BGLastFmDefines.h */,
 				B52CE5090C5AB18B007090A7 /* BGLastFmSong.h */,
 				B52CE50A0C5AB18B007090A7 /* BGLastFmSong.m */,
-				B55E7ED80C5C058A00CB1F31 /* LoveBan */,
 				B52CE4F70C5AB16F007090A7 /* Handshake */,
 				B52CE5000C5AB17A007090A7 /* Scrobble */,
 			);
@@ -472,17 +465,6 @@
 				B52DE3780DF8CF210024C2EB /* old_menu_icon.png */,
 			);
 			name = Images;
-			sourceTree = "<group>";
-		};
-		B55E7ED80C5C058A00CB1F31 /* LoveBan */ = {
-			isa = PBXGroup;
-			children = (
-				B5F6B78B0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.h */,
-				B5F6B78C0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m */,
-				B55E7EDB0C5C05C900CB1F31 /* BGLastFmServiceWorker.h */,
-				B55E7EDC0C5C05C900CB1F31 /* BGLastFmServiceWorker.m */,
-			);
-			name = LoveBan;
 			sourceTree = "<group>";
 		};
 		B560F8EA0DB36E7C0005674A /* Tri-State */ = {
@@ -782,7 +764,6 @@
 				B52CE5060C5AB17A007090A7 /* BGLastFmScrobbleResponse.m in Sources */,
 				B52CE5080C5AB17A007090A7 /* BGLastFmScrobbler.m in Sources */,
 				B52CE50C0C5AB18B007090A7 /* BGLastFmSong.m in Sources */,
-				B55E7EDE0C5C05C900CB1F31 /* BGLastFmServiceWorker.m in Sources */,
 				B5EAFDEA0D47152900863484 /* BGTrackCollector.m in Sources */,
 				B5EFC0D60D5C532C003C8C21 /* BGLastFMPasswordChecker.m in Sources */,
 				B589BCC60D6158D9008911C3 /* BGRoundedInfoView.m in Sources */,
@@ -798,7 +779,6 @@
 				B54CD6EF0DBDD7A500B2F077 /* StatusItemView.m in Sources */,
 				B5903C810DBEBBDD0051A0E4 /* BGPointWindow.m in Sources */,
 				B5903C820DBEBBDD0051A0E4 /* RoundPointView.m in Sources */,
-				B5F6B78D0DBF72BA0014E9A7 /* BGLastFmRadioHandshakeResponse.m in Sources */,
 				B5CFA3550DC0040F00F96D31 /* BGAudioScrobblerXmlRpcPost.m in Sources */,
 				B5CFA35B0DC00B5D00F96D31 /* BGAudioScrobblerXmlRpcParameter.m in Sources */,
 				B516CFEC0DDBE72700F496BF /* BGScrobbleDecisionManager.m in Sources */,
