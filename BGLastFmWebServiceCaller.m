@@ -51,7 +51,6 @@
 	}
 	
 	if (responseObject==nil) responseObject = [[BGLastFmWebServiceResponse alloc] initWithData:nil];
-	NSLog(@"Going to return %@",responseObject);
 	return [responseObject autorelease];
 }
 

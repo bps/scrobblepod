@@ -57,8 +57,8 @@
 	#define BGActivityHistoryArray "ActivityHistory"
 	#define BGTracksScrobbledTotal @"TracksScrobbled"
 
-	#define ServiceWorker_LoveCommand @"loveTrack"
-	#define ServiceWorker_BanCommand @"banTrack"
+	#define ServiceWorker_LoveCommand @"track.love"
+	#define ServiceWorker_BanCommand  @"track.ban"
 
 #pragma mark Leavin for Later (Commented)
 //#define applescriptCalFormat @"%A, %e %B %Y %I:%M:%S %p"

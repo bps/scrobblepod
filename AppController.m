@@ -15,7 +15,9 @@
 #import "BGLastFmHandshakeResponse.h"
 #import "BGLastFmScrobbler.h"
 #import "BGLastFmScrobbleResponse.h"
-#import "BGLastFmServiceWorker.h"
+//#import "BGLastFmServiceWorker.h"
+#import "BGLastFmWebServiceCaller.h"
+#import "BGLastFmWebServiceParameterList.h"
 
 #import "BGMultipleSongPlayManager.h"
 
@@ -30,14 +32,6 @@
 //#import "BGConnectionCaller.h"
 
 @implementation AppController
-
--(IBAction)showWaitPanel:(id)sender {
-//	[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:[NSURL URLWithString:@"http://www.google.com/"]] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
-//	[NSApp beginSheet:authorizationWaitPanel modalForWindow:welcomeWindow
-//            modalDelegate:self
-//            didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
-//            contextInfo:NULL];
-}
 
 #pragma mark Application Starting/Quitting
 
@@ -122,8 +116,6 @@ nil] ];
 		[self primeSongPlayCache];
 	}
 	
-//	[resizingMenuItem setView:[[[BGResizingMenuItemView alloc] initWithFrame:NSMakeRect(0,0,containerView.frame.size.width,20)] autorelease] ];
-	
 	NSString *storedDateString = [defaults valueForKey:BGPrefLastScrobbled];
 	if ([NSCalendarDate dateWithString:storedDateString calendarFormat:DATE_FORMAT_STRING]==nil) {
 		[defaults setValue:[[NSCalendarDate calendarDate] descriptionWithCalendarFormat:DATE_FORMAT_STRING] forKey:BGPrefLastScrobbled];
@@ -147,6 +139,8 @@ nil] ];
 	 [xmlWatcher startWatchingXMLFile];
 	 NSLog(@"XML Path: %@",[xmlWatcher fullXmlPath]);
 }
+
+#pragma mark Authorization Manager
 
 -(IBAction)openAuthPage:(id)sender {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/api/auth?api_key=%@",API_KEY]]];
@@ -265,7 +259,7 @@ nil] ];
 	[super dealloc];
 }
 
-#pragma mark Delegate Method
+#pragma mark Delegate Methods
 
 -(void)podWatcherMountedPod:(NSNotification *)notification {
 	[[BGScrobbleDecisionManager sharedManager] refreshDecisionAndNotifyIfChanged:YES];
@@ -361,7 +355,7 @@ nil] ];
 	[commonTagsField setObjectValue:[NSArray array]];
 	[commonTagsLoadingView setHidden:NO];
 	[commonTagsLoadingIndicator startAnimation:self];
-	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
+/*	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
 		NSArray *tagList = [serviceWorker tagsForSong:nil forType: tagTypeChooser.selectedSegment];
 		if (tagList.count > 0) {
 			self.tagAutocompleteList = tagList;
@@ -369,7 +363,7 @@ nil] ];
 			self.tagAutocompleteList = [NSArray arrayWithObjects:@"Tags", @"Could", @"Not", @"Be", @"Loaded",nil];
 		}
 		[commonTagsField setObjectValue:tagAutocompleteList];
-	[serviceWorker release];
+	[serviceWorker release];*/
 	[commonTagsLoadingIndicator stopAnimation:self];
 	[commonTagsLoadingView setHidden:YES];
 	isLoadingCommonTags = NO;
@@ -422,10 +416,10 @@ nil] ];
 
 -(IBAction)performTagSong:(id)sender {
 	[arrowWindow setShouldClose:NO];
-	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
+/*	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
 		[serviceWorker acquireCredentials];
 		[serviceWorker tagWithType:[tagTypeChooser selectedSegment] forTags:[tagEntryField objectValue]];
-	[serviceWorker release];
+	[serviceWorker release];*/
 	[arrowWindow setShouldClose:YES];
 }
 
@@ -438,19 +432,19 @@ nil] ];
 
 -(IBAction)performRecommendSong:(id)sender {
 	[arrowWindow setShouldClose:NO];
-	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
+/*	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
 		[serviceWorker acquireCredentials];
 		[serviceWorker recommendWithType:recommendTypeChooser.selectedSegment forFriendUsernames:friendsEntryField.objectValue withMessage:recommendMessageField.stringValue];
-	[serviceWorker release];
+	[serviceWorker release];*/
 	[arrowWindow setShouldClose:YES];
 }
 
 -(void)updateFriendsList {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	BGLastFmServiceWorker *friendFinder = [[BGLastFmServiceWorker alloc] init];
+/*	BGLastFmServiceWorker *friendFinder = [[BGLastFmServiceWorker alloc] init];
 		NSArray *friendsList = [friendFinder friendsForUser:[[NSUserDefaults standardUserDefaults] stringForKey:BGPrefUsername]];
 		self.friendsAutocompleteList = friendsList;
-	[friendFinder release];
+	[friendFinder release];*/
 	[pool release];
 }
 
@@ -478,12 +472,34 @@ nil] ];
 	[NSAnimationContext endGrouping];
 }
 
--(void)startTasteCommand:(NSString *)tasteCommand {
-//	[infoView setStringValue:@"Loving song..." isActive:YES];
-	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
-	[serviceWorker acquireCredentials];
-	[serviceWorker submitTasteCommand:tasteCommand];
-	[serviceWorker release];
+-(void)startTasteCommand:(NSString *)tasteCommand { //tasteCommand is either @"track.love" or @"track.ban"
+	iTunesWatcher *tunesWatcher = [iTunesWatcher sharedManager];
+
+	NSString *sessionKey = authManager.webServiceSessionKey;
+	BOOL isPlaying = tunesWatcher.iTunesIsPlaying;
+	
+	if (isPlaying && sessionKey && sessionKey.length > 0) {
+
+		BGLastFmSong *currentSong = tunesWatcher.currentSong;
+		
+		if (currentSong) {
+			NSString *songTitle = currentSong.title;
+			NSString *songArtist = currentSong.title;
+			
+			if (songTitle && songArtist && songTitle.length > 0 && songArtist.length > 0) {
+				BGLastFmWebServiceParameterList *params = [[BGLastFmWebServiceParameterList alloc] initWithMethod:tasteCommand andSessionKey:sessionKey];
+				[params setParameter:songTitle forKey:@"track"];
+				[params setParameter:songArtist forKey:@"artist"];
+
+				BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
+					BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+					NSLog(@"Got API Response for command %@ - %@",tasteCommand,[resp description]);
+				[sc release];
+				
+				[params release];
+			}
+		}
+	}
 }
 
 #pragma mark Preferences
