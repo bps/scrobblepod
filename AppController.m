@@ -187,10 +187,6 @@ nil] ];
 	return [[NSFileManager defaultManager] fileExistsAtPath:[self pathForCachedDatabase]];
 }
 
-//-(void)receivedData:(NSData *)theData {
-//	NSLog(@"The data was %d bytes long",[theData length]);
-//}
-
 -(void)menuDidClose:(NSMenu *)menu {
 	[(StatusItemView *)statusItem.view setSelected:NO];
 	[infoView resetBlueToOffState];
@@ -356,7 +352,6 @@ nil] ];
 	[commonTagsLoadingIndicator startAnimation:self];
 
 	NSArray *tagList = [self popularTagsForCurrentSong];
-	NSLog(@"TAGS:%@",tagList);
 	if (tagList.count > 0) {
 		self.tagAutocompleteList = tagList;
 	} else {
@@ -689,7 +684,6 @@ nil] ];
 
 -(void)detachScrobbleThreadWithoutConsideration:(BOOL)passThrough {
 	if (!isScrobbling) {
-		NSLog(@"Posting scrobbles");
 		BOOL shouldContinue = passThrough;
 		if (!passThrough) shouldContinue = [[BGScrobbleDecisionManager sharedManager] shouldScrobble];
 		if (shouldContinue) [NSThread detachNewThreadSelector:@selector(postScrobble) toTarget:self withObject:nil];
