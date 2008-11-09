@@ -13,24 +13,6 @@
 			<string>NSView</string>
 		</dict>
 		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>close</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>BGPointWindow</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>theMenu</key>
-				<string>NSMenu</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindow</string>
-		</dict>
-		<dict>
 			<key>CLASS</key>
 			<string>BGRoundedInfoView</string>
 			<key>LANGUAGE</key>
@@ -64,6 +46,24 @@
 			<string>NSObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>close</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>BGPointWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>theMenu</key>
+				<string>NSMenu</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindow</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
