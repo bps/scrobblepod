@@ -89,6 +89,7 @@
 -(void)xmlFileChanged:(NSNotification *)notification;
 
 #pragma mark Secondary Last.fm Methods
+-(BOOL)dataIsAvailableForAPICallUsingArtist:(BOOL)useArtist andAlbum:(BOOL)useAlbum andTrack:(BOOL)useTrack;
 -(IBAction)goToUserProfilePage:(id)sender;
 -(IBAction)loveSong:(id)sender;
 -(IBAction)banSong:(id)sender;

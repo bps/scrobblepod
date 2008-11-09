@@ -407,6 +407,43 @@ nil] ];
 	[self startTasteCommand:ServiceWorker_BanCommand];
 }
 
+-(BOOL)dataIsAvailableForAPICallUsingArtist:(BOOL)useArtist andAlbum:(BOOL)useAlbum andTrack:(BOOL)useTrack {
+	iTunesWatcher *tunesWatcher = [iTunesWatcher sharedManager];
+
+	NSString *sessionKey = authManager.webServiceSessionKey;
+	BOOL isPlaying = tunesWatcher.iTunesIsPlaying;
+
+	if (isPlaying && sessionKey && sessionKey.length > 0) {
+		BGLastFmSong *currentSong = tunesWatcher.currentSong;
+		
+		if (currentSong) {
+			NSString *songTitle = currentSong.title;
+			NSString *songArtist = currentSong.artist;
+			NSString *songAlbum = currentSong.album;
+			
+			return ( (!useArtist || (useArtist && songArtist)) && (!useAlbum || (useAlbum && songAlbum)) && (!useTrack || (useTrack && songTitle)) );
+		} else return NO;
+	} else return NO;
+}
+
+-(void)startTasteCommand:(NSString *)tasteCommand { //tasteCommand is either @"track.love" or @"track.ban"
+	if ([self dataIsAvailableForAPICallUsingArtist:YES andAlbum:NO andTrack:YES]) {
+		NSString *sessionKey = authManager.webServiceSessionKey;
+		BGLastFmSong *currentSong = [iTunesWatcher sharedManager].currentSong;
+
+		BGLastFmWebServiceParameterList *params = [[BGLastFmWebServiceParameterList alloc] initWithMethod:tasteCommand andSessionKey:sessionKey];
+		[params setParameter:currentSong.title  forKey:@"track"];
+		[params setParameter:currentSong.artist forKey:@"artist"];
+
+		BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
+			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+			NSLog(@"Got API Response for command %@ - %@",tasteCommand,[resp description]);
+		[sc release];
+
+		[params release];
+	}
+}
+
 -(IBAction)tagSong:(id)sender {
 	[tagEntryField setObjectValue:[NSArray array]];
 	[self showArrowWindowForView:tagEntryView];
@@ -416,10 +453,52 @@ nil] ];
 
 -(IBAction)performTagSong:(id)sender {
 	[arrowWindow setShouldClose:NO];
-/*	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
-		[serviceWorker acquireCredentials];
-		[serviceWorker tagWithType:[tagTypeChooser selectedSegment] forTags:[tagEntryField objectValue]];
-	[serviceWorker release];*/
+	
+	int tagType = [tagTypeChooser selectedSegment];
+	BOOL needAlbum = BGOperationType_Album == tagType;
+	BOOL needTrack = BGOperationType_Song  == tagType;
+	
+	if ([self dataIsAvailableForAPICallUsingArtist:YES andAlbum:needAlbum andTrack:needTrack]) {
+	
+		NSString *apiMethod;
+		switch (tagType) {
+			case BGOperationType_Song:
+				apiMethod = @"track.addTags";
+				break;
+			case BGOperationType_Artist:
+				apiMethod = @"artist.addTags";
+				break;
+			case BGOperationType_Album:
+				apiMethod = @"album.addTags";
+				break;
+			default:
+				apiMethod = nil;
+				break;
+		}
+		
+		if (apiMethod != nil) {
+			NSString *sessionKey = authManager.webServiceSessionKey;
+			BGLastFmSong *currentSong = [iTunesWatcher sharedManager].currentSong;
+
+			BGLastFmWebServiceParameterList *params = [[BGLastFmWebServiceParameterList alloc] initWithMethod:apiMethod andSessionKey:sessionKey];
+			[params setParameter:currentSong.artist forKey:@"artist"];
+			if (needTrack) [params setParameter:currentSong.title  forKey:@"track"];
+			if (needAlbum) [params setParameter:currentSong.album  forKey:@"album"];
+			
+			NSArray *theTags = [tagEntryField objectValue];
+			if (theTags.count > 0) {
+				[params setParameter:[theTags componentsJoinedByString:@","] forKey:@"tags"];
+			}
+
+			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
+				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+				NSLog(@"Got API Response for command %@ - %@",apiMethod,[resp description]);
+			[sc release];
+
+			[params release];
+		}
+	}
+	
 	[arrowWindow setShouldClose:YES];
 }
 
@@ -470,36 +549,6 @@ nil] ];
 		[[NSAnimationContext currentContext] setDuration:0.1];
 		[arrowWindow.animator setAlphaValue:1.0f];
 	[NSAnimationContext endGrouping];
-}
-
--(void)startTasteCommand:(NSString *)tasteCommand { //tasteCommand is either @"track.love" or @"track.ban"
-	iTunesWatcher *tunesWatcher = [iTunesWatcher sharedManager];
-
-	NSString *sessionKey = authManager.webServiceSessionKey;
-	BOOL isPlaying = tunesWatcher.iTunesIsPlaying;
-	
-	if (isPlaying && sessionKey && sessionKey.length > 0) {
-
-		BGLastFmSong *currentSong = tunesWatcher.currentSong;
-		
-		if (currentSong) {
-			NSString *songTitle = currentSong.title;
-			NSString *songArtist = currentSong.title;
-			
-			if (songTitle && songArtist && songTitle.length > 0 && songArtist.length > 0) {
-				BGLastFmWebServiceParameterList *params = [[BGLastFmWebServiceParameterList alloc] initWithMethod:tasteCommand andSessionKey:sessionKey];
-				[params setParameter:songTitle forKey:@"track"];
-				[params setParameter:songArtist forKey:@"artist"];
-
-				BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-					BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
-					NSLog(@"Got API Response for command %@ - %@",tasteCommand,[resp description]);
-				[sc release];
-				
-				[params release];
-			}
-		}
-	}
 }
 
 #pragma mark Preferences
