@@ -404,7 +404,7 @@ nil] ];
 			if (needAlbum) [params setParameter:currentSong.album  forKey:@"album"];
 
 			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:NO];
 				
 				NSXMLDocument *tagsXML = resp.responseDocument;
 				NSArray *tagNodes = [tagsXML nodesForXPath:@"/lfm/toptags/tag/name" error:nil];
@@ -487,7 +487,7 @@ nil] ];
 		[params setParameter:currentSong.artist forKey:@"artist"];
 
 		BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:YES];
 			NSLog(@"Got API Response for command %@ - %@",tasteCommand,[resp description]);
 		[sc release];
 
@@ -542,7 +542,7 @@ nil] ];
 			}
 
 			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:YES];
 				NSLog(@"Got API Response for command %@ - %@",apiMethod,[resp description]);
 			[sc release];
 
@@ -604,7 +604,7 @@ nil] ];
 			if (theMessage.length > 0) [params setParameter:theMessage forKey:@"message"];
 
 			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:YES];
 				NSLog(@"Got API Response for command %@ - %@",apiMethod,[resp description]);
 			[sc release];
 
@@ -631,7 +631,7 @@ nil] ];
 		[params setParameter:username forKey:@"user"];
 
 		BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
-			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+			BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES usingAuthentication:NO];
 			
 			NSXMLDocument *friendsXML = resp.responseDocument;
 			NSArray *friendNodes = [friendsXML nodesForXPath:@"/lfm/friends/user/name" error:nil];

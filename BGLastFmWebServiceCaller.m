@@ -11,10 +11,13 @@
 
 @implementation BGLastFmWebServiceCaller
 
--(BGLastFmWebServiceResponse *)callWithParameters:(BGLastFmWebServiceParameterList *)parameterList usingPostMethod:(BOOL)postBool {
+-(BGLastFmWebServiceResponse *)callWithParameters:(BGLastFmWebServiceParameterList *)parameterList usingPostMethod:(BOOL)postBool usingAuthentication:(BOOL)needAuthentication {
 	BGLastFmWebServiceResponse *responseObject;
 	if (!postBool || (postBool && [parameterList parameterForKey:@"sk"]!=nil && [parameterList parameterForKey:@"sk"].length>0)) {
-		NSString *postString = [NSString stringWithFormat:@"%@&api_sig=%@",[parameterList concatenatedParametersString],[parameterList methodSignature]];
+		NSString *postString = [NSString stringWithFormat:@"%@%@",
+			[parameterList concatenatedParametersString],
+			(needAuthentication ? [NSString stringWithFormat:@"&api_sig=%@", [parameterList methodSignature]] : @"" )
+		];
 		NSURL *postURL;
 		if (postBool) {
 			postURL = [NSURL URLWithString:@"http://ws.audioscrobbler.com/2.0/"];

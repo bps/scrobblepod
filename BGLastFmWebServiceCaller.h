@@ -14,6 +14,6 @@
 
 }
 
--(BGLastFmWebServiceResponse *)callWithParameters:(BGLastFmWebServiceParameterList *)theParameters usingPostMethod:(BOOL)postBool;
+-(BGLastFmWebServiceResponse *)callWithParameters:(BGLastFmWebServiceParameterList *)parameterList usingPostMethod:(BOOL)postBool usingAuthentication:(BOOL)needAuthentication;
 
 @end
