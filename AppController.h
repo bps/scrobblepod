@@ -97,7 +97,7 @@
 -(IBAction)recommendSong:(id)sender;
 -(void)startTasteCommand:(NSString *)tasteCommand;
 -(IBAction)performTagSong:(id)sender;
-
+-(NSArray *)popularTagsForCurrentSong;
 -(void)showArrowWindowForView:(NSView *)theView;
 -(void)updateFriendsList;
 -(NSArray *)friendsForUser;

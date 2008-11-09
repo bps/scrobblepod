@@ -355,19 +355,70 @@ nil] ];
 	[commonTagsField setObjectValue:[NSArray array]];
 	[commonTagsLoadingView setHidden:NO];
 	[commonTagsLoadingIndicator startAnimation:self];
-/*	BGLastFmServiceWorker *serviceWorker = [[BGLastFmServiceWorker alloc] init];
-		NSArray *tagList = [serviceWorker tagsForSong:nil forType: tagTypeChooser.selectedSegment];
-		if (tagList.count > 0) {
-			self.tagAutocompleteList = tagList;
-		} else {
-			self.tagAutocompleteList = [NSArray arrayWithObjects:@"Tags", @"Could", @"Not", @"Be", @"Loaded",nil];
-		}
-		[commonTagsField setObjectValue:tagAutocompleteList];
-	[serviceWorker release];*/
+
+	NSArray *tagList = [self popularTagsForCurrentSong];
+	NSLog(@"TAGS:%@",tagList);
+	if (tagList.count > 0) {
+		self.tagAutocompleteList = tagList;
+	} else {
+		self.tagAutocompleteList = [NSArray arrayWithObjects:@"Tags", @"Could", @"Not", @"Be", @"Loaded",nil];
+	}
+
+	[commonTagsField setObjectValue:self.tagAutocompleteList];
+
 	[commonTagsLoadingIndicator stopAnimation:self];
 	[commonTagsLoadingView setHidden:YES];
 	isLoadingCommonTags = NO;
 	[pool release];
+}
+
+-(NSArray *)popularTagsForCurrentSong {
+	NSMutableArray *tagList = [NSMutableArray array];
+	int tagType = tagTypeChooser.selectedSegment;
+	BOOL needAlbum = BGOperationType_Album == tagType;
+	BOOL needTrack = BGOperationType_Song  == tagType;
+	if ([self dataIsAvailableForAPICallUsingArtist:NO andAlbum:needAlbum andTrack:needTrack]) {
+		NSString *sessionKey = authManager.webServiceSessionKey;
+
+		NSString *apiMethod;
+		switch (tagType) {
+			case BGOperationType_Song:
+				apiMethod = @"track.getTopTags";
+				break;
+			case BGOperationType_Artist:
+				apiMethod = @"artist.getTopTags";
+				break;
+			case BGOperationType_Album:
+				apiMethod = nil;//@"album.addTags";
+				break;
+			default:
+				apiMethod = nil;
+				break;
+		}
+		
+		if (apiMethod) {
+			BGLastFmWebServiceParameterList *params = [[BGLastFmWebServiceParameterList alloc] initWithMethod:apiMethod andSessionKey:sessionKey];
+
+			BGLastFmSong *currentSong = [iTunesWatcher sharedManager].currentSong;		
+			[params setParameter:currentSong.artist forKey:@"artist"];
+			if (needTrack) [params setParameter:currentSong.title  forKey:@"track"];
+			if (needAlbum) [params setParameter:currentSong.album  forKey:@"album"];
+
+			BGLastFmWebServiceCaller *sc = [[BGLastFmWebServiceCaller alloc] init];
+				BGLastFmWebServiceResponse *resp = [sc callWithParameters:params usingPostMethod:YES];
+				
+				NSXMLDocument *tagsXML = resp.responseDocument;
+				NSArray *tagNodes = [tagsXML nodesForXPath:@"/lfm/toptags/tag/name" error:nil];
+				NSXMLNode *currentTagNode;
+				for (currentTagNode in tagNodes) {
+					[tagList addObject:[currentTagNode stringValue]];
+				}
+			[sc release];
+
+			[params release];
+		}
+	}
+	return tagList;
 }
 
 #pragma mark Scrobbling Status Methods
