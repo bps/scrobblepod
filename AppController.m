@@ -842,7 +842,7 @@ nil] ];
 			NSLog(@"Posting song details to Last.fm Now Playing service");
 			[NSThread detachNewThreadSelector:@selector(postNowPlayingNotificationForSong:) toTarget:self withObject:currentPlayingSong];
 		} else {
-			NSLog(@"Did not post Now Playing notification, as song is commented with exclusion string");
+			NSLog(@"Did not post Now Playing notification, as song was excluded");
 		}
 	}
 }

@@ -14,6 +14,7 @@
 	NSString *artist;
 	NSString *album;
 	NSString *comment;
+	NSString *genre;
 	NSCalendarDate *lastPlayed;
 	int length;
 	int extraPlays;
@@ -28,6 +29,7 @@
 @property (copy) NSString *artist;
 @property (copy) NSString *album;
 @property (copy) NSString *comment;
+@property (copy) NSString *genre;
 @property (copy) NSCalendarDate *lastPlayed;
 @property (assign) int length;
 @property (assign) int extraPlays;

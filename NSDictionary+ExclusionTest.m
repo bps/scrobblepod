@@ -16,7 +16,8 @@
 	BOOL shouldIncludeTrack;
 	shouldIncludeTrack = YES;
 	if ([cutoffDate compare:playDate]==NSOrderedAscending) {
-		if (!includingPodcasts && [[self objectForKey:@"Podcast"] boolValue]) shouldIncludeTrack = NO; // include podcasts? //(wantPodcastCheckbox.state==NSOffState)
+		if (!includingPodcasts && [[self objectForKey:@"Podcast"] boolValue]) shouldIncludeTrack = NO;
+		if (shouldIncludeTrack && !includingPodcasts && ([[self objectForKey:@"Genre"] rangeOfString:@"Podcast"].length>0)) shouldIncludeTrack = NO;
 		if (shouldIncludeTrack && !includeVideo && [[self objectForKey:@"Has Video"] boolValue]) shouldIncludeTrack = NO; // include video? //(wantVideoCheckbox.state==NSOffState)
 		if (shouldIncludeTrack && (ignoreString!=nil) && ([[self objectForKey:@"Comments"] rangeOfString:ignoreString].length>0)) shouldIncludeTrack = NO; // ignore commented? //(ignoreCommentedCheckbox.state==NSOnState)
 		if (shouldIncludeTrack && (genreString!=nil) && ([[self objectForKey:@"Genre"] rangeOfString:genreString].length>0)) shouldIncludeTrack = NO; // ignore commented? //(ignoreCommentedCheckbox.state==NSOnState)

@@ -27,6 +27,7 @@
 	[artist release];
 	[album release];
 	[comment release];
+	[genre release];
 	[lastPlayed release];
 	[uniqueIdentifier release];
 	[super dealloc];
@@ -43,6 +44,7 @@
 	copy.lastPlayed = self.lastPlayed;
 	copy.uniqueIdentifier = self.uniqueIdentifier;
 	copy.length = self.length;
+	copy.genre = self.genre;
 	copy.extraPlays = self.extraPlays;
 	copy.playCount = self.playCount;
 	copy.isExtra = self.isExtra;
@@ -58,6 +60,7 @@
 @synthesize artist;
 @synthesize album;
 @synthesize comment;
+@synthesize genre;
 @synthesize lastPlayed;
 @synthesize length;
 @synthesize extraPlays;

@@ -141,12 +141,16 @@ static iTunesWatcher *sharedTunesManager = nil;
 		if (useAlbumArtist) artistName = [newSongDetails objectForKey:@"Album Artist"];
 		if (!artistName) artistName = [newSongDetails objectForKey:@"Artist"];
 		if (!artistName) artistName = @"Unknown Artist";
+		
+		NSString *songGenre = [newSongDetails objectForKey:@"Genre"];
+		if (!songGenre) songGenre = @"";
 
 		NSString *albumName  = [newSongDetails objectForKey:@"Album"];
 		int trackDuration    = (int)([[newSongDetails objectForKey:@"Total Time"] intValue]/1000);
 
 		BGLastFmSong *newSong = [[BGLastFmSong alloc] initWithTitle:trackName artist:artistName album:albumName];
 			newSong.length = trackDuration;
+			newSong.genre  = songGenre;
 			self.currentSong = newSong;
 		[newSong release];
 
@@ -233,6 +237,7 @@ song is being played from a shared library.
 			BGLastFmSong *manualSong = [[BGLastFmSong alloc] initWithTitle:currentTrack.name artist:currentTrack.artist album:currentTrack.album];
 			manualSong.length        = currentTrack.duration;
 			manualSong.comment       = currentTrack.comment;
+			manualSong.genre         = currentTrack.genre;
 			self.currentSong = manualSong;
 			[manualSong release];
 		} else {
