@@ -285,7 +285,6 @@
 		// Once drawing finishes, make sure it is on the exact (correct) value
 		if (self.currentBlueAction==BLUE_SHRINKING) {
 			[self resetBlueToOffState];
-			[[self window] setAcceptsMouseMovedEvents:NO];
 		} else if (self.currentBlueAction==BLUE_GROWING) {
 			currentBlueOffset = drawingBounds.origin.x + drawingBounds.size.width - blueLimit_On;
 			self.blueIsClosed = NO;
@@ -369,6 +368,7 @@
 
 -(void)closeBlueMenu {
 	self.blueIsClosed = YES;
+	[[self window] setAcceptsMouseMovedEvents:NO];
 	[self startBlueTimerWithDirection:BLUE_SHRINKING];
 }
 
