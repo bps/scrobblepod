@@ -783,7 +783,7 @@ nil] ];
 						scrobbleAttempts = 2;
 					} else {
 						if (scrobbleAttempts==1) {
-							//[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FailedScrobbling andTitle:@"Tracks could not be scrobbled" andDescription:@"Scrobbling probably timed out" andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
+							[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FailedScrobbling andTitle:@"Tracks could not be scrobbled" andDescription:@"Scrobbling probably timed out" andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
 							[prefController addHistoryWithSuccess:NO andDate:[NSDate date] andDescription:@"Scrobble failed likely due to timeout"];
 						}
 					}
@@ -791,7 +791,6 @@ nil] ];
 					[prefController addHistoryWithSuccess:YES andDate:[NSDate date] andDescription:[NSString stringWithFormat:@"Scrobbled %d song%@",recentTracksCount,(recentTracksCount==1?@"":@"s")]];
 					NSCalendarDate *returnedDate = [scrobbleResponse lastScrobbleDate];
 					NSLog(@"-- After Scrobbling Date Returned: %@",returnedDate);
-					//[self addActivityHistoryEntryWithStatus:NO andDescription:@"Successful"];
 					if (returnedDate!=nil) {
 						NSString *updatedDateString = [returnedDate descriptionWithCalendarFormat:DATE_FORMAT_STRING];
 						[defaults setValue:updatedDateString forKey:BGPrefLastScrobbled];
