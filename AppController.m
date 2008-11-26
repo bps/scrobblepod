@@ -769,12 +769,14 @@ nil] ];
 				BGLastFmScrobbleResponse *scrobbleResponse = [theScrobbler performScrobbleWithSongs:allRecentTracks andSessionKey:theSessionKey toURL:[NSURL URLWithString:thePostAddress]];
 
 				if (!scrobbleResponse.wasSuccessful) {
-					if (scrobbleResponse.responseType==2) {
+					if (scrobbleResponse.responseType==SCROBBLE_RESPONSE_BADAUTH) {
 						// Need to rehandshake
-					} else if (scrobbleResponse.responseType==3) {
+						[authManager fetchNewSubmissionSessionKeyUsingWebServiceSessionKey];
+						scrobbleAttempts = 2;
+					} else if (scrobbleResponse.responseType==SCROBBLE_RESPONSE_FAILED) {
 						[[GrowlHub sharedManager] postGrowlNotificationWithName:SP_Growl_FailedScrobbling andTitle:@"Tracks could not be scrobbled" andDescription:[NSString stringWithFormat:@"Server said \"%@\"",[scrobbleResponse failureReason]] andImage:nil andIdentifier:SP_Growl_StartedScrobbling];
 						[prefController addHistoryWithSuccess:NO andDate:[NSDate date] andDescription:[NSString stringWithFormat:@"Scrobble failed: ",[scrobbleResponse failureReason]]];
-					} else if (scrobbleResponse.responseType==0 && scrobbleAttempts==0) {
+					} else if (scrobbleResponse.responseType==SCROBBLE_RESPONSE_UNKNOWN && scrobbleAttempts==0) {
 						// Because the scrobble post URL is stored in the user defaults (and handshake is not updated on launch), there is a
 						// chance that the stored URL (IP address) may no longer point to Last.fm. In this case, we re-handshake.
 						[authManager fetchNewSubmissionSessionKeyUsingWebServiceSessionKey];

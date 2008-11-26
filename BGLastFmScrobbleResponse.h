@@ -8,6 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define SCROBBLE_RESPONSE_UNKNOWN	0
+#define SCROBBLE_RESPONSE_OK		1
+#define SCROBBLE_RESPONSE_BADAUTH	2
+#define SCROBBLE_RESPONSE_FAILED	3
+
 @interface BGLastFmScrobbleResponse : NSObject {
 
 int responseType;
