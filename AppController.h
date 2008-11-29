@@ -9,6 +9,7 @@
 #import "FileWatcher.h"
 #import "BGLastFmAuthenticationManager.h"
 #import "BGLastFmWebServiceParameterList.h"
+#import <Sparkle/SUUpdater.h>
 
 @interface AppController : NSObject <TunesWatcherDelegate> {
 	NSStatusItem *statusItem;
@@ -30,6 +31,8 @@
 	
 	IBOutlet NSView *commonTagsLoadingView;
 	IBOutlet NSProgressIndicator *commonTagsLoadingIndicator;
+	
+	IBOutlet SUUpdater *updater;
 	
 	BGLastFmAuthenticationManager *authManager;
 	
@@ -110,4 +113,9 @@
 
 #pragma mark Preference Integration
 -(IBAction)raiseLoginPanel:(id)sender;//show pref window
+
+#pragma mark Sparkle
+- (NSString*)installationId;
+- (NSArray *)feedParametersForUpdater:(SUUpdater *)updater sendingSystemProfile:(BOOL)sendingProfile;
+
 @end

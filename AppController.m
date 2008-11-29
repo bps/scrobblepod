@@ -49,6 +49,9 @@
 	[self setIsScrobbling:NO];
 	[self setIsPostingNP:NO];
 	
+	[updater setDelegate:self];
+	[updater setSendsSystemProfile:YES];
+	
 	isLoadingCommonTags = NO;
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -140,6 +143,34 @@ nil] ];
 	 NSLog(@"XML Path: %@",[xmlWatcher fullXmlPath]);
 	 
 	 apiQueue = [NSMutableArray new];
+}
+
+#pragma mark Sparkle
+
+- (NSArray *)feedParametersForUpdater:(SUUpdater *)updater sendingSystemProfile:(BOOL)sendingProfile {
+	NSArray *keys = [NSArray arrayWithObjects:@"key", @"value", nil];
+	NSArray *parameters = [NSArray arrayWithObject:	[NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:	@"uuid", [self installationId], nil] forKeys:keys]];
+	return parameters;
+}
+
+- (NSString*)installationId {
+	NSString *uuid = [[NSUserDefaults standardUserDefaults] valueForKey:INSTALLATIONID];
+
+	if (uuid == nil) {
+		uuid_t buffer;
+		char str[37];
+
+		uuid_generate(buffer);
+		uuid_unparse_upper(buffer, str);        
+
+		uuid = [NSString stringWithFormat:@"%s", str];
+
+		NSLog(@"Generated UUID %@", uuid);        
+
+		[[NSUserDefaults standardUserDefaults] setValue:uuid forKey:INSTALLATIONID];
+	}
+
+	return uuid;
 }
 
 #pragma mark Authorization Manager
