@@ -231,17 +231,21 @@ song is being played from a shared library.
 -(void)manuallyRetrieveCurrentSongInfo {
 	if ([self itunesIsRunning]) {
 		iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:ITUNES_BUNDLE_IDENTIFIER];
-		iTunesTrack *currentTrack = [iTunes currentTrack];
-		if (iTunes.playerState == iTunesEPlSPlaying) {
-			iTunesIsPlaying = YES;
-			BGLastFmSong *manualSong = [[BGLastFmSong alloc] initWithTitle:currentTrack.name artist:currentTrack.artist album:currentTrack.album];
-			manualSong.length        = currentTrack.duration;
-			manualSong.comment       = currentTrack.comment;
-			manualSong.genre         = currentTrack.genre;
-			self.currentSong = manualSong;
-			[manualSong release];
-		} else {
-			self.currentSong = nil;
+		if (iTunes) {
+			if (iTunes.playerState == iTunesEPlSPlaying) {
+				iTunesTrack *currentTrack = [iTunes currentTrack];
+				if (currentTrack) {
+					iTunesIsPlaying = YES;
+					BGLastFmSong *manualSong = [[BGLastFmSong alloc] initWithTitle:currentTrack.name artist:currentTrack.artist album:currentTrack.album];
+					manualSong.length        = currentTrack.duration;
+					manualSong.comment       = currentTrack.comment;
+					manualSong.genre         = currentTrack.genre;
+					self.currentSong = manualSong;
+					[manualSong release];
+				}
+			} else {
+				self.currentSong = nil;
+			}
 		}
 	} else {
 		self.currentSong = nil;
