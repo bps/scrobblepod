@@ -14,6 +14,9 @@
 @implementation BGTrackCollector
 -(NSMutableArray *)collectTracksFromXMLFile:(NSString *)xmlPath withCutoffDate:(NSDate *)cutoffDate includingPodcasts:(BOOL)includePodcasts includingVideo:(BOOL)includeVideo ignoringComment:(NSString *)ignoreString ignoringGenre:(NSString *)genreString withMinimumDuration:(int)minimumDuration {
 
+	double oldPriority = [NSThread threadPriority];
+	[NSThread setThreadPriority:0.0];
+
 	if (!xmlPath || ![[NSFileManager defaultManager] fileExistsAtPath:xmlPath]) {
 		NSLog(@"Supplied XML path does not exist - Using default XML path");
 		xmlPath = [@"~/Music/iTunes/iTunes Music Library.xml" stringByExpandingTildeInPath];
@@ -27,7 +30,9 @@
 	
 	NSMutableArray *resultSongArray = [NSMutableArray new];
 	
-	BOOL useAlbumArtist = [[NSUserDefaults standardUserDefaults] boolForKey:BGPrefShouldUseAlbumArtist];
+	BOOL useAlbumArtist =             [[NSUserDefaults standardUserDefaults] boolForKey:BGPrefShouldUseAlbumArtist];
+	BOOL useComposerInsteadOfArtist = [[NSUserDefaults standardUserDefaults] boolForKey:BGPrefShouldUseComposerInsteadOfArtist];
+	BOOL useGroupingInTitle =         [[NSUserDefaults standardUserDefaults] boolForKey:BGPrefShouldUseGroupingInTitle];
 	
 	if (itunesLibrary) {
 		NSLog(@"Parsing XML contents");
@@ -51,13 +56,28 @@
 
 			NSDictionary *trackStuff;
 			for (trackStuff in wantedTracksSorted) {
+			
 				// track name
-				NSString *nameString = [trackStuff objectForKey:@"Name"];
+				NSString *trackTitle = [trackStuff objectForKey:@"Name"];
+				NSString *nameString = nil;
+				if (trackTitle) {
+					if (useGroupingInTitle) {
+						NSString *trackGrouping = [trackStuff objectForKey:@"Grouping"];
+						if (trackGrouping) nameString = [NSString stringWithFormat:@"%@: %@",trackGrouping,trackTitle];
+					}
+					if (!nameString) nameString = trackTitle;
+				}
+				NSLog(@"10");
 				if (!nameString) nameString = @"";
+				NSLog(@"11");
 				
 				// artist, using album artist where possible
 				NSString *artistString = nil;
-				if (useAlbumArtist) artistString = [trackStuff objectForKey:@"Album Artist"];
+				if (useAlbumArtist) {
+					artistString = [trackStuff objectForKey:@"Album Artist"];
+				} else if (useComposerInsteadOfArtist) {
+					artistString = [trackStuff objectForKey:@"Composer"];
+				}
 				if (!artistString)  artistString = [trackStuff objectForKey:@"Artist"];
 				if (!artistString)  artistString = @"";
 				
@@ -97,6 +117,8 @@
 	} else NSLog(@"Could not load dictionary from XML");
 	
 	//itunesLibrary
+	
+	[NSThread setThreadPriority:oldPriority];
 
 	return resultSongArray;
 }

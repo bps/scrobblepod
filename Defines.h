@@ -15,6 +15,8 @@
 	#define BGPrefIgnoreShortLength @"IgnoreShortLength"
 	#define BGPrefShouldDoMultiPlay @"DoMultiPlay"
 	#define BGPrefShouldUseAlbumArtist @"UseAlbumArtist"
+	#define BGPrefShouldUseComposerInsteadOfArtist @"UseComposer"
+	#define BGPrefShouldUseGroupingInTitle @"UseGroupingInTitle"
 	#define INSTALLATIONID @"AnonymousInstallNumber"
 	
 	#define BGPrefWantOldIcon @"WantOldIcon"

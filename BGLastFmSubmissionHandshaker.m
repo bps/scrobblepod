@@ -17,7 +17,7 @@
 	NSString *currentUnixTime = [NSString stringWithFormat:@"%d",(int)[[NSDate date] timeIntervalSince1970]]; 
 	NSString *authString = [[NSString stringWithFormat:@"%@%@",API_SECRET,currentUnixTime] md5HexHash];
 
-	NSString *handshakeUrlString = [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=sld&v=0.50&u=%@&t=%@&a=%@&api_key=%@&sk=%@",username,currentUnixTime,authString,API_KEY,wsSessionKey];
+	NSString *handshakeUrlString = [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=sld&v=0.52&u=%@&t=%@&a=%@&api_key=%@&sk=%@",username,currentUnixTime,authString,API_KEY,wsSessionKey];
 	
 	NSURL *postURL = [NSURL URLWithString:handshakeUrlString];
 	

@@ -83,6 +83,8 @@
 		[NSNumber numberWithBool:NO],BGPrefWantOldIcon,
 		[NSNumber numberWithBool:NO],BGPrefShouldDoMultiPlay,
 		[NSNumber numberWithBool:NO],BGPrefShouldUseAlbumArtist,
+		[NSNumber numberWithBool:NO],BGPrefShouldUseComposerInsteadOfArtist,
+		[NSNumber numberWithBool:NO],BGPrefShouldUseGroupingInTitle,
 		@"~/Music/iTunes/iTunes Music Library.xml",BGPrefXmlLocation,
 nil] ];
 

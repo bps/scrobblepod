@@ -38,7 +38,7 @@
 		currentUnixTime = [NSString stringWithFormat:@"%d",(int)[[NSDate date] timeIntervalSince1970]]; 
 		authenticationHash = [[NSString stringWithFormat:@"%@%@",[API_SECRET md5HexHash],currentUnixTime] md5HexHash];
 
-		handshakeURL = [NSURL URLWithString: [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=sld&v=0.50.11&u=%@&t=%@&a=%@&sk=%@",theUsername,currentUnixTime,authenticationHash,apiSessionKey]];
+		handshakeURL = [NSURL URLWithString: [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=sld&v=0.521&u=%@&t=%@&a=%@&sk=%@",theUsername,currentUnixTime,authenticationHash,apiSessionKey]];
 
 		NSMutableURLRequest *handshakeRequest = [[NSMutableURLRequest alloc] initWithURL:handshakeURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:2.0];
 		[handshakeRequest setHTTPMethod:@"GET"];
