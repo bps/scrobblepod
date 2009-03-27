@@ -122,6 +122,7 @@ static iTunesWatcher *sharedTunesManager = nil;
 	
 	self.iTunesIsPlaying = YES;
 	NSString *newIdentifier = [[newSongDetails objectForKey:@"PersistentID"] stringValue];
+	NSLog(@"Got new song Persistent ID: %@",newIdentifier);
 	
 	if ( [self songIsNew:newIdentifier] ) {
 

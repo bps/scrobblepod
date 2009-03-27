@@ -129,6 +129,7 @@ nil] ];
 	NSNotificationCenter *defaultNotificationCenter = [NSNotificationCenter defaultCenter];
 	[defaultNotificationCenter addObserver:self selector:@selector(podWatcherMountedPod:) name:BGNotificationPodMounted object:nil];
 	[defaultNotificationCenter addObserver:self selector:@selector(xmlFileChanged:) name:XMLChangedNotification object:nil];
+	[defaultNotificationCenter addObserver:self selector:@selector(amdsSyncCompleted:) name:AMDSSyncComplete object:nil];
 
 	 authManager = [[BGLastFmAuthenticationManager alloc] initWithDelegate:self];
 
@@ -297,6 +298,11 @@ nil] ];
 
 -(void)podWatcherMountedPod:(NSNotification *)notification {
 	[[BGScrobbleDecisionManager sharedManager] refreshDecisionAndNotifyIfChanged:YES];
+}
+
+-(void)amdsSyncCompleted:(NSNotification *)notification {
+	NSLog(@"Mobile Device finished syncing... going to try to scrobble");
+	[self detachScrobbleThreadWithoutConsideration:NO];
 }
 
 -(void)xmlFileChanged:(NSNotification *)notification {

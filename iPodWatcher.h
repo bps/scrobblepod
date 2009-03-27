@@ -25,6 +25,7 @@
 
 -(void)applyForMobileDeviceNotifications;
 -(void)amdsDidConnect:(NSNotification*)note;
+-(void)amdsDidSync:(NSNotification*)note;
 -(void)amdsDidFail:(NSNotification*)note;
 
 -(void)applyForiPodNotifications;

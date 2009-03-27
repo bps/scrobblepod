@@ -59,6 +59,7 @@
 	#define BGLastSyncDate @"iPodLastSynchronized"
 	#define BGActivityHistoryArray "ActivityHistory"
 	#define BGTracksScrobbledTotal @"TracksScrobbled"
+	#define AMDSSyncComplete @"AMDSSyncComplete"
 
 	#define ServiceWorker_LoveCommand @"track.love"
 	#define ServiceWorker_BanCommand  @"track.ban"

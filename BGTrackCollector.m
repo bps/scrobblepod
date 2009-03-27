@@ -67,9 +67,7 @@
 					}
 					if (!nameString) nameString = trackTitle;
 				}
-				NSLog(@"10");
 				if (!nameString) nameString = @"";
-				NSLog(@"11");
 				
 				// artist, using album artist where possible
 				NSString *artistString = nil;

@@ -93,6 +93,7 @@
 -(void)detachNowPlayingThread;
 -(void)playScrobblingSound;
 -(void)xmlFileChanged:(NSNotification *)notification;
+-(void)amdsSyncCompleted:(NSNotification *)notification;
 
 #pragma mark Secondary Last.fm Methods
 -(void)queueApiCall:(BGLastFmWebServiceParameterList *)theCall popQueueToo:(BOOL)shouldPopQueue;
